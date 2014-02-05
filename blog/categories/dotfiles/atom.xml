@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Michael Prouty]]></title>
-  <link href="http://MProuts.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Dotfiles | Michael Prouty]]></title>
+  <link href="http://MProuts.github.io/blog/categories/dotfiles/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
   <updated>2014-02-04T23:55:52-05:00</updated>
   <id>http://MProuts.github.io/</id>
