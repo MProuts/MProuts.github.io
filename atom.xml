@@ -4,7 +4,7 @@
   <title><![CDATA[Michael Prouty]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-02-05T00:44:33-05:00</updated>
+  <updated>2014-02-07T13:54:59-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -18,7 +18,117 @@
     <link href="http://MProuts.github.io/blog/2014/02/04/hello-octopress-slash/"/>
     <updated>2014-02-04T22:55:48-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/04/hello-octopress-slash</id>
-    <content type="html"><![CDATA[
+    <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside the long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put it my dotfiles under version control.</p>
+
+<p>This turned out to be a little trickier than I expected&hellip;</p>
+
+<h2>Separate Your Dots</h2>
+
+<p>The first problem I encountered is that your system expects dotfiles to live in your home directory at paths like <code>~/.vimrc</code>. This isn&rsquo;t a great place for a git repository because, well, that&rsquo;s where <em>ALL</em> of the rest of your user files live.  On the other hand, if you move them into their own directory,</p>
+
+<pre><code>$ mkdir ~/dotfiles/
+$ mv ~/.bash_profile /dotfile/bash_profile
+</code></pre>
+
+<p>the programs that use these files to load your customization will still look for them in the home directory, and no longer find them there.</p>
+
+<h2>Symlinks</h2>
+
+<p>Enter symlinks.  Symlinks basically let you create a named pointer (or <em>symbolic link</em>) to a file at a different location in the file system.  When the system tries to open this pointer, it will link to the target file, and open that instead.  In our case, this means that we can stash all of our resource files in <code>~/dotfile</code> and create links to make them accessible to programs looking for them in <code>~/</code>. Here&rsquo;s the line of code that makes that happen.</p>
+
+<pre><code>$ ln -s /dotfile/bash_profile ~/.bash_profile
+</code></pre>
+
+<p>This is basically just saying:
+&ldquo;Create a link from stashed file <code>/dotfiles/bash_profile</code> to its original location at <code>~/.bash_profile</code>.  (I decided to remove the dot from the stashed file for convenience.)</p>
+
+<h2>(S)he Could Git It!</h2>
+
+<p>With the symlink in place, our <code>bash_profile</code> should now be working from its new location.  (Note: You may need to close and reopen terminal to see a change). All that&rsquo;s left to do is initialize our git repo and make our first commit.</p>
+
+<pre><code>$ cd ~/dotfiles
+$ git init
+$ git add .
+$ git commit -m "Initial commit"
+</code></pre>
+
+<h2>Syntax Highlighting</h2>
+
+<p>You&rsquo;ll notice that as a side effect of moving our bash_profile, we no longer get pretty syntax highlighting when we open it in an editor.</p>
+
+<p>  <strong>dotfiles/bash_profile</strong></p>
+
+<pre><code>PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+
+CDPATH=~/dev/
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+export PS1="\W ☕ "
+export GREP_OPTIONS='--color=always'
+export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
+</code></pre>
+
+<p>The solution is to explicitly tell the editor the file type (a shell script) by appending <code>.sh</code> to the filename.</p>
+
+<p>  <strong>dotfiles/bash_profile.sh</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/Applications/Postgres.app/Contents/MacOS/bin:$PATH&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">CDPATH</span><span class="o">=</span>~/dev/
+</span><span class='line'>
+</span><span class='line'><span class="o">[[</span> -s <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">source</span> <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="c"># Load RVM into a shell session *as a function*</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\W ☕ &quot;</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">GREP_OPTIONS</span><span class="o">=</span><span class="s1">&#39;--color=always&#39;</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">LSCOLORS</span><span class="o">=</span><span class="s2">&quot;GxGxBxDxCxEgEdxbxgxcxd&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Generate Symlinks with Script</h2>
+
+<p>Great, so now version control and syntax hightlighting are working, but we&rsquo;ve introduced another problem.  Namely, it&rsquo;s a pain to manually maintain these symlinks.  As your list of dotfiles grows, or when you change computers, it would be nice to have a way to dynamically generate links to these stashed resource files. Solution: write a little shell script to link all of the files in <code>/dotfiles</code> to the home directory for you.  I just threw this in the same directory.</p>
+
+<p><strong>linkdotfiles.sh</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">dir</span><span class="o">=</span>~/dotfiles          <span class="c"># dotfiles directory</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for </span>file in <span class="nv">$dir</span>/*; <span class="k">do</span>
+</span><span class='line'><span class="k">  if</span> <span class="o">[</span> <span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span> !<span class="o">=</span> <span class="s2">&quot;linkdotfiles&quot;</span> <span class="o">]</span>
+</span><span class='line'>  <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Linking&quot;</span> <span class="k">$(</span>basename <span class="nv">$file</span><span class="k">)</span> <span class="s2">&quot;...&quot;</span>
+</span><span class='line'>    ln -s <span class="nv">$file</span> ~/.<span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span>
+</span><span class='line'>  <span class="k">fi</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;... all done!&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To run:</p>
+
+<pre><code>$ sh linkdotfiles.sh
+</code></pre>
+
+<p>All done.  :)</p>
 ]]></content>
   </entry>
   
