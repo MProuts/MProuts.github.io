@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Manage Your Dotfiles With Git - Michael Prouty</title>
+  <title>Manage Your Dotfiles With Git - Full Stack Snacks</title>
   <meta name="author" content="Michael Prouty">
 
   
@@ -21,7 +21,7 @@
   <link rel="canonical" href="http://MProuts.github.io/blog/2014/02/04/hello-octopress-slash">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Michael Prouty" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Full Stack Snacks" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -36,9 +36,7 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Michael Prouty</a></h1>
-  
-    <h2>Full Stack padawan.</h2>
+  <h1><a href="/">Full Stack Snacks</a></h1>
   
 </hgroup>
 
@@ -91,7 +89,7 @@
   </header>
 
 
-<div class="entry-content"><p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside the long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put it my dotfiles under version control.</p>
+<div class="entry-content"><p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside the long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
 
 <p>This turned out to be a little trickier than I expected&hellip;</p>
 
@@ -100,22 +98,22 @@
 <p>The first problem I encountered is that your system expects dotfiles to live in your home directory at paths like <code>~/.vimrc</code>. This isn&rsquo;t a great place for a git repository because, well, that&rsquo;s where <em>ALL</em> of the rest of your user files live.  On the other hand, if you move them into their own directory,</p>
 
 <pre><code>$ mkdir ~/dotfiles/
-$ mv ~/.bash_profile /dotfile/bash_profile
+$ mv ~/.bash_profile /dotfiles/bash_profile
 </code></pre>
 
-<p>the programs that use these files to load your customization will still look for them in the home directory, and no longer find them there.</p>
+<p>they will no longer be accessible to programs that use them to load your customization.</p>
 
 <h2>Symlinks</h2>
 
-<p>Enter symlinks.  Symlinks basically let you create a named pointer (or <em>symbolic link</em>) to a file at a different location in the file system.  When the system tries to open this pointer, it will link to the target file, and open that instead.  In our case, this means that we can stash all of our resource files in <code>~/dotfile</code> and create links to make them accessible to programs looking for them in <code>~/</code>. Here&rsquo;s the line of code that makes that happen.</p>
+<p>Enter symlinks.  Symlinks basically let you create a named pointer (or <em>symbolic link</em>) to a file at a different location in the file system.  When the system tries to open this pointer, it will link to the target file, and open that instead.  In our case, this means that we can stash all of our resource files in <code>~/dotfiles</code> and create links to make them accessible to programs looking for them in <code>~/</code>. Here&rsquo;s the line of code that makes that happen.</p>
 
-<pre><code>$ ln -s /dotfile/bash_profile ~/.bash_profile
+<pre><code>$ ln -s /dotfiles/bash_profile ~/.bash_profile
 </code></pre>
 
 <p>This is basically just saying:
 &ldquo;Create a link from stashed file <code>/dotfiles/bash_profile</code> to its original location at <code>~/.bash_profile</code>.  (I decided to remove the dot from the stashed file for convenience.)</p>
 
-<h2>(S)he Could Git It!</h2>
+<h2>Git It!</h2>
 
 <p>With the symlink in place, our <code>bash_profile</code> should now be working from its new location.  (Note: You may need to close and reopen terminal to see a change). All that&rsquo;s left to do is initialize our git repo and make our first commit.</p>
 
@@ -167,7 +165,9 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>Generate Symlinks with Script</h2>
+<p>Much better.</p>
+
+<h2>Generate Symlinks with a Script</h2>
 
 <p>Great, so now version control and syntax hightlighting are working, but we&rsquo;ve introduced another problem.  Namely, it&rsquo;s a pain to manually maintain these symlinks.  As your list of dotfiles grows, or when you change computers, it would be nice to have a way to dynamically generate links to these stashed resource files. Solution: write a little shell script to link all of the files in <code>/dotfiles</code> to the home directory for you.  I just threw this in the same directory.</p>
 
@@ -259,7 +259,14 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
 <section>
 	<span>
-		<img src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+		<img style="float:left" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+    <span style="float:left;margin-left: 5px">
+      <p style="margin:0px;font-weight:bold;">Michael Prouty</p>
+      <p style="margin:0px;">Student</p>
+      <p><a href="http://flatironschool.com/index.html" target="_blank">Flatiron School</a></p>
+    </span>
+    <span style="display:block;clear:both;visibility:hidden;">.
+    </span>
 	</span>
 </section>
 <section>
