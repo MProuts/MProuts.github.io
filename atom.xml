@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-02-08T12:33:39-05:00</updated>
+  <updated>2014-02-08T12:35:29-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -94,7 +94,7 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Much better.</p>
+<p>Aaaaah. Much better.</p>
 
 <h2>Generate Symlinks with a Script</h2>
 
