@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-02-11T20:23:05-05:00</updated>
+  <updated>2014-02-11T20:23:44-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -92,7 +92,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Here, we literally name our parameter &ldquo;args.&rdquo;   Could these concepts be <em>less</em> practically distinct, I ask you?</p>
+<p>Here, we literally name our parameter &ldquo;args.&rdquo;   <em>Could</em> these concepts be <em>less</em> practically distinct, I ask you?</p>
 
 <h3>Is This Important?</h3>
 
