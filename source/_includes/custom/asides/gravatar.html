@@ -1,7 +1,14 @@
 {% if site.gravatar_email %}
 <section>
 	<span>
-		<img src="{% gravatar_image %}" alt="Gravatar of {{ site.author}} " title="Gravatar of {{ site.author }}" />
+		<img style="float:left" src="{% gravatar_image %}" alt="Gravatar of {{ site.author}} " title="Gravatar of {{ site.author }}" />
+    <span style="float:left;margin-left: 5px">
+      <p style="margin:0px;font-weight:bold;">Michael Prouty</p>
+      <p style="margin:0px;">Student</p>
+      <p><a href="http://flatironschool.com/index.html" target="_blank">Flatiron School</a></p>
+    </span>
+    <span style="display:block;clear:both;visibility:hidden;">.
+    </span>
 	</span>
 </section>
 {% endif %}
