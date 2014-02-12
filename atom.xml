@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-02-11T20:54:28-05:00</updated>
+  <updated>2014-02-12T14:12:14-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Parameters vs. Arguments]]></title>
-    <link href="http://MProuts.github.io/blog/2014/02/09/the-parameters-vs-arguments/"/>
+    <link href="http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments/"/>
     <updated>2014-02-09T13:20:04-05:00</updated>
-    <id>http://MProuts.github.io/blog/2014/02/09/the-parameters-vs-arguments</id>
+    <id>http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments</id>
     <content type="html"><![CDATA[<blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
 
 <p>-Confucius</p></blockquote>
