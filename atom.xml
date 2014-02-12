@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-02-08T12:58:15-05:00</updated>
+  <updated>2014-02-11T20:17:22-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -12,6 +12,97 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Parameters vs. Arguments]]></title>
+    <link href="http://MProuts.github.io/blog/2014/02/09/the-parameters-vs-arguments/"/>
+    <updated>2014-02-09T13:20:04-05:00</updated>
+    <id>http://MProuts.github.io/blog/2014/02/09/the-parameters-vs-arguments</id>
+    <content type="html"><![CDATA[<blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
+
+<p>-Confucius</p></blockquote>
+
+<p>Why are two concepts so basic to everything we do in computing so hard for most of us to differentiate?  The short answer is that it&rsquo;s not a useful distinction, so we abstract it out of our thought processes to make room for other things.  The long answer follows.  (Read on interested reader&hellip;)</p>
+
+<p>In order to understand why the distinciton is unnatural, we first have to understand the distinction itself.  Here goes:</p>
+
+<h3>Parameters</h3>
+
+<p>Parameters exist in <em>method declarations</em>.  They are placeholders for what later gets passed into the method.  Syntactically, they say &ldquo;something goes here.&rdquo;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">plate_food</span><span class="p">(</span><span class="n">plate_goes_here</span><span class="p">,</span>  <span class="n">food_goes_here</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># code to place food on plate</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example, <code>plate_goes_here</code> and <code>food_goes_here</code> are parameters.</p>
+
+<h3>Arguments</h3>
+
+<p>Arguments, on the other hand, exist in method <em>calls</em>.   They <strong>are</strong> the actual things that get passed to a method.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_plate</span> <span class="o">=</span> <span class="n">plate</span><span class="o">.</span><span class="n">new</span> <span class="s2">&quot;porcelain&quot;</span>
+</span><span class='line'><span class="n">some_food</span> <span class="o">=</span> <span class="n">food</span><span class="o">.</span><span class="n">new</span> <span class="s2">&quot;kimchi&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">plate_food</span><span class="p">(</span><span class="n">my_plate</span><span class="p">,</span> <span class="n">some_food</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example, <code>my_plate</code> and <code>some_food</code> are arguments.</p>
+
+<h3>How They&rsquo;re Related</h3>
+
+<p>In programming, methods are for storing behavior.  We &ldquo;parameterize&rdquo; methods in order to allow them to interact with data, without having to specify that data.  That way, we can use the method over and over again, passing in different pieces of data at our whim.  <em>Parameters</em> act as placeholders in the method definition for hard data that is passed as <em>arguments</em> every time the method is actually invoked.</p>
+
+<blockquote><p>parameter:hypothetical::argument:concrete</p></blockquote>
+
+<h3>The Confusing Part&hellip;</h3>
+
+<p>This distinction becomes murky as soon as we begin our programming careers, because we tend to name our placeholders (logically) for the things that will eventually take their place.</p>
+
+<p>To return to the previous example, instead of naming our parameters <code>plate_goes_here</code> and <code>food_goes_here</code>, we go with <code>plate</code> and <code>food</code> instead.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">plate_food</span><span class="p">(</span><span class="n">plate</span><span class="p">,</span>  <span class="n">food</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># code to place food on plate</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And just like that, the seam we intentionally dug out earlier has been rehidden.  And hidden it remains for 99.999% of our programming careers.</p>
+
+<p>A particularly explicit example of this placetaker-for-placeholder conflation is literally a convention in Ruby:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">clean_plates</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">args</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">plate</span><span class="o">|</span> <span class="n">plate</span><span class="o">.</span><span class="n">wash</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, we literally name our parameter &ldquo;args.&rdquo;   Could these concepts be less practically distinct?</p>
+
+<h3>Is This Important?</h3>
+
+<p>Practically, probably not.</p>
+
+<p>If you have a bent for philosophy or linguistics, this is the type of conceptual relationship you might explore further in an introductory course in <a href="http://en.wikipedia.org/wiki/Semiotics">semiotics</a> or <a href="http://en.wikipedia.org/wiki/Semantics">semantics</a>.</p>
+
+<p>But my sense is that this distinction is muddled in most applied programming by design.  Given the option to hide a conceptual layer from ourselves, most of us take it without even thinking about it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>

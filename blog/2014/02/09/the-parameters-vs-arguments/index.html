@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Full Stack Snacks</title>
+  <title>Parameters vs. Arguments - Full Stack Snacks</title>
   <meta name="author" content="Michael Prouty">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://MProuts.github.io">
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/02/09/the-parameters-vs-arguments">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Full Stack Snacks" type="application/atom+xml">
@@ -63,15 +63,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/02/09/the-parameters-vs-arguments/">Parameters vs. Arguments</a></h1>
+      <h1 class="entry-title">Parameters vs. Arguments</h1>
     
     
       <p class="meta">
@@ -94,7 +91,7 @@
   </header>
 
 
-  <div class="entry-content"><blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
+<div class="entry-content"><blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
 
 <p>-Confucius</p></blockquote>
 
@@ -178,22 +175,16 @@
 
 <p>But my sense is that this distinction is muddled in most applied programming by design.  Given the option to hide a conceptual layer from ourselves, most of us take it without even thinking about it.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/04/manage-your-dotfiles-with-git/">Manage Your Dotfiles With Git</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Michael Prouty</span></span>
+
+      
 
 
 
@@ -205,139 +196,32 @@
   
 
 
-<time datetime="2014-02-04T22:55:48-05:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
-        
-      </p>
+<time datetime="2014-02-09T13:20:04-05:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
+      
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
-
-<p>This turned out to be a little trickier than I expected&hellip;</p>
-
-<h2>Separate Your Dots</h2>
-
-<p>The first problem I encountered is that your system expects dotfiles to live in your home directory at paths like <code>~/.vimrc</code>. This isn&rsquo;t a great place for a git repository because, well, that&rsquo;s where <em>ALL</em> of the rest of your user files live.  On the other hand, if you move them into their own directory,</p>
-
-<pre><code>$ mkdir ~/dotfiles/
-$ mv ~/.bash_profile /dotfiles/bash_profile
-</code></pre>
-
-<p>they will no longer be accessible to programs that use them to load your customization.</p>
-
-<h2>Symlinks</h2>
-
-<p>Enter symlinks.  Symlinks basically let you create a named pointer (or <em>symbolic link</em>) to a file at a different location in the file system.  When the system tries to open this pointer, it will link to the target file, and open that instead.  In our case, this means that we can stash all of our resource files in <code>~/dotfiles</code> and create links to make them accessible to programs looking for them in <code>~/</code>. Here&rsquo;s the line of code that makes that happen.</p>
-
-<pre><code>$ ln -s /dotfiles/bash_profile ~/.bash_profile
-</code></pre>
-
-<p>This is basically just saying:
-&ldquo;Create a link from stashed file <code>/dotfiles/bash_profile</code> to its original location at <code>~/.bash_profile</code>.  (I decided to remove the dot from the stashed file for convenience.)</p>
-
-<h2>Git It!</h2>
-
-<p>With the symlink in place, our <code>bash_profile</code> should now be working from its new location.  (Note: You may need to close and reopen terminal to see a change). All that&rsquo;s left to do is initialize our git repo and make our first commit.</p>
-
-<pre><code>$ cd ~/dotfiles
-$ git init
-$ git add .
-$ git commit -m "Initial commit"
-</code></pre>
-
-<h2>Syntax Highlighting</h2>
-
-<p>You&rsquo;ll notice that as a side effect of moving our <code>bash_profile</code>, we no longer get pretty syntax highlighting when we open it in an editor.</p>
-
-<p>  <strong>dotfiles/bash_profile</strong></p>
-
-<pre><code>PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-
-CDPATH=~/dev/
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-export PS1="\W ☕ "
-export GREP_OPTIONS='--color=always'
-export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
-</code></pre>
-
-<p>The solution is to explicitly tell the editor the file type (a shell script) by appending <code>.sh</code> to the filename.</p>
-
-<p>  <strong>dotfiles/bash_profile.sh</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/Applications/Postgres.app/Contents/MacOS/bin:$PATH&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">CDPATH</span><span class="o">=</span>~/dev/
-</span><span class='line'>
-</span><span class='line'><span class="o">[[</span> -s <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">source</span> <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="c"># Load RVM into a shell session *as a function*</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\W ☕ &quot;</span>
-</span><span class='line'><span class="nb">export </span><span class="nv">GREP_OPTIONS</span><span class="o">=</span><span class="s1">&#39;--color=always&#39;</span>
-</span><span class='line'><span class="nb">export </span><span class="nv">LSCOLORS</span><span class="o">=</span><span class="s2">&quot;GxGxBxDxCxEgEdxbxgxcxd&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Aaaaah. Much better.</p>
-
-<h2>Generate Symlinks with a Script</h2>
-
-<p>Great, so now version control and syntax hightlighting are working, but we&rsquo;ve introduced another problem.  Namely, it&rsquo;s a pain to manually maintain these symlinks.  As your list of dotfiles grows, or when you change computers, it would be nice to have a way to dynamically generate links to these stashed resource files. Solution: write a little shell script to link all of the files in <code>/dotfiles</code> to the home directory for you.  I just threw this in the same directory.</p>
-
-<p><strong>linkdotfiles.sh</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">dir</span><span class="o">=</span>~/dotfiles          <span class="c"># dotfiles directory</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">for </span>file in <span class="nv">$dir</span>/*; <span class="k">do</span>
-</span><span class='line'><span class="k">  if</span> <span class="o">[</span> <span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span> !<span class="o">=</span> <span class="s2">&quot;linkdotfiles&quot;</span> <span class="o">]</span>
-</span><span class='line'>  <span class="k">then</span>
-</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Linking&quot;</span> <span class="k">$(</span>basename <span class="nv">$file</span><span class="k">)</span> <span class="s2">&quot;...&quot;</span>
-</span><span class='line'>    ln -s <span class="nv">$file</span> ~/.<span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span>
-</span><span class='line'>  <span class="k">fi</span>
-</span><span class='line'><span class="k">done</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;... all done!&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>To run:</p>
-
-<pre><code>$ sh linkdotfiles.sh
-</code></pre>
-
-<p>All done.  :)</p>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/02/09/the-parameters-vs-arguments/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/02/09/the-parameters-vs-arguments/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/02/04/manage-your-dotfiles-with-git/" title="Previous Post: Manage Your Dotfiles With Git">&laquo; Manage Your Dotfiles With Git</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     
@@ -374,6 +258,7 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
 
   
 </aside>
+
 
     </div>
   </div>
