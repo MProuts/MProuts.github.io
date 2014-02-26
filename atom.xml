@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-02-26T00:53:06-05:00</updated>
+  <updated>2014-02-26T00:53:46-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -18,7 +18,7 @@
     <link href="http://MProuts.github.io/blog/2014/02/24/7-coding-coloqualisms/"/>
     <updated>2014-02-24T15:19:09-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/24/7-coding-coloqualisms</id>
-    <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange historically-specific colloquialisms.  Here are 8 you might not know&hellip;</p>
+    <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 8 you might not know&hellip;</p>
 
 <h2>Spaghetti Code: </h2>
 
