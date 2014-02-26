@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-02-26T09:44:12-05:00</updated>
+  <updated>2014-02-26T10:02:53-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -18,7 +18,7 @@
     <link href="http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code/"/>
     <updated>2014-02-24T15:19:09-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code</id>
-    <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 8 you might not know&hellip;</p>
+    <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 7 you might not know&hellip;</p>
 
 <h2>Spaghetti Code: </h2>
 
@@ -308,7 +308,7 @@ developers for other developers to find.</p>
 
 <h3>The Confusing Part&hellip;</h3>
 
-<p>This distinction becomes murky as soon as we begin our programming careers, because we tend to name our placeholders (logically) for the things that will eventually take their place.</p>
+<p>This distinction becomes murky, because programmers tend to name placeholders (logically) for the things that will eventually replace them.</p>
 
 <p>To return to the previous example, instead of naming our parameters <code>plate_goes_here</code> and <code>food_goes_here</code>, we go with <code>plate</code> and <code>food</code> instead.</p>
 
@@ -321,9 +321,7 @@ developers for other developers to find.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>And just like that, the seam we intentionally dug out earlier has been rehidden.  And hidden it remains for 99.999% of our programming careers.</p>
-
-<p>A particularly explicit example of this placetaker-for-placeholder conflation is literally a convention in Ruby:</p>
+<p>A particularly glaring example of this placetaker-for-placeholder conflation happens in Ruby when we name our splat parameters <code>*args</code>.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -333,8 +331,6 @@ developers for other developers to find.</p>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
-<p>Here, we literally name our parameter &ldquo;args.&rdquo;   <em>Could</em> these concepts be less practically distinct, I ask you?</p>
 
 <h3>&hellip;And Is Understanding This <em>All</em> That Important?</h3>
 
