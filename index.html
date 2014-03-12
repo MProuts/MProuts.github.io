@@ -281,7 +281,7 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
 
 <h1>3) MVC Structure</h1>
 
-<p>Sinatra lets you place your model and controller code side-by-side in a general application file.   (It  will look for views in a top-level <code>views/</code> directory by default. This may be a good option for you, depending on the size and complexity of your project.  However, if your requirements necessitate breaking your application up into a more Railsy MVC structure, here’s how to do it.</p>
+<p>Sinatra lets you place your model and controller code side-by-side in a general application file.   (It  will look for views in a top-level <code>views/</code> directory by default.) This may be a good option for you, depending on the size and complexity of your project.  However, if your requirements necessitate breaking your application up into a more Railsy MVC structure, here’s how to do it.</p>
 
 <hr />
 
@@ -417,26 +417,16 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">require_relative</span> <span class="s1">&#39;../config/environment&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
 </span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">include</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Test</span><span class="o">::</span><span class="no">Methods</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="ss">:transaction</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean_with</span><span class="p">(</span><span class="ss">:truncation</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">example</span><span class="o">|</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">cleaning</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">example</span><span class="o">.</span><span class="n">run</span>
-</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
