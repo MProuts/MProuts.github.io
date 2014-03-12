@@ -48,7 +48,7 @@ In programming, methods are for storing behavior.  We "parameterize" methods in 
 
 ###The Confusing Part...
 
-This distinction becomes murky as soon as we begin our programming careers, because we tend to name our placeholders (logically) for the things that will eventually take their place.  
+This distinction becomes murky, because programmers tend to name placeholders (logically) for the things that will eventually replace them. 
 
 To return to the previous example, instead of naming our parameters ```plate_goes_here``` and ```food_goes_here```, we go with ```plate``` and ```food``` instead.  
 
@@ -58,9 +58,7 @@ def plate_food(plate,  food)
 end
 ```
 
-And just like that, the seam we intentionally dug out earlier has been rehidden.  And hidden it remains for 99.999% of our programming careers.  
-
-A particularly explicit example of this placetaker-for-placeholder conflation is literally a convention in Ruby:
+A particularly glaring example of this placetaker-for-placeholder conflation happens in Ruby when we name our splat parameters ```*args```.
 
 
 ```ruby
@@ -69,15 +67,13 @@ def clean_plates(*args)
 end
 ```
 
-Here, we literally name our parameter "args."   *Could* these concepts be less practically distinct, I ask you?  
-
-###...And Is Understanding This *All* That Important?
+###Is Understanding This *All* That Important?
 
 Practically, probably not.
 
 If you have a bent for philosophy or linguistics, this is the type of conceptual relationship you might explore further in an introductory course in [semiotics](http://en.wikipedia.org/wiki/Semiotics) or [semantics](http://en.wikipedia.org/wiki/Semantics).  
 
-But my sense is that this distinction is muddled in most higher-level applied programming *by design*.  After all, given the option to hide a conceptual layer from ourselves, most programmers take it without even thinking about it.  
+But my sense is that this distinction is muddled in most higher-level applied programming *by design*.  After all, given the option to hide a conceptual layer from themselves, most programmers take it without even thinking about it.  
 
 
 

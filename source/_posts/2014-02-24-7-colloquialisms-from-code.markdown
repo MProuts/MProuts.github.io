@@ -6,14 +6,14 @@ comments: true
 categories: 
 ---
 
-Beyond specific technical jargon ("loop," "thread," "iteration"), the language of programming languages is rich in strange historical colloquialisms.  Here are 8 you might not know...
+Beyond specific technical jargon ("loop," "thread," "iteration"), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 7 you might not know...
 
 Spaghetti Code: 
 -----
 ***noun*** 1. pejoritave term for code whose flow of execution is muddled, often associated with poor usage of the GOTO keyword. *I was going to give her write access to my repo, but I hear she writes spaghetti code.*
 
 {% img left http://upload.wikimedia.org/wikipedia/commons/9/93/Spaghetti.jpg 300 300 %}
-{% img images/fortran.png 400 400%}
+<img src="{{ root_url }}/images/fortran.png" height="400" width="400"/>
 
 **See also**: 
 [Ravioli Code](http://en.wikipedia.org/wiki/Spaghetti_code#Ravioli_code), 
