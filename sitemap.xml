@@ -14,15 +14,21 @@
     </url>
     <url>
         <loc>http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app/</loc>
-        <lastmod>2014-03-12T10:44:19-04:00</lastmod>
+        <lastmod>2014-03-12T10:49:48-04:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/
+        </loc>
+        <lastmod>2014-03-25T22:06:41-04:00</lastmod>
     </url>
     <url>
         <loc>http://MProuts.github.io/blog/archives/</loc>
-        <lastmod>2014-03-12T10:44:19-04:00</lastmod>
+        <lastmod>2014-03-25T22:06:41-04:00</lastmod>
     </url>
     <url>
         <loc>http://MProuts.github.io/</loc>
-        <lastmod>2014-03-12T10:44:19-04:00</lastmod>
+        <lastmod>2014-03-25T22:06:41-04:00</lastmod>
     </url>
     <url>
         <loc>http://MProuts.github.io/robots.txt</loc>
