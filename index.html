@@ -9,8 +9,8 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="In the context of Rails development, fixtures provide an easy way to create sample data and
-make it available to your tests. Every time Rails &hellip;">
+  <meta name="description" content="It&rsquo;s pretty common to require that a user be logged in to perform certain
+actions around your application. For example, let&rsquo;s say you &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,177 @@ make it available to your tests. Every time Rails &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/06/friendly-forwarding-with-devise/">Friendly Forwarding With Devise</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-06T17:10:43-04:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s pretty common to require that a user be logged in to perform certain
+actions around your application. For example, let&rsquo;s say you wanted to make sure a user
+was
+signed in before being able to see any user&rsquo;s profile. Assuming you&rsquo;re using Devise for
+authentication, your code might look something like this:</p>
+
+<h3>controllers/users_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="n">before_action</span> <span class="ss">:set_user</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:show</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">before_action</span> <span class="ss">:require_login</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:show</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">set_user</span>
+</span><span class='line'>    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">require_login</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">new_user_session_path</span><span class="p">,</span> <span class="ss">:notice</span> <span class="o">=&gt;</span> <span class="s2">&quot;Please sign in.&quot;</span>  <span class="k">unless</span> <span class="n">user_signed_in?</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, our before action, <code>require_login</code>, conditionally redirects to the login page if a request hits the <code>user#show</code> action and no user is signed in.
+Note that we make use of Devise&rsquo;s handy <code>user_signed_in?</code> method to make this happen.</p>
+
+<p>Cool.</p>
+
+<h1>Now what?</h1>
+
+<p>But what will the user see after they log in?  In other words:</p>
+
+<p>If I&hellip;</p>
+
+<p>   1) browse to a restricted page,<br/>
+   2) get redirected to login page,<br/>
+   3) sign in,<br/>
+   4) ???</p>
+
+<p>&hellip;then where do I go next?</p>
+
+<p>Out of the box, Devise redirects to the <code>root_url</code> upon successfully signing in a
+user.  In certain cases, this may make sense from the perspective of the
+user.  However, in the case outlined above, redirecting to the <code>root_url</code> breaks
+the deal our application struck with the user in step 2.</p>
+
+<p>Here are the same four lines in plain English:</p>
+
+<p>1) User: &ldquo;Hey application, show me this thing.&#8221;<br/>
+2) Application: &#8220;Hey user, I will, as long as you log in first.&#8221;<br/>
+3) User: &#8220;Totes, np!&rdquo; &lt;logs in cheerfully> <br/>
+4) Application: &ldquo;Here&rsquo;s the homepage, what can I help you with?&rdquo;</p>
+
+<p>Absurd, I say.  Absurd.</p>
+
+<h1>Forward!</h1>
+
+<p>So we need to make our application less rude by giving it a tiny bit of short-term
+memory, but how can we accomplish this in a stateless protocol like HTTP?</p>
+
+<p>Answer: Sessions.</p>
+
+<p>A session (or &ldquo;user session&rdquo;) is a mechanism for persisting bits of
+user-specific data across multiple HTTP request cycles, giving the illusion that
+an application <em>maintains state</em>, or remembers things about its past interactions with a particular user.</p>
+
+<p>How exactly sessions are implemented is beyond the scope of this post, but for now, we&rsquo;ll content ourselves with the fact
+that we can stick information into a hash-like variable called <code>session</code> in our
+controllers, and then retreive it when handling subsequent requests.</p>
+
+<p>Back to our example.  In order to keep track of which page the user was asking
+for
+when we told them to sign in, we can jot down a reminder for ourselves in the <code>session</code>.</p>
+
+<h3>controllers/users_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="kp">private</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">require_login</span>
+</span><span class='line'>  <span class="k">unless</span> <span class="n">user_signed_in?</span>
+</span><span class='line'>    <span class="n">session</span><span class="o">[</span><span class="ss">:forward_url</span><span class="o">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">fullpath</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">new_user_session_path</span><span class="p">,</span> <span class="ss">:notice</span> <span class="o">=&gt;</span> <span class="s2">&quot;Please sign in.&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That way, instead of trying to remember our entire conversation, (which is, well, impossible),
+we simply check the session for reminders
+everytime we log a user in.</p>
+
+<h3>controllers/application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">after_sign_in_path_for</span> <span class="n">user</span>
+</span><span class='line'>    <span class="n">session</span><span class="o">[</span><span class="ss">:forward_url</span><span class="o">]</span> <span class="p">?</span> <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:forward_url</span><span class="p">)</span> <span class="p">:</span> <span class="k">super</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Devise calls a method aptly name <code>after_sign_in_path_for</code> to determine where to send the client after login.
+This method is implemented internally in Devise, but we can override it by <em>duck
+punching</em> it in our <code>ApplicationController</code>.</p>
+
+<p>Our implentation checks for a reminder in the session, deletes and returns that
+reminder if
+it exists, and otherwise passes the call up the inheritance tree to Devise&rsquo;s
+default <code>after_sign_in_path_for</code> method.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1217,6 +1388,10 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/06/friendly-forwarding-with-devise/">Friendly Forwarding With Devise</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/">Testing With FactoryGirl and Faker</a>
       </li>
     
@@ -1230,10 +1405,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
       <li class="post">
         <a href="/blog/2014/02/09/parameters-vs-arguments/">Parameters vs. Arguments</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/04/manage-your-dotfiles-with-git/">Manage Your Dotfiles With Git</a>
       </li>
     
   </ul>
