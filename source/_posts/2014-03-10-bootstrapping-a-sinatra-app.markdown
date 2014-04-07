@@ -10,7 +10,7 @@ Sinatra is a simple open-source web framework for ruby.  It's similar to Rails,
 but much smaller, weighing in around 1,500 lines of code compared to Rail's
 ~100,000.  
 
-Its stripped-down nature means that out of the box, Sinatra does less *for* you (automatically) than does Rails.  For example, if you tell Sinatra to ```generate``` a ```scaffold``` for you, it will respond politely that it has no idea what the [Sinatra] you're talking about.  What's more, much of the nitty-gritty of configuring you're environment (such as managing your environmental dependencies and database connections) is left up to you, the programmer.  
+Its stripped-down nature means that out of the box, Sinatra does less for you (automatically) than does Rails.  For example, if you tell Sinatra to ```generate``` a ```scaffold``` for you, it will respond politely that it has no idea what the [Sinatra] you're talking about.  What's more, much of the nitty-gritty of configuring you're environment (such as managing your environmental dependencies and database connections) is left up to you, the programmer.  
 
 Thus, working with Sinatra, you pay a higher setup cost upfront (than in Rails), 
 in exchange for a much smaller codebase, and a better understanding of how your
@@ -22,7 +22,7 @@ Ready?  Here goes:
 1) Database/ActiveRecord
 =====================
 
-This example uses sqlite with ActiveRecord.  As mentioned, in Sinatra, you're in charge of establishing and managing your database connection manually.  It’s convention to put this, along with all of your other environmental dependencies in a file called ```environment.rb``` in your project’s ```config/``` directory.
+This example uses Sqlite with ActiveRecord.  As mentioned, in Sinatra, you're in charge of establishing and managing your database connection manually.  It’s convention to put this, along with all of your other environmental dependencies in a file called ```environment.rb``` in your project’s ```config/``` directory.
 ###Gemfile
 ```ruby
 source "https://rubygems.org"
@@ -126,7 +126,7 @@ Pry provides a feature-rich debugging shell.  To use it as our console we simply
 
 3) MVC Structure
 ===============
-Sinatra lets you place your model and controller code side-by-side in a general application file.   (It  will look for views in a top-level ```views/``` directory by default. This may be a good option for you, depending on the size and complexity of your project.  However, if your requirements necessitate breaking your application up into a more Railsy MVC structure, here’s how to do it.  
+Sinatra lets you place your model and controller code side-by-side in a general application file.   (It  will look for views in a top-level ```views/``` directory by default.) This may be a good option for you, depending on the size and complexity of your project.  However, if your requirements necessitate breaking your application up into a more Railsy MVC structure, here’s how to do it.  
 
 
 ----------------------
@@ -214,15 +214,10 @@ RSpec.configure do |config|
   ...
   config.include Rack::Test::Methods
 
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
-  end
+  DatabaseCleaner.strategy = :truncation
 
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
+  config.before(:each) do 
+    DatabaseCleaner.clean
   end
 end
 ```
