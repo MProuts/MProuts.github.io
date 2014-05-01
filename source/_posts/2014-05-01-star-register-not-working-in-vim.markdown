@@ -10,7 +10,7 @@ The star register provides a convenient way to read and write from the system cl
 
 For this to work, you need a version of vim
 compiled with the ```clipboard``` feature included.  You can easily check
-the features included in your version by running:
+the features included in your vim version by running:
 
 ```
 $ vim --version
