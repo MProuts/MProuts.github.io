@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Registers, | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/registers/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-05-01T12:14:08-06:00</updated>
+  <updated>2014-05-01T12:17:26-06:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -22,7 +22,7 @@
 
 <p>For this to work, you need a version of vim
 compiled with the <code>clipboard</code> feature included.  You can easily check
-the features included in your version by running:</p>
+the features included in your vim version by running:</p>
 
 <p><code>
 $ vim --version
