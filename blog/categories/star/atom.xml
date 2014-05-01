@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Star | Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/blog/categories/star/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2014-05-01T12:14:08-06:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Star Register Not Working in Vim?]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/"/>
+    <updated>2014-05-01T11:19:04-06:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim</id>
+    <content type="html"><![CDATA[<p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
+
+<p>For this to work, you need a version of vim
+compiled with the <code>clipboard</code> feature included.  You can easily check
+the features included in your version by running:</p>
+
+<p><code>
+$ vim --version
+...
+-clipboard       +iconv           +path_extra      -toolbar
+...
+</code></p>
+
+<p>If you see <code>+clipboard</code>, you&rsquo;re in good shape.</p>
+
+<p>Elsif you see <code>-clipboard</code>, read on for the fix.</p>
+
+<p>1) Get the latest version of vim.
+<code>
+brew install vim
+</code></p>
+
+<p>2) Check which local version of vim is being used.
+<code>
+which vim
+/usr/bin/vim
+</code></p>
+
+<p>3) If you don&rsquo;t see <code>/usr/local/bin/vim</code>,
+add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
+
+<p>```</p>
+
+<h1>Prefer Homebrew binaries</h1>
+
+<p>export PATH=/usr/local/bin:$PATH
+```</p>
+
+<p>4) Run <code>vim --version</code> again to make sure it worked.<br/>
+<code>
+$ vim --version
+...
++clipboard       +iconv           +path_extra      -toolbar
+...
+</code></p>
+
+<p>Success!</p>
+]]></content>
+  </entry>
+  
+</feed>

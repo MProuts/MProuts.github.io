@@ -9,8 +9,7 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="It&rsquo;s pretty common to require that a user be logged in to perform certain
-actions around your application. For example, let&rsquo;s say you &hellip;">
+  <meta name="description" content="The star register provides a convenient way to read and write from the system clipboard in vim. (For example: "*yy in vim, ctrl-v in another &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +71,97 @@ actions around your application. For example, let&rsquo;s say you &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/05/01/star-register-not-working-in-vim/">Star Register Not Working in Vim?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-01T11:19:04-06:00" pubdate data-updated="true">May 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
+
+<p>For this to work, you need a version of vim
+compiled with the <code>clipboard</code> feature included.  You can easily check
+the features included in your version by running:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version
+</span><span class='line'>...
+</span><span class='line'>-clipboard       +iconv           +path_extra      -toolbar
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you see <code>+clipboard</code>, you&rsquo;re in good shape.</p>
+
+<p>Elsif you see <code>-clipboard</code>, read on for the fix.</p>
+
+<p>1) Get the latest version of vim.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install vim</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2) Check which local version of vim is being used.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>which vim
+</span><span class='line'>/usr/bin/vim</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3) If you don&rsquo;t see <code>/usr/local/bin/vim</code>,
+add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Prefer Homebrew binaries
+</span><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4) Run <code>vim --version</code> again to make sure it worked.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version 
+</span><span class='line'>...
+</span><span class='line'>+clipboard       +iconv           +path_extra      -toolbar
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Success!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/04/06/friendly-forwarding-with-devise/">Friendly Forwarding With Devise</a></h1>
     
     
@@ -88,7 +178,7 @@ actions around your application. For example, let&rsquo;s say you &hellip;">
   
 
 
-<time datetime="2014-04-06T17:10:43-04:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
+<time datetime="2014-04-06T15:10:43-06:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
         
       </p>
     
@@ -259,7 +349,7 @@ default <code>after_sign_in_path_for</code> method.</p>
   
 
 
-<time datetime="2014-03-25T19:57:39-04:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+<time datetime="2014-03-25T17:57:39-06:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
         
       </p>
     
@@ -477,7 +567,7 @@ And, of course, there will always be more.<br/>
   
 
 
-<time datetime="2014-03-10T12:00:09-04:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
+<time datetime="2014-03-10T10:00:09-06:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
         
       </p>
     
@@ -852,7 +942,7 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
   
 
 
-<time datetime="2014-02-24T15:19:09-05:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time>
+<time datetime="2014-02-24T13:19:09-07:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time>
         
       </p>
     
@@ -1121,7 +1211,7 @@ developers for other developers to find.</p>
   
 
 
-<time datetime="2014-02-09T13:20:04-05:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
+<time datetime="2014-02-09T11:20:04-07:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
         
       </p>
     
@@ -1235,7 +1325,7 @@ developers for other developers to find.</p>
   
 
 
-<time datetime="2014-02-04T22:55:48-05:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
+<time datetime="2014-02-04T20:55:48-07:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
         
       </p>
     
@@ -1388,6 +1478,10 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/01/star-register-not-working-in-vim/">Star Register Not Working in Vim?</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/06/friendly-forwarding-with-devise/">Friendly Forwarding With Devise</a>
       </li>
     
@@ -1401,10 +1495,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
       <li class="post">
         <a href="/blog/2014/02/24/7-colloquialisms-from-code/">7 Colloquialisms From Code</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/09/parameters-vs-arguments/">Parameters vs. Arguments</a>
       </li>
     
   </ul>

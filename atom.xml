@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-04-06T21:04:40-04:00</updated>
+  <updated>2014-05-01T12:14:08-06:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -14,9 +14,73 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Star Register Not Working in Vim?]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/"/>
+    <updated>2014-05-01T11:19:04-06:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim</id>
+    <content type="html"><![CDATA[<p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
+
+<p>For this to work, you need a version of vim
+compiled with the <code>clipboard</code> feature included.  You can easily check
+the features included in your version by running:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version
+</span><span class='line'>...
+</span><span class='line'>-clipboard       +iconv           +path_extra      -toolbar
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you see <code>+clipboard</code>, you&rsquo;re in good shape.</p>
+
+<p>Elsif you see <code>-clipboard</code>, read on for the fix.</p>
+
+<p>1) Get the latest version of vim.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install vim</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2) Check which local version of vim is being used.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>which vim
+</span><span class='line'>/usr/bin/vim</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3) If you don&rsquo;t see <code>/usr/local/bin/vim</code>,
+add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Prefer Homebrew binaries
+</span><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4) Run <code>vim --version</code> again to make sure it worked.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version 
+</span><span class='line'>...
+</span><span class='line'>+clipboard       +iconv           +path_extra      -toolbar
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Success!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Friendly Forwarding With Devise]]></title>
     <link href="http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise/"/>
-    <updated>2014-04-06T17:10:43-04:00</updated>
+    <updated>2014-04-06T15:10:43-06:00</updated>
     <id>http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise</id>
     <content type="html"><![CDATA[<p>It&rsquo;s pretty common to require that a user be logged in to perform certain
 actions around your application. For example, let&rsquo;s say you wanted to make sure a user
@@ -160,7 +224,7 @@ default <code>after_sign_in_path_for</code> method.</p>
   <entry>
     <title type="html"><![CDATA[Testing With FactoryGirl and Faker]]></title>
     <link href="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/"/>
-    <updated>2014-03-25T19:57:39-04:00</updated>
+    <updated>2014-03-25T17:57:39-06:00</updated>
     <id>http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker</id>
     <content type="html"><![CDATA[<p>In the context of Rails development, fixtures provide an easy way to create sample data and
 make it available to your tests. Every time Rails generates a model, it
@@ -351,7 +415,7 @@ And, of course, there will always be more.<br/>
   <entry>
     <title type="html"><![CDATA[Bootstrapping a Sinatra App]]></title>
     <link href="http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app/"/>
-    <updated>2014-03-10T12:00:09-04:00</updated>
+    <updated>2014-03-10T10:00:09-06:00</updated>
     <id>http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app</id>
     <content type="html"><![CDATA[<p>Sinatra is a simple open-source web framework for ruby.  It&rsquo;s similar to Rails,
 but much smaller, weighing in around 1,500 lines of code compared to Rail&rsquo;s
@@ -699,7 +763,7 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
   <entry>
     <title type="html"><![CDATA[7 Colloquialisms From Code]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code/"/>
-    <updated>2014-02-24T15:19:09-05:00</updated>
+    <updated>2014-02-24T13:19:09-07:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code</id>
     <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 7 you might not know&hellip;</p>
 
@@ -941,7 +1005,7 @@ developers for other developers to find.</p>
   <entry>
     <title type="html"><![CDATA[Parameters vs. Arguments]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments/"/>
-    <updated>2014-02-09T13:20:04-05:00</updated>
+    <updated>2014-02-09T11:20:04-07:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments</id>
     <content type="html"><![CDATA[<blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
 
@@ -1028,7 +1092,7 @@ developers for other developers to find.</p>
   <entry>
     <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/"/>
-    <updated>2014-02-04T22:55:48-05:00</updated>
+    <updated>2014-02-04T20:55:48-07:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git</id>
     <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
 
