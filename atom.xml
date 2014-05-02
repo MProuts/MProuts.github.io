@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-05-01T12:17:26-06:00</updated>
+  <updated>2014-05-02T16:30:12-06:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -12,6 +12,58 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Psql Cheatsheet]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
+    <updated>2014-05-02T13:48:12-06:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
+    <content type="html"><![CDATA[<p>Django development requires that you know your way around your database
+console.  Here are the basics for PostgreSQL:</p>
+
+<h3>start</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>psql            #Start interactive terminal</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>database</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\list                    #List databases
+</span><span class='line'>\connect &lt;db&gt;            #Switch connection
+</span><span class='line'>
+</span><span class='line'>SELECT 
+</span><span class='line'>current_database();      #Show database connection</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>tables</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\d              #List tables
+</span><span class='line'>\d &lt;table&gt;      #List table columns</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>help</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\?              #List backslash commands
+</span><span class='line'>\help           #List SQL commands</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>quit</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\q              #Quit  </span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Star Register Not Working in Vim?]]></title>
