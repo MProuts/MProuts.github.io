@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-05-02T16:30:12-06:00</updated>
+  <updated>2014-05-05T14:01:08-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -14,9 +14,83 @@
 
   
   <entry>
+    <title type="html"><![CDATA[How to Use Homebrew's Version of Git]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git/"/>
+    <updated>2014-05-04T15:20:02-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git</id>
+    <content type="html"><![CDATA[<p>If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it&rsquo;s important to know which version of a particular package gets run when you type a command at the command line.  For example, when you type <code>git status</code>, are you running OSX&rsquo;s version of git or Homebrew&rsquo;s version?</p>
+
+<h3>OSX Packages</h3>
+
+<p>OSX’s binaries live in <code>/usr/bin</code>.  They are the defaults that either came
+preinstalled in your machine, or were bundled with Xcode.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Homebrew Packages</h3>
+
+<p>Under the covers, Homebrew installs packages or ‘kegs’ in their own directories in <code>/usr/local/Cellar</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/Cellar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For convenience, Homebrew symlinks binaries nested within these directories to <code>/usr/local/bin</code>.  These links are how you access Homebrew binaries.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Which Package?</h3>
+
+<p>Which of these two versions gets run is determined by your PATH variable.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git
+</span><span class='line'>/usr/bin/git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you take a look at your global PATH configuration by running <code>cat etc/paths</code> you&rsquo;ll see that binaries in <code>/usr/bin</code> are
+run before binaries in <code>/usr/local/bin</code> by default.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat etc/paths
+</span><span class='line'>/usr/bin
+</span><span class='line'>/bin
+</span><span class='line'>/usr/sbin
+</span><span class='line'>/sbin
+</span><span class='line'>/usr/local/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can move Homebrew&rsquo;s binaries to the front of the line by adding this
+to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshrc</code>).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voila!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git 
+</span><span class='line'>/usr/local/bin/git</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Psql Cheatsheet]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
-    <updated>2014-05-02T13:48:12-06:00</updated>
+    <updated>2014-05-02T15:48:12-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
     <content type="html"><![CDATA[<p>Django development requires that you know your way around your database
 console.  Here are the basics for PostgreSQL:</p>
@@ -68,7 +142,7 @@ console.  Here are the basics for PostgreSQL:</p>
   <entry>
     <title type="html"><![CDATA[Star Register Not Working in Vim?]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/"/>
-    <updated>2014-05-01T11:19:04-06:00</updated>
+    <updated>2014-05-01T13:19:04-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim</id>
     <content type="html"><![CDATA[<p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
 
@@ -132,7 +206,7 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
   <entry>
     <title type="html"><![CDATA[Friendly Forwarding With Devise]]></title>
     <link href="http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise/"/>
-    <updated>2014-04-06T15:10:43-06:00</updated>
+    <updated>2014-04-06T17:10:43-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise</id>
     <content type="html"><![CDATA[<p>It&rsquo;s pretty common to require that a user be logged in to perform certain
 actions around your application. For example, let&rsquo;s say you wanted to make sure a user
@@ -276,7 +350,7 @@ default <code>after_sign_in_path_for</code> method.</p>
   <entry>
     <title type="html"><![CDATA[Testing With FactoryGirl and Faker]]></title>
     <link href="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/"/>
-    <updated>2014-03-25T17:57:39-06:00</updated>
+    <updated>2014-03-25T19:57:39-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker</id>
     <content type="html"><![CDATA[<p>In the context of Rails development, fixtures provide an easy way to create sample data and
 make it available to your tests. Every time Rails generates a model, it
@@ -467,7 +541,7 @@ And, of course, there will always be more.<br/>
   <entry>
     <title type="html"><![CDATA[Bootstrapping a Sinatra App]]></title>
     <link href="http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app/"/>
-    <updated>2014-03-10T10:00:09-06:00</updated>
+    <updated>2014-03-10T12:00:09-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app</id>
     <content type="html"><![CDATA[<p>Sinatra is a simple open-source web framework for ruby.  It&rsquo;s similar to Rails,
 but much smaller, weighing in around 1,500 lines of code compared to Rail&rsquo;s
@@ -815,7 +889,7 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
   <entry>
     <title type="html"><![CDATA[7 Colloquialisms From Code]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code/"/>
-    <updated>2014-02-24T13:19:09-07:00</updated>
+    <updated>2014-02-24T15:19:09-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code</id>
     <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 7 you might not know&hellip;</p>
 
@@ -1057,7 +1131,7 @@ developers for other developers to find.</p>
   <entry>
     <title type="html"><![CDATA[Parameters vs. Arguments]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments/"/>
-    <updated>2014-02-09T11:20:04-07:00</updated>
+    <updated>2014-02-09T13:20:04-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments</id>
     <content type="html"><![CDATA[<blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
 
@@ -1144,7 +1218,7 @@ developers for other developers to find.</p>
   <entry>
     <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/"/>
-    <updated>2014-02-04T20:55:48-07:00</updated>
+    <updated>2014-02-04T22:55:48-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git</id>
     <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
 

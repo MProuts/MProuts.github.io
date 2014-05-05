@@ -9,9 +9,7 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Django development requires that you know your way around your database
-console. Here are the basics for PostgreSQL: start 1
-psql #Start interactive &hellip;">
+  <meta name="description" content="If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +71,107 @@ psql #Start interactive &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew&#8217;s Version of Git</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-04T15:20:02-04:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it&rsquo;s important to know which version of a particular package gets run when you type a command at the command line.  For example, when you type <code>git status</code>, are you running OSX&rsquo;s version of git or Homebrew&rsquo;s version?</p>
+
+<h3>OSX Packages</h3>
+
+<p>OSX’s binaries live in <code>/usr/bin</code>.  They are the defaults that either came
+preinstalled in your machine, or were bundled with Xcode.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Homebrew Packages</h3>
+
+<p>Under the covers, Homebrew installs packages or ‘kegs’ in their own directories in <code>/usr/local/Cellar</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/Cellar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For convenience, Homebrew symlinks binaries nested within these directories to <code>/usr/local/bin</code>.  These links are how you access Homebrew binaries.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Which Package?</h3>
+
+<p>Which of these two versions gets run is determined by your PATH variable.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git
+</span><span class='line'>/usr/bin/git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you take a look at your global PATH configuration by running <code>cat etc/paths</code> you&rsquo;ll see that binaries in <code>/usr/bin</code> are
+run before binaries in <code>/usr/local/bin</code> by default.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat etc/paths
+</span><span class='line'>/usr/bin
+</span><span class='line'>/bin
+</span><span class='line'>/usr/sbin
+</span><span class='line'>/sbin
+</span><span class='line'>/usr/local/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can move Homebrew&rsquo;s binaries to the front of the line by adding this
+to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshrc</code>).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voila!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git 
+</span><span class='line'>/usr/local/bin/git</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/05/02/psql-cheatsheet/">Psql Cheatsheet</a></h1>
     
     
@@ -89,7 +188,7 @@ psql #Start interactive &hellip;">
   
 
 
-<time datetime="2014-05-02T13:48:12-06:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+<time datetime="2014-05-02T15:48:12-04:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
         
       </p>
     
@@ -168,7 +267,7 @@ console.  Here are the basics for PostgreSQL:</p>
   
 
 
-<time datetime="2014-05-01T11:19:04-06:00" pubdate data-updated="true">May 1<span>st</span>, 2014</time>
+<time datetime="2014-05-01T13:19:04-04:00" pubdate data-updated="true">May 1<span>st</span>, 2014</time>
         
       </p>
     
@@ -259,7 +358,7 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
   
 
 
-<time datetime="2014-04-06T15:10:43-06:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
+<time datetime="2014-04-06T17:10:43-04:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
         
       </p>
     
@@ -430,7 +529,7 @@ default <code>after_sign_in_path_for</code> method.</p>
   
 
 
-<time datetime="2014-03-25T17:57:39-06:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+<time datetime="2014-03-25T19:57:39-04:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
         
       </p>
     
@@ -648,7 +747,7 @@ And, of course, there will always be more.<br/>
   
 
 
-<time datetime="2014-03-10T10:00:09-06:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
+<time datetime="2014-03-10T12:00:09-04:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
         
       </p>
     
@@ -1023,7 +1122,7 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
   
 
 
-<time datetime="2014-02-24T13:19:09-07:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time>
+<time datetime="2014-02-24T15:19:09-05:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time>
         
       </p>
     
@@ -1292,7 +1391,7 @@ developers for other developers to find.</p>
   
 
 
-<time datetime="2014-02-09T11:20:04-07:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
+<time datetime="2014-02-09T13:20:04-05:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
         
       </p>
     
@@ -1406,7 +1505,7 @@ developers for other developers to find.</p>
   
 
 
-<time datetime="2014-02-04T20:55:48-07:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
+<time datetime="2014-02-04T22:55:48-05:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
         
       </p>
     
@@ -1559,6 +1658,10 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew&#8217;s Version of Git</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/02/psql-cheatsheet/">Psql Cheatsheet</a>
       </li>
     
@@ -1572,10 +1675,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
       <li class="post">
         <a href="/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/">Testing With FactoryGirl and Faker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/10/bootstrapping-a-sinatra-app/">Bootstrapping a Sinatra App</a>
       </li>
     
   </ul>
