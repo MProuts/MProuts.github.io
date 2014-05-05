@@ -25,7 +25,7 @@ Under the covers, Homebrew installs packages or ‘kegs’ in their own director
 $ ls /usr/local/Cellar
 ```
 
-For convenience, Homebrew symlinks binaries nested within these directories to ```/usr/local/bin```.  These links are how you access Homebrew binaries.
+For convenience, Homebrew symlinks binaries nested within these directories to ```/usr/local/bin```.  These links are how you access and run Homebrew binaries.
 
 ```
 $ ls /usr/local/bin
