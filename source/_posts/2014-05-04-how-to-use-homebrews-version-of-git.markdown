@@ -6,7 +6,9 @@ comments: true
 categories: 
 ---
 
-If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it's important to know which version of a particular package gets run when you type a command at the command line.  For example, when you type ```git status```, are you running OSX's version of git or Homebrew's version?
+If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it's important to know which version of a particular package gets run when you type a command at the command line.  For example, when you type ```git status```, are you running OSX's version of git or Homebrew's version? 
+
+Here's the scoop:
 
 ###OSX Packages
 
