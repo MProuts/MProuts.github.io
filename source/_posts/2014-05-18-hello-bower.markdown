@@ -42,4 +42,4 @@ $ bower list
 ```
 
 Use this command to list all packages installed on a given project.  Again, the list of
-installed packages will vary on a project-to-project basis.
+installed packages will vary on a project-by-project basis.
