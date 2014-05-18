@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-05-18T11:35:26-04:00</updated>
+  <updated>2014-05-18T11:36:45-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -20,7 +20,7 @@
     <id>http://MProuts.github.io/blog/2014/05/18/hello-bower</id>
     <content type="html"><![CDATA[<p>Bower is a simple package manager for front-end assets like CSS and
 Javascript. It provides an elegant solution for including third-party assets and libraries (e.g.
-Bootstrap, jQuery) in different projects on your machine.  Here&rsquo;s how it
+Bootstrap, jQuery) into different projects on your machine.  Here&rsquo;s how it
 works:</p>
 
 <h3>Get Bower</h3>
