@@ -8,7 +8,7 @@ categories:
 
 Bower is a simple package manager for front-end assets like CSS and
 Javascript. It provides an elegant solution for including third-party assets and libraries (e.g.
-Bootstrap, jQuery) in different projects on your machine.  Here's how it
+Bootstrap, jQuery) into different projects on your machine.  Here's how it
 works:
 
 ###Get Bower
