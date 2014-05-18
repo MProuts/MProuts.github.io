@@ -9,7 +9,8 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it& &hellip;">
+  <meta name="description" content="Bower is a simple package manager for front-end assets like CSS and
+Javascript. It provides an elegant solution for including third-party assets and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +78,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/18/hello-bower/">Hello, Bower</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-18T11:05:16-04:00" pubdate data-updated="true">May 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Bower is a simple package manager for front-end assets like CSS and
+Javascript. It provides an elegant solution for including third-party assets and libraries (e.g.
+Bootstrap, jQuery) in different projects on your machine.  Here&rsquo;s how it
+works:</p>
+
+<h3>Get Bower</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ npm install -g bower</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Install a Package</h3>
+
+<p>Bower installs packages on a project-by-project basis.  Make sure
+you&rsquo;re inside of the project directory where you want a package installed first,
+then run:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bower install &lt;package&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This command creates a directory inside your project called <code>bower-components/</code>
+containing the package you&rsquo;ve installed, as well as any dependencies.</p>
+
+<h3>Use a Package</h3>
+
+<p>To use a Bower package, simply reference the appropriate files in <code>bower-components/</code> manually.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script src="/bower_components/jquery/jquery.js"&gt;&lt;/script&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>List Packages</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bower list</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Use this command to list all packages installed on a given project.  Again, the list of
+installed packages will vary on a project-to-project basis.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1672,6 +1748,10 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/18/hello-bower/">Hello, Bower</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew&#8217;s Version of Git</a>
       </li>
     
@@ -1685,10 +1765,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
       <li class="post">
         <a href="/blog/2014/04/06/friendly-forwarding-with-devise/">Friendly Forwarding With Devise</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/">Testing With FactoryGirl and Faker</a>
       </li>
     
   </ul>
