@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-06-01T20:52:09-04:00</updated>
+  <updated>2014-06-01T20:54:31-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -189,7 +189,7 @@ we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>As configured above, <code>rack-cors</code> will intercept the preflight OPTIONS request from jQuery and grant DELETE access to <code>localhost:8000</code>.</p>
+<p>As configured above, <code>rack-cors</code> will intercept the preflight <code>OPTIONS</code> request from jQuery and grant <code>DELETE</code> access to <code>localhost:8000</code>.</p>
 
 <p>And there you have it.  :)</p>
 ]]></content>
