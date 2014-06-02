@@ -111,7 +111,7 @@ the one described above. When an Angular app and the API it consumes are
 hosted on separate domains, data access is complicated by a security restriction implemented by most browsers called the <code>same-origin policy</code>.  Under the <code>same-origin policy</code>, client-side scripts running in one domain are prevented from obtaining data retrieved from another domain.</p>
 
 <p>Luckily, most browsers also provide a mechanism for getting
-around this restriction called Cross-Origin Resource Sharing, or CORS.  Here&rsquo;s
+around this restriction called <code>cross-origin resource sharing</code>, or <code>CORS</code>.  Here&rsquo;s
 what you need to know to get it working with jQuery and Rails.</p>
 
 <h1>GET</h1>
@@ -188,7 +188,7 @@ in our application controller as follows.</p>
 <h1>DELETE</h1>
 
 <p> <code>GET</code> and <code>POST</code> are considered <em>simple requests</em> under the
- CORS standard, meaning that providing the access control headers is
+ <code>CORS</code> standard, meaning that providing the access control headers is
  sufficient for cross-domain requests.</p>
 
 <p>But what about <code>DELETE</code>?</p>
@@ -223,7 +223,7 @@ ActionController::RoutingError (No route matches [OPTIONS] "/pokemon/11/comments
 
 <h1>Preflighted Requests</h1>
 
-<p>Under CORS, requests using methods other than <code>GET</code> or <code>POST</code> need to be <em>preflighted</em>.  Essentially, before the
+<p>Under <code>CORS</code>, requests using methods other than <code>GET</code> or <code>POST</code> need to be <em>preflighted</em>.  Essentially, before the
 actual request can take place, the client sends a preliminary
  <code>OPTIONS</code> request with an <code>access-control-request-method</code>
 header, asking permission to use a particular HTTP method with a given URL.  In our case, we
