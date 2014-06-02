@@ -134,6 +134,6 @@ config.middleware.use Rack::Cors do
 end
 ```
 
-As configured above, ```rack-cors``` will intercept the preflight OPTIONS request from jQuery and grant DELETE access to ```localhost:8000```.
+As configured above, ```rack-cors``` will intercept the preflight ```OPTIONS``` request from jQuery and grant ```DELETE``` access to ```localhost:8000```.
 
 And there you have it.  :)
