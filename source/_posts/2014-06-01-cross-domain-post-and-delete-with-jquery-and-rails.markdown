@@ -9,23 +9,18 @@ categories:
 Most modern web APIs provide programatic access to an application's internals by exposing RESTful JSON endpoints.  For example, a ```POST``` to ```/pokemon.json``` with a lump of properly-formatted JSON might create a new pokemon resource on the application server.  
 
 Javascript frameworks like Angular were designed to
-sit on top of APIs, accessing data programatically from endpoints like
-the one above. However, this process is less straightforward than it
-might be because of a restriction that most browsers implement
-called the ```same-origin policy```, whereby scripts using ```XMLHttpRequest``` aren't allowed to access/manipulate resources across domains.
-
-This means, essentially, that unless your frontend Angular application is hosted on the same
-domain as the API it consumes, you will run into issues when trying to
-access data.  
+sit on top of APIs, accessing data through endpoints like
+the one described above. When an Angular app and the API it consumes are
+hosted on separate domains, data access is complicated by a security restriction implemented by most browsers called the ```same-origin policy```.  Under the ```same-origin policy```, client-side scripts running in one domain are prevented from obtaining data retrieved from another domain.
 
 Luckily, most browsers also provide a mechanism for getting
-around this restriction called Cross-Domain Resource Sharing or CORS.  Here's
+around this restriction called Cross-Origin Resource Sharing, or CORS.  Here's
 what you need to know to get it working with jQuery and Rails.
 
 #GET
-Let's say that in development, you have your Angular app up [on port 8000](#)
-and your Rails API up on port 3000. When your Angular app loads, it will probably need to reqeust some data
-from the server...
+Let's say that you have your Angular app running in development on port 8000,
+and your Rails API running on port 3000. When your Angular app loads, it will probably need to request some data
+from the server.
 
 ###app.js
 ```js
@@ -36,17 +31,16 @@ $http
     pokedex.pokemons = data;
 });
 ```
-...but then...
+
+But this produces an error.
 
 {% img /images/cors_get_request.png %}
 
-Under the same origin policy, the browser will block cross-domain
-XMLHttpRequests unless the server's response includes a ```access-control-allow-origin``` header that matches the
-script's request's ```origin``` header (i.e. the script's domain).
+Under the ```same-origin policy```, the browser will block cross-domain ```XMLHttpRequests``` unless the server's response to such requests includes an ```access-control-allow-origin``` header that matches the
+requesting script's ```origin``` (In our case, ```http://localhost:8000```).
 
-In Rails, we can simply add this header to all responses (since we
-want to give the script access to the entire API) in our
-application controller as follows.
+In Rails, we can simply add this header to all responses
+in our application controller as follows.
 
 ###application_controller.rb
 ```ruby
@@ -54,7 +48,6 @@ before_filter :set_access_control_headers
 
 def set_access_control_headers
   headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
-  headers['Access-Control-Request-Method'] = '*'
 end
 ```
 
@@ -75,11 +68,11 @@ $.ajax({
 ```
 #DELETE
 
- ```GET``` and ```POST``` are considered 'simple requests' under the
+ ```GET``` and ```POST``` are considered *simple requests* under the
  CORS standard, meaning that providing the access control headers is
- all we have to do.
+ sufficient for cross-domain requests.
 
-What about ```DELETE```?
+But what about ```DELETE```?
 
 ###app.js
 
@@ -103,27 +96,26 @@ $.ajax({
     ActionController::RoutingError (No route matches [OPTIONS] "/pokemon/11/comments/119"):
 
 #Preflighted Requests
-Requests that use methods other than ```GET``` or ```POST```, or that
-use custom headers, need to be 'preflighted'.  Essentially, before the
-actual request can take place, the client sends a preflight
+Under CORS, requests using methods other than ```GET``` or ```POST``` need to be *preflighted*.  Essentially, before the
+actual request can take place, the client sends a preliminary
  ```OPTIONS``` request with an ```access-control-request-method```
-header, asking permission to use a particular method.  In our case, we
-want to ```DELETE```.  jQuery is smart enough to initiate the preflight
-request for us.
+header, asking permission to use a particular HTTP method with a given URL.  In our case, we
+want to use ```DELETE``` at ```/pokemon/11/comments/119```.  jQuery is smart enough to initiate the preflight
+request for us...
 
     OPTIONS /pokemon/11/comments/119
     Origin: http://localhost:8000
     Access-Control-Request-Method: DELETE
 
-If the server responds with
+...so if the server responds with...
 
     Access-Control-Allow-Origin: http://localhost:8000
     Access-Control-Allow-Methods: DELETE
 
-...then the browser allows the original request go through.
+...then the browser will allow the original request to go through.
 
-Rather than roll our own CORS routes and logic for handling preflighted OPTIONS requests and headers,
-we can simply add the ```rack-cors``` gem.
+Rather than roll our own system for handling this exchange,
+we can simply add the ```rack-cors``` gem to our gemfile.
 
 ###Gemfile
 ```ruby
@@ -142,7 +134,6 @@ config.middleware.use Rack::Cors do
 end
 ```
 
-This will intercept and handle the OPTIONS request and grant DELETE
-access to ```localhost:8000```.
+As configured above, ```rack-cors``` will intercept the preflight OPTIONS request from jQuery and grant DELETE access to ```localhost:8000```.
 
-And there you have it.
+And there you have it.  :)
