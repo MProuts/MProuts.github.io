@@ -14,7 +14,7 @@ the one described above. When an Angular app and the API it consumes are
 hosted on separate domains, data access is complicated by a security restriction implemented by most browsers called the ```same-origin policy```.  Under the ```same-origin policy```, client-side scripts running in one domain are prevented from obtaining data retrieved from another domain.
 
 Luckily, most browsers also provide a mechanism for getting
-around this restriction called Cross-Origin Resource Sharing, or CORS.  Here's
+around this restriction called ```cross-origin resource sharing```, or ```CORS```.  Here's
 what you need to know to get it working with jQuery and Rails.
 
 #GET
@@ -69,7 +69,7 @@ $.ajax({
 #DELETE
 
  ```GET``` and ```POST``` are considered *simple requests* under the
- CORS standard, meaning that providing the access control headers is
+ ```CORS``` standard, meaning that providing the access control headers is
  sufficient for cross-domain requests.
 
 But what about ```DELETE```?
@@ -96,7 +96,7 @@ $.ajax({
     ActionController::RoutingError (No route matches [OPTIONS] "/pokemon/11/comments/119"):
 
 #Preflighted Requests
-Under CORS, requests using methods other than ```GET``` or ```POST``` need to be *preflighted*.  Essentially, before the
+Under ```CORS```, requests using methods other than ```GET``` or ```POST``` need to be *preflighted*.  Essentially, before the
 actual request can take place, the client sends a preliminary
  ```OPTIONS``` request with an ```access-control-request-method```
 header, asking permission to use a particular HTTP method with a given URL.  In our case, we
