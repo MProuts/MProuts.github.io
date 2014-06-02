@@ -43,12 +43,18 @@
         <lastmod>2014-05-18T11:38:04-04:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/
+        </loc>
+        <lastmod>2014-06-01T20:42:27-04:00</lastmod>
+    </url>
+    <url>
         <loc>http://MProuts.github.io/blog/archives/</loc>
-        <lastmod>2014-05-18T11:38:04-04:00</lastmod>
+        <lastmod>2014-06-01T20:42:27-04:00</lastmod>
     </url>
     <url>
         <loc>http://MProuts.github.io/</loc>
-        <lastmod>2014-05-18T11:38:04-04:00</lastmod>
+        <lastmod>2014-06-01T20:42:27-04:00</lastmod>
     </url>
     <url>
         <loc>http://MProuts.github.io/robots.txt</loc>
