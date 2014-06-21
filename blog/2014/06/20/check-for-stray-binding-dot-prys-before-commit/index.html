@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Check for Stray Pry Calls Before Commit - Full Stack Snacks</title>
+  <meta name="author" content="Michael Prouty">
+
+  
+  <meta name="description" content="Tired of accidentally checking binding.pry calls in to source? Here&rsquo;s a
+script that will take care of checking for them on your behalf. Place &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Full Stack Snacks" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-50683410-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Full Stack Snacks</a></h1>
+  
+    <h2>One byte at a time.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:MProuts.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Check for Stray Pry Calls Before Commit</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-20T22:59:36-04:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Tired of accidentally checking <code>binding.pry</code> calls in to source?  Here&rsquo;s a
+script that will take care of checking for them on your behalf.  Place
+this in your project&rsquo;s <code>.git/hooks</code> directory in a file called <code>pre-commit</code>.</p>
+
+<h3>.git/hooks/pre-commit</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'>git diff --cached --name-only | <span class="se">\</span>
+</span><span class='line'>    <span class="nv">GREP_COLOR</span><span class="o">=</span><span class="s1">&#39;4;5;37;41&#39;</span> xargs grep --color --with-filename -n pry <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span><span class='line'>    <span class="nb">echo</span> <span class="s1">&#39;COMMIT REJECTED&#39;</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>Note</em>: Don&rsquo;t forget to <code>chmod pre-commit u+x</code> to make this file
+executable.</p>
+
+<p>Let&rsquo;s step through this line by line.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>First, we use a shebang directive
+to specify the interpreter that will be used to run the code in this file.  Since
+we&rsquo;re writing a shell script we specify <code>/bin/sh</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git diff --cached --name-only | <span class="se">\</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> <code>git diff</code> shows us any differences between the code in working directory
+and our previous commit.  We pass it the <code>--cached</code> flag to show
+changes to files that have already been staged.  The <code>--name-only</code> flag will
+print just the names of files that have been changed, rather than the
+actual changed contents of those files.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">GREP_COLOR</span><span class="o">=</span><span class="s1">&#39;4;5;37;41&#39;</span> xargs grep --color --with-filename -n pry <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> <code>GREP_COLOR</code> is an environment variable that determines the colors
+ <code>grep</code> uses to highlight matches when the <code>--color</code> flag is given.  We
+use <code>xargs</code> to feed the individual file names that resulted from the previous line to <code>grep pry</code>.  The <code>--with-filename</code> and <code>-n</code> flags add the
+file name and line number to the results, respectively.   We use the
+logical operator <code>&amp;&amp;</code> to execute the next line of code only if the
+current line runs successfully.  (I.e. If <code>grep</code> doesn&rsquo;t find any
+occurances of &lsquo;pry&rsquo;, the chain stops here.)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s1">&#39;COMMIT REJECTED&#39;</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span><span class='line'><span class="nb">exit </span>1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If grep does find a &lsquo;pry&rsquo; anywhere in our staged changes, we print an error message and exit with a status
+of <code>1</code> for &lsquo;error&rsquo;, which tells <code>git</code> to terminate the commit.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Otherwise, we exit with a status of <code>0</code> for &lsquo;successful&rsquo;, which tells <code>git</code> to go ahead with the commit.</p>
+
+<h3>Make This Hook Global</h3>
+
+<p>To make this hook global, run the following command and copy the script
+into <code>~/.git_template/hooks</code>.  Thereafter, every time you call git init, it will be included in your project&rsquo;s <code>.git/hooks</code> directory.</p>
+
+<pre><code>$ git config --global init.templatedir '~/.git_template'
+
+$ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
+</code></pre>
+
+<p>And there you have it.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Michael Prouty</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-20T22:59:36-04:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/git/'>git</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/" title="Previous Post: Cross-Domain Requests With Angular & Rails">&laquo; Cross-Domain Requests With Angular & Rails</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+<section>
+	<span>
+		<img style="float:left" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+    <span style="float:left;margin-left: 5px">
+      <p style="margin:0px;font-weight:bold;">Michael Prouty</p>
+      <p style="margin:0px;">Student</p>
+      <p><a href="http://flatironschool.com/index.html" target="_blank">Flatiron School</a></p>
+    </span>
+    <span style="display:block;clear:both;visibility:hidden;">.
+    </span>
+	</span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/">Check for Stray Pry Calls Before Commit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">Cross-Domain Requests With Angular & Rails</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/18/hello-bower/">Hello, Bower</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew's Version of Git</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/02/psql-cheatsheet/">Psql Cheatsheet</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Michael Prouty -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
