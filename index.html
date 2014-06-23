@@ -9,7 +9,7 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Tired of accidentally checking binding.pry calls in to source? Here&rsquo;s a
+  <meta name="description" content="Tired of accidentally checking binding.pry calls into source? Here&rsquo;s a
 script that will take care of checking for them on your behalf. Place &hellip;">
   
 
@@ -107,7 +107,7 @@ script that will take care of checking for them on your behalf. Place &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>Tired of accidentally checking <code>binding.pry</code> calls in to source?  Here&rsquo;s a
+  <div class="entry-content"><p>Tired of accidentally checking <code>binding.pry</code> calls into source?  Here&rsquo;s a
 script that will take care of checking for them on your behalf.  Place
 this in your project&rsquo;s <code>.git/hooks</code> directory in a file called <code>pre-commit</code>.</p>
 
@@ -133,7 +133,7 @@ this in your project&rsquo;s <code>.git/hooks</code> directory in a file called 
 <p><em>Note</em>: Don&rsquo;t forget to <code>chmod pre-commit u+x</code> to make this file
 executable.</p>
 
-<p>Let&rsquo;s step through this line by line.</p>
+<p>Let&rsquo;s step through this script line by line.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
@@ -188,7 +188,7 @@ of <code>1</code> for &lsquo;error&rsquo;, which tells <code>git</code> to termi
 <h3>Make This Hook Global</h3>
 
 <p>To make this hook global, run the following command and copy the script
-into <code>~/.git_template/hooks</code>.  Thereafter, every time you call git init, it will be included in your project&rsquo;s <code>.git/hooks</code> directory.</p>
+into <code>~/.git_template/hooks</code>.  Thereafter, every time you call <code>git init</code>, it will be included in your project&rsquo;s <code>.git/hooks</code> directory.</p>
 
 <pre><code>$ git config --global init.templatedir '~/.git_template'
 

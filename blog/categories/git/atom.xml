@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Git | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-06-23T11:21:49-04:00</updated>
+  <updated>2014-06-23T12:19:39-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -18,7 +18,7 @@
     <link href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/"/>
     <updated>2014-06-20T22:59:36-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit</id>
-    <content type="html"><![CDATA[<p>Tired of accidentally checking <code>binding.pry</code> calls in to source?  Here&rsquo;s a
+    <content type="html"><![CDATA[<p>Tired of accidentally checking <code>binding.pry</code> calls into source?  Here&rsquo;s a
 script that will take care of checking for them on your behalf.  Place
 this in your project&rsquo;s <code>.git/hooks</code> directory in a file called <code>pre-commit</code>.</p>
 
@@ -40,7 +40,7 @@ exit 1
 *Note*: Don't forget to</code>chmod pre-commit u+x``` to make this file
 executable.</p>
 
-<p>Let&rsquo;s step through this line by line.</p>
+<p>Let&rsquo;s step through this script line by line.</p>
 
 <p>```sh</p>
 
@@ -89,7 +89,7 @@ Otherwise, we exit with a status of <code>0</code> for &lsquo;successful&rsquo;,
 <h3>Make This Hook Global</h3>
 
 <p>To make this hook global, run the following command and copy the script
-into <code>~/.git_template/hooks</code>.  Thereafter, every time you call git init, it will be included in your project&rsquo;s <code>.git/hooks</code> directory.</p>
+into <code>~/.git_template/hooks</code>.  Thereafter, every time you call <code>git init</code>, it will be included in your project&rsquo;s <code>.git/hooks</code> directory.</p>
 
 <pre><code>$ git config --global init.templatedir '~/.git_template'
 
