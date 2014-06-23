@@ -6,7 +6,7 @@ comments: true
 categories: git
 ---
 
-Tired of accidentally checking ```binding.pry``` calls in to source?  Here's a
+Tired of accidentally checking ```binding.pry``` calls into source?  Here's a
 script that will take care of checking for them on your behalf.  Place
 this in your project's ```.git/hooks``` directory in a file called ```pre-commit```.
 
@@ -25,7 +25,7 @@ exit 0
 *Note*: Don't forget to ```chmod pre-commit u+x``` to make this file
 executable.
 
-Let's step through this line by line. 
+Let's step through this script line by line.
 
 ```sh
 #!/bin/sh
@@ -72,7 +72,7 @@ Otherwise, we exit with a status of ```0``` for 'successful', which tells ```git
 ### Make This Hook Global
 
 To make this hook global, run the following command and copy the script
-into ```~/.git_template/hooks```.  Thereafter, every time you call git init, it will be included in your project's ```.git/hooks``` directory.
+into ```~/.git_template/hooks```.  Thereafter, every time you call ```git init```, it will be included in your project's ```.git/hooks``` directory.
 
     $ git config --global init.templatedir '~/.git_template'
 
