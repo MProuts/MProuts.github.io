@@ -9,7 +9,7 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo; -Confucius Why are two concepts so basic to everything we do with &hellip;">
+  <meta name="description" content="Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,275 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/24/7-colloquialisms-from-code/">7 Colloquialisms From Code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-24T15:19:09-05:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 7 you might not know&hellip;</p>
+
+<h2>Spaghetti Code: </h2>
+
+<p><strong><em>noun</em></strong> 1. pejoritave term for code whose flow of execution is muddled, often associated with poor usage of the GOTO keyword. <em>I was going to give her write access to my repo, but I hear she writes spaghetti code.</em></p>
+
+<p><img class="left" src="http://upload.wikimedia.org/wikipedia/commons/9/93/Spaghetti.jpg" width="300" height="300">
+<img src="/images/fortran.png" height="400" width="400"/></p>
+
+<p><strong>See also</strong>:
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Ravioli_code">Ravioli Code</a>,
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Lasagna_code">Lasagna Code</a>,
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Spaghetti_with_meatballs">Spaghetti With Meatballs Code</a>,
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Macaroni_code">Macaroni Code</a></p>
+
+<h2>Syntactic Sugar:</h2>
+
+<p><strong><em>noun</em></strong>
+1. optional syntax in a programming language that makes code more readable,
+   consice or otherwise sweeter for the humans that interact with it. <em>I take my
+   [syntactic] sugar with coffee and cream.</em></p>
+
+<p><img class="left" src="http://www.usafutures.com/sugar_trading_broker.jpg" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Salty</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">keep_parantheses</span><span class="p">(</span><span class="n">on</span><span class="p">);</span> <span class="k">end</span>
+</span><span class='line'><span class="o">[].</span><span class="n">&lt;</span><span class="o">&lt;</span><span class="p">(</span><span class="s2">&quot;Something&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="mi">4</span><span class="o">.</span><span class="n">+</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span><span class='line'><span class="mi">4</span><span class="o">.</span><span class="n">%</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Sweet</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">leave_parentheses</span> <span class="n">off</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="o">[]</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;Something Else&quot;</span>
+</span><span class='line'><span class="mi">4</span> <span class="o">+</span> <span class="mi">4</span>
+</span><span class='line'><span class="mi">4</span> <span class="o">%</span> <span class="mi">4</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Duck Typing</h2>
+
+<p><strong><em>noun</em></strong>
+1. A style of dynamic typing where an object&rsquo;s type is defined by what it can do
+   rather than what it <em>is</em> (i.e. its class).</p>
+
+<p><strong>etymology:</strong>
+From the popular saying, &ldquo;If it looks like a duck and quacks like a duck, it must
+be a duck.&rdquo;</p>
+
+<p><img class="left" src="http://www.stanford.edu/dept/CTL/cgi-bin/academicskillscoaching/wp-content/uploads/2012/07/baby-duck.jpg" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Duck</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;quack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Dog</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;woofquack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">ducks</span> <span class="o">=</span> <span class="o">[</span><span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Dog</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+</span><span class='line'><span class="n">ducks</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">duck</span><span class="o">|</span> <span class="n">duck</span><span class="o">.</span><span class="n">quack</span> <span class="p">}</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;quack!&quot;, &quot;woofquack!&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Duck Punching</h2>
+
+<p><strong><em>noun</em></strong>
+1. Modifying code at runtime (e.g. overriding methods, attributes) without
+   changing the underlying source code.</p>
+
+<p><strong>etymology:</strong>
+From the popular saying, &ldquo;If it looks like a duck, but barks like a dog at runtime, you
+must have punched it.&rdquo; ;)</p>
+
+<p><img class="left" src="http://www.justindlevine.com/wp-content/uploads/2013/11/duck-1.jpg" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Duck</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;quack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># later, at runtime...</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Duck</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;woof, ouch!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">quack</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;woof, ouch!&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Twiddle-Wakka</h2>
+
+<p><strong>noun</strong>
+1. Mysterious squiggle-carrot operator (also known as the pessimistic operator) used to
+specify versions in ruby Gemfiles.
+<em>I see your twiddle-wakka, and raise you a scope resolution operator.</em></p>
+
+<p><img class="left" src="/images/twiddle.png" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;rails&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;pry&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#...</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#Highest version &gt;= 3.2.1 and &lt; 3.3.0</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;sapphire&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 3.2.1&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#Highest version &gt;= 2.1 and &lt; 2.2</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;diamond&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 2.1&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Shaving A Yak</h2>
+
+<p><strong><em>gerandial noun</em></strong>
+1. The state of being engaged in an activity that is remotely related to the original
+task at hand, often after a long chain of troubleshooting digressions. <em>I intended to shave a yak, but pretty soon, I was filing my taxes.</em></p>
+
+<p><img class="left" src="http://a-z-animals.com/media/animals/images/original/yak9.jpg" width="320" height="320"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">make_dinner</span>
+</span><span class='line'>  <span class="n">buy_ingredients</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">buy_ingrediens</span>
+</span><span class='line'>  <span class="n">earn_money</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">earn_money</span>
+</span><span class='line'>  <span class="n">shave_yak</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">shave_yak</span>
+</span><span class='line'>  <span class="k">raise</span> <span class="s2">&quot;Gross, what am I even doing?&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Easter Egg</h2>
+
+<p><strong>noun</strong>
+1. Inside jokes and other funny superfluous tidbits intentionally left in source code by
+developers for other developers to find.</p>
+
+<p><img class="left" src="/images/easter-egg.png" width="285" height="285"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="n">hidden_treasure</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span>
+</span><span class='line'>    <span class="no">ALL</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+</span><span class='line'><span class="c1">#      .-&quot;-.</span>
+</span><span class='line'><span class="c1">#    .&#39;=^=^=&#39;.</span>
+</span><span class='line'><span class="c1">#   /=^=^=^=^=\</span>
+</span><span class='line'><span class="c1">#  :^= HAPPY =^;      Can you spot the Easter egg</span>
+</span><span class='line'><span class="c1">#  |^ EASTER! ^|       in this source code?</span>
+</span><span class='line'><span class="c1">#  :^=^=^=^=^=^:  </span>
+</span><span class='line'><span class="c1">#   \=^=^=^=^=/</span>
+</span><span class='line'><span class="c1">#    `.=^=^=.&#39;</span>
+</span><span class='line'><span class="c1">#      `~~~`</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -369,6 +638,10 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/15/understanding-ip-addressess/">Addressing IP</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/">Check for Stray Pry Calls Before Commit</a>
       </li>
     
@@ -382,10 +655,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
       <li class="post">
         <a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew&#8217;s Version of Git</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/02/psql-cheatsheet/">Psql Cheatsheet</a>
       </li>
     
   </ul>
