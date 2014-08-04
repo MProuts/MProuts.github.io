@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Private | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/private/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-08-03T20:05:58-04:00</updated>
+  <updated>2014-08-03T20:19:00-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Addressing IP]]></title>
-    <link href="http://MProuts.github.io/blog/2014/07/15/understanding-ip-addressess/"/>
+    <link href="http://MProuts.github.io/blog/2014/07/15/addressing-ip/"/>
     <updated>2014-07-15T11:44:20-04:00</updated>
-    <id>http://MProuts.github.io/blog/2014/07/15/understanding-ip-addressess</id>
+    <id>http://MProuts.github.io/blog/2014/07/15/addressing-ip</id>
     <content type="html"><![CDATA[<h3>The Basics</h3>
 
 <p>TCP/IP (or Transmission Control Protocol/Internet Protocol) is the most ubiquetous inter-network protocol in use today.  Computers use
