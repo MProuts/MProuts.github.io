@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-07-22T00:34:09-04:00</updated>
+  <updated>2014-08-03T20:05:58-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -125,7 +125,7 @@ every device connected to your LAN.</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Check for Stray Pry Calls Before Commit]]></title>
+    <title type="html"><![CDATA[check for stray pry calls before commit]]></title>
     <link href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/"/>
     <updated>2014-06-20T22:59:36-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit</id>
@@ -404,7 +404,7 @@ we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Hello, Bower]]></title>
+    <title type="html"><![CDATA[hello, bower]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/18/hello-bower/"/>
     <updated>2014-05-18T11:05:16-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/18/hello-bower</id>
@@ -452,7 +452,7 @@ installed packages will vary on a project-by-project basis.</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to Use Homebrew's Version of Git]]></title>
+    <title type="html"><![CDATA[How To Use Homebrew's Version of Git]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git/"/>
     <updated>2014-05-04T15:20:02-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git</id>
@@ -528,7 +528,7 @@ to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshr
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Psql Cheatsheet]]></title>
+    <title type="html"><![CDATA[psql cheatsheet]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
     <updated>2014-05-02T15:48:12-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
@@ -580,7 +580,7 @@ console.  Here are the basics for PostgreSQL:</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Star Register Not Working in Vim?]]></title>
+    <title type="html"><![CDATA[Star Register Not Working In Vim?]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/"/>
     <updated>2014-05-01T13:19:04-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim</id>
@@ -644,7 +644,7 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Friendly Forwarding With Devise]]></title>
+    <title type="html"><![CDATA[friendly forwarding with devise]]></title>
     <link href="http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise/"/>
     <updated>2014-04-06T17:10:43-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise</id>
@@ -788,7 +788,7 @@ default <code>after_sign_in_path_for</code> method.</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Testing With FactoryGirl and Faker]]></title>
+    <title type="html"><![CDATA[Testing with FactoryGirl and Faker]]></title>
     <link href="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/"/>
     <updated>2014-03-25T19:57:39-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker</id>
