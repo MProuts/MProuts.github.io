@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Star Register Not Working In Vim? - Full Stack Snacks</title>
+  <title>add ANSI colors to your motd (with vim!) - Full Stack Snacks</title>
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="The star register provides a convenient way to read and write from the system clipboard in vim. (For example: "*yy in vim, ctrl-v in another &hellip;">
+  <meta name="description" content="I got stumped recently trying to figure out how one of my
+co-workers had made his computer&rsquo;s message of the day so colorful and awesome. I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/">
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/08/03/add-ansi-colors-to-your-motd-with-vim/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">Star Register Not Working in Vim?</h1>
+      <h1 class="entry-title">Add ANSI Colors to Your Motd (With Vim!)</h1>
     
     
       <p class="meta">
@@ -95,69 +96,68 @@
   
 
 
-<time datetime="2014-05-01T13:19:04-04:00" pubdate data-updated="true">May 1<span>st</span>, 2014</time>
+<time datetime="2014-08-03T20:23:56-04:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
+<div class="entry-content"><p>I got stumped recently trying to figure out how one of my
+co-workers had made his computer&rsquo;s message of the day so colorful and awesome.  I decided to share what
+I learned here with enquiring souls.</p>
 
-<p>For this to work, you need a version of vim
-compiled with the <code>clipboard</code> feature included.  You can easily check
-the features included in your vim version by running:</p>
+<h1>motd</h1>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>In most Unix-y operating systems, if you stick a file named <code>motd</code>
+in <code>/etc</code> it will get read into your terminal at the beginning of
+each session.</p>
+
+<h1>figlet</h1>
+
+<p>Figlet&rsquo;s this awesome utility for making large ASCII letters.</p>
+
+<p><strong>Installation</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>brew install figlet
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Usage</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version
-</span><span class='line'>...
-</span><span class='line'>-clipboard       +iconv           +path_extra      -toolbar
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>figlet meow
+</span><span class='line'> _ __ ___   ___  _____      __
+</span><span class='line'>| <span class="err">&#39;</span>_ <span class="sb">`</span> _ <span class="se">\ </span>/ _ <span class="se">\/</span> _ <span class="se">\ \ </span>/<span class="se">\ </span>/ /
+</span><span class='line'>| | | | | |  __/ <span class="o">(</span>_<span class="o">)</span> <span class="se">\ </span>V  V /
+</span><span class='line'>|_| |_| |_|<span class="se">\_</span>__|<span class="se">\_</span>__/ <span class="se">\_</span>/<span class="se">\_</span>/
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>If you see <code>+clipboard</code>, you&rsquo;re in good shape.</p>
+<p>Preview your font options:</p>
 
-<p>Elsif you see <code>-clipboard</code>, read on for the fix.</p>
-
-<p>1) Get the latest version of vim.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>brew install vim</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>showfigfonts
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>2) Check which local version of vim is being used.</p>
+<p>Write in a font:
+🐌  figlet -f slant meow</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>which vim
-</span><span class='line'>/usr/bin/vim</span></code></pre></td></tr></table></div></figure>
+<hr />
 
+<p>  / <strong> `</strong> \/ _ \/ <strong> \ | /| / /
+ / / / / / /  </strong>/ /<em>/ / |/ |/ /
+/</em>/ /<em>/ /</em>/_<strong>/_</strong>_/|<strong>/|</strong>/</p>
 
-<p>3) If you don&rsquo;t see <code>/usr/local/bin/vim</code>,
-add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
+<p>Pretty cool.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># Prefer Homebrew binaries
-</span><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
-
-
-<p>4) Run <code>vim --version</code> again to make sure it worked.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version 
-</span><span class='line'>...
-</span><span class='line'>+clipboard       +iconv           +path_extra      -toolbar
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Success!</p>
+<p>&#8220;`</p>
 </div>
 
 
@@ -180,21 +180,15 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
   
 
 
-<time datetime="2014-05-01T13:19:04-04:00" pubdate data-updated="true">May 1<span>st</span>, 2014</time>
+<time datetime="2014-08-03T20:23:56-04:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/homebrew/'>homebrew,</a>, <a class='category' href='/blog/categories/register/'>register</a>, <a class='category' href='/blog/categories/registers/'>registers,</a>, <a class='category' href='/blog/categories/star/'>star</a>, <a class='category' href='/blog/categories/vim/'>vim</a>, <a class='category' href='/blog/categories/vim/'>vim,</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/08/03/add-ansi-colors-to-your-motd-with-vim/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/08/03/add-ansi-colors-to-your-motd-with-vim/" >Tweet</a>
   
   
   
@@ -203,10 +197,10 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/04/06/friendly-forwarding-with-devise/" title="Previous Post: friendly forwarding with devise">&laquo; friendly forwarding with devise</a>
+        <a class="basic-alignment left" href="/blog/2014/07/15/addressing-ip/" title="Previous Post: Addressing IP">&laquo; Addressing IP</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/05/02/psql-cheatsheet/" title="Next Post: psql cheatsheet">psql cheatsheet &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/08/29/binary-encoding-in-ruby-ascii-8bit/" title="Next Post: Ruby Encoding: From the Top">Ruby Encoding: From the Top &raquo;</a>
       
     </p>
   </footer>

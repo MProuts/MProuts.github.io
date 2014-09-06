@@ -272,22 +272,45 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
 <aside class="sidebar">
   
     
+  <style>
+<style>
+  .ig-b- { display: inline-block; }
+  .ig-b- img { visibility: hidden; }
+  .ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+  .ig-b-16 { width: 16px; height: 16px; background: url(//badges.instagram.com/static/images/ig-badge-sprite-16.png) no-repeat 0 0; }
+  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .ig-b-16 { background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-16@2x.png); background-size: 60px 178px; } }
+  .gravatar p { margin:0px }
+  .gravatar > .text, .image { float:left }
+  .gravatar .name { font-weight:bold;margin-top:4px; }
+  .gravatar .text { margin-left:5px; }
+  .badge { display:block;margin-bottom:3px; }
+  .clearfix { display:block;clear:both;visibility:hidden; }
+</style>
 <section>
-	<span>
-		<img style="float:left" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
-    <span style="float:left;margin-left: 5px">
-      <p style="margin:0px;font-weight:bold;">Michael Prouty</p>
-      <p style="margin:0px;">Ruby Developer</p>
+	<span class="gravatar">
+		<img class="image" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+    <span class="text">
+      <p class="name">Michael Prouty</p>
+      <a href="http://instagram.com/_mprouts?ref=badge" class="ig-b- ig-b-16 badge"><img src="//badges.instagram.com/static/images/ig-badge-16.png" alt="Instagram" /></a><p></p>
+      <p>Ruby Developer</p>
       <p><a href="http://logcheck.com" target="_blank">LogCheck</a></p>
     </span>
-    <span style="display:block;clear:both;visibility:hidden;">.
-    </span>
+    <span class="clearfix">.</span>
 	</span>
 </section>
 
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/08/29/binary-encoding-in-ruby-ascii-8bit/">Ruby Encoding: From the Top</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/03/add-ansi-colors-to-your-motd-with-vim/">Add ANSI Colors to Your Motd (With Vim!)</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/07/15/addressing-ip/">Addressing IP</a>
@@ -299,14 +322,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
       <li class="post">
         <a href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">Cross-Domain Requests With Angular & Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/18/hello-bower/">Hello, Bower</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew's Version of Git</a>
       </li>
     
   </ul>
