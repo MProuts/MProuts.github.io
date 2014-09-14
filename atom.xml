@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-09-06T17:09:35-04:00</updated>
+  <updated>2014-09-13T22:32:45-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -12,6 +12,36 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Find And Replace From Outside Of Files]]></title>
+    <link href="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/"/>
+    <updated>2014-09-13T22:10:03-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files</id>
+    <content type="html"><![CDATA[<p>Toss this puppy in your <code>.bashrc</code> for string substitution from
+outside of files.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="k">function </span>ack_sub <span class="o">{</span>
+</span><span class='line'>  ack -l <span class="nv">$1</span> <span class="nv">$3</span> | xargs perl -pi -E <span class="s1">&#39;s/&#39;</span><span class="nv">$1</span><span class="s1">&#39;/&#39;</span><span class="nv">$2</span><span class="s1">&#39;/g&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Syntax</h3>
+
+<blockquote><p><code>ack_sub &lt;target&gt; &lt;substitution&gt; &lt;directory&gt;</code></p></blockquote>
+
+<h3>Example</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ack_sub <span class="s2">&quot;Mikey&quot;</span> <span class="s2">&quot;Michael&quot;</span> <span class="s2">&quot;./taxes&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Addressing IP]]></title>
