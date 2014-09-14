@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: dotfiles | Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/blog/categories/dotfiles/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2014-09-06T17:09:35-04:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>
+    <link href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/"/>
+    <updated>2014-02-04T22:55:48-05:00</updated>
+    <id>http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git</id>
+    <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
+
+<p>This turned out to be a little trickier than I expected&hellip;</p>
+
+<h2>Separate Your Dots</h2>
+
+<p>The first problem I encountered is that your system expects dotfiles to live in your home directory at paths like <code>~/.vimrc</code>. This isn&rsquo;t a great place for a git repository because, well, that&rsquo;s where <em>ALL</em> of the rest of your user files live.  On the other hand, if you move them into their own directory,</p>
+
+<pre><code>$ mkdir ~/dotfiles/
+$ mv ~/.bash_profile /dotfiles/bash_profile
+</code></pre>
+
+<p>they will no longer be accessible to programs that use them to load your customization.</p>
+
+<h2>Symlinks</h2>
+
+<p>Enter symlinks.  Symlinks basically let you create a named pointer (or <em>symbolic link</em>) to a file at a different location in the file system.  When the system tries to open this pointer, it will link to the target file, and open that instead.  In our case, this means that we can stash all of our resource files in <code>~/dotfiles</code> and create links to make them accessible to programs looking for them in <code>~/</code>. Here&rsquo;s the line of code that makes that happen.</p>
+
+<pre><code>$ ln -s /dotfiles/bash_profile ~/.bash_profile
+</code></pre>
+
+<p>This is basically just saying:
+&ldquo;Create a link from stashed file <code>/dotfiles/bash_profile</code> to its original location at <code>~/.bash_profile</code>.  (I decided to remove the dot from the stashed file for convenience.)</p>
+
+<h2>Git It!</h2>
+
+<p>With the symlink in place, our <code>bash_profile</code> should now be working from its new location.  (Note: You may need to close and reopen terminal to see a change). All that&rsquo;s left to do is initialize our git repo and make our first commit.</p>
+
+<pre><code>$ cd ~/dotfiles
+$ git init
+$ git add .
+$ git commit -m "Initial commit"
+</code></pre>
+
+<h2>Syntax Highlighting</h2>
+
+<p>You&rsquo;ll notice that as a side effect of moving our <code>bash_profile</code>, we no longer get pretty syntax highlighting when we open it in an editor.</p>
+
+<p>  <strong>dotfiles/bash_profile</strong></p>
+
+<pre><code>PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+
+CDPATH=~/dev/
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+export PS1="\W ☕ "
+export GREP_OPTIONS='--color=always'
+export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
+</code></pre>
+
+<p>The solution is to explicitly tell the editor the file type (a shell script) by appending <code>.sh</code> to the filename.</p>
+
+<p>  <strong>dotfiles/bash_profile.sh</strong></p>
+
+<p>```bash</p>
+
+<p>PATH=&ldquo;/Applications/Postgres.app/Contents/MacOS/bin:$PATH&rdquo;</p>
+
+<p>CDPATH=~/dev/</p>
+
+<p>[[ -s &ldquo;$HOME/.rvm/scripts/rvm&rdquo; ]] &amp;&amp; source &ldquo;$HOME/.rvm/scripts/rvm&rdquo; # Load RVM into a shell session <em>as a function</em></p>
+
+<p>export PS1=&ldquo;\W ☕ &rdquo;
+export GREP_OPTIONS=&lsquo;&mdash;color=always&rsquo;
+export LSCOLORS=&ldquo;GxGxBxDxCxEgEdxbxgxcxd&rdquo;
+```</p>
+
+<p>Aaaaah. Much better.</p>
+
+<h2>Generate Symlinks with a Script</h2>
+
+<p>Great, so now version control and syntax hightlighting are working, but we&rsquo;ve introduced another problem.  Namely, it&rsquo;s a pain to manually maintain these symlinks.  As your list of dotfiles grows, or when you change computers, it would be nice to have a way to dynamically generate links to these stashed resource files. Solution: write a little shell script to link all of the files in <code>/dotfiles</code> to the home directory for you.  I just threw this in the same directory.</p>
+
+<p><strong>linkdotfiles.sh</strong>
+```
+dir=~/dotfiles          # dotfiles directory</p>
+
+<p>for file in $dir/*; do
+  if [ $(basename $file .sh) != &ldquo;linkdotfiles&rdquo; ]
+  then</p>
+
+<pre><code>echo "Linking" $(basename $file) "..."
+ln -s $file ~/.$(basename $file .sh)
+</code></pre>
+
+<p>  fi
+done
+echo &ldquo;&hellip; all done!&rdquo;
+```</p>
+
+<p>To run:</p>
+
+<pre><code>$ sh linkdotfiles.sh
+</code></pre>
+
+<p>All done.  :)</p>
+]]></content>
+  </entry>
+  
+</feed>
