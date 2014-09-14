@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cross-Domain Requests With Angular & Rails - Full Stack Snacks</title>
+  <meta name="author" content="Michael Prouty">
+
+  
+  <meta name="description" content="Most modern web APIs provide programatic access to an application&rsquo;s internals by exposing RESTful JSON endpoints. For example, a POST to / &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Full Stack Snacks" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-50683410-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Full Stack Snacks</a></h1>
+  
+    <h2>One byte at a time.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:MProuts.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cross-Domain Requests With Angular & Rails</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-01T09:54:29-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Most modern web APIs provide programatic access to an application&rsquo;s internals by exposing RESTful JSON endpoints.  For example, a <code>POST</code> to <code>/pokemon.json</code> with a lump of properly-formatted JSON might create a new pokemon resource on the application server.</p>
+
+<p>Javascript frameworks like Angular were designed to
+sit on top of APIs, accessing data through endpoints like
+the one described above. When an Angular app and the API it consumes are
+hosted on separate domains, data access is complicated by a security restriction implemented by most browsers called the <code>same-origin policy</code>.  Under the <code>same-origin policy</code>, client-side scripts running in one domain are prevented from obtaining data retrieved from another domain.</p>
+
+<p>Luckily, most browsers also provide a mechanism for getting
+around this restriction called <code>cross-origin resource sharing</code>, or <code>CORS</code>.  Here&rsquo;s
+what you need to know to get it working with jQuery and Rails.</p>
+
+<h1>GET</h1>
+
+<p>Let&rsquo;s say that you have your Angular app running in development on port 8000,
+and your Rails API running on port 3000. When your Angular app loads, it will probably need to request some data
+from the server.</p>
+
+<h3>app.js</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$http</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/pokemon.json&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">pokedex</span><span class="p">.</span><span class="nx">pokemons</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But this produces an error.</p>
+
+<p><img src="/images/cors_get_request.png"></p>
+
+<p>Under the <code>same-origin policy</code>, the browser will block cross-domain <code>XMLHttpRequests</code> unless the server&rsquo;s response to such requests includes an <code>access-control-allow-origin</code> header that matches the
+requesting script&rsquo;s <code>origin</code> (In our case, <code>http://localhost:8000</code>).</p>
+
+<p>In Rails, we can simply add this header to all responses
+in our application controller as follows.</p>
+
+<h3>application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_filter</span> <span class="ss">:set_access_control_headers</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">set_access_control_headers</span>
+</span><span class='line'>  <span class="n">headers</span><span class="o">[</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>POST</h1>
+
+<p> <code>POST</code> should now also work.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">data</span><span class="o">:</span> <span class="nx">mydata</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>DELETE</h1>
+
+<p> <code>GET</code> and <code>POST</code> are considered <em>simple requests</em> under the
+ <code>CORS</code> standard, meaning that providing the access control headers is
+ sufficient for cross-domain requests.</p>
+
+<p>But what about <code>DELETE</code>?</p>
+
+<h3>app.js</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments/&#39;</span> <span class="o">+</span> <span class="nx">comment</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">contentType</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;produces&hellip;</p>
+
+<p><img src="/images/cors_delete_request.png"></p>
+
+<p>&hellip;and in the Rails log&hellip;</p>
+
+<pre><code>Started OPTIONS "/pokemon/11/comments/119" for 127.0.0.1 at 2014-06-01 11:38:14 -0400
+
+ActionController::RoutingError (No route matches [OPTIONS] "/pokemon/11/comments/119"):
+</code></pre>
+
+<h1>Preflighted Requests</h1>
+
+<p>Under <code>CORS</code>, requests using methods other than <code>GET</code> or <code>POST</code> need to be <em>preflighted</em>.  Essentially, before the
+actual request can take place, the client sends a preliminary
+ <code>OPTIONS</code> request with an <code>access-control-request-method</code>
+header, asking permission to use a particular HTTP method with a given URL.  In our case, we
+want to use <code>DELETE</code> at <code>/pokemon/11/comments/119</code>.  jQuery is smart enough to initiate the preflight
+request for us&hellip;</p>
+
+<pre><code>OPTIONS /pokemon/11/comments/119
+Origin: http://localhost:8000
+Access-Control-Request-Method: DELETE
+</code></pre>
+
+<p>&hellip;so if the server responds with&hellip;</p>
+
+<pre><code>Access-Control-Allow-Origin: http://localhost:8000
+Access-Control-Allow-Methods: DELETE
+</code></pre>
+
+<p>&hellip;then the browser will allow the original request to go through.</p>
+
+<p>Rather than roll our own system for handling this exchange,
+we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;rack-cors&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s1">&#39;rack/cors&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>config/application.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">use</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Cors</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">allow</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">origins</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+</span><span class='line'>    <span class="n">resource</span> <span class="sr">%r{/pokemon/\d+/comments/\d+}</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:headers</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;Accept&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:methods</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:delete</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As configured above, <code>rack-cors</code> will intercept the preflight <code>OPTIONS</code> request from jQuery and grant <code>DELETE</code> access to <code>localhost:8000</code>.</p>
+
+<p>And there you have it.  :)</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Michael Prouty</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-01T09:54:29-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/18/hello-bower/" title="Previous Post: hello, bower">&laquo; hello, bower</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/" title="Next Post: check for stray pry calls before commit">check for stray pry calls before commit &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  <style>
+<style>
+  .ig-b- { display: inline-block; }
+  .ig-b- img { visibility: hidden; }
+  .ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+  .ig-b-16 { width: 16px; height: 16px; background: url(//badges.instagram.com/static/images/ig-badge-sprite-16.png) no-repeat 0 0; }
+  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .ig-b-16 { background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-16@2x.png); background-size: 60px 178px; } }
+  .gravatar p { margin:0px }
+  .gravatar > .text, .image { float:left }
+  .gravatar .name { font-weight:bold;margin-top:4px; }
+  .gravatar .text { margin-left:5px; }
+  .badge { display:block;margin-bottom:3px; }
+  .clearfix { display:block;clear:both;visibility:hidden; }
+</style>
+<section>
+	<span class="gravatar">
+		<img class="image" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+    <span class="text">
+      <p class="name">Michael Prouty</p>
+      <a href="http://instagram.com/_mprouts?ref=badge" class="ig-b- ig-b-16 badge"><img src="//badges.instagram.com/static/images/ig-badge-16.png" alt="Instagram" /></a><p></p>
+      <p>Ruby Developer</p>
+      <p><a href="http://logcheck.com" target="_blank">LogCheck</a></p>
+    </span>
+    <span class="clearfix">.</span>
+	</span>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/07/15/addressing-ip/">Addressing IP</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/">Check for Stray Pry Calls Before Commit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">Cross-Domain Requests With Angular & Rails</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/18/hello-bower/">Hello, Bower</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew's Version of Git</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Michael Prouty -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>. Design by <a href="http://octopressthemes.com">Octopress Themes</a>.</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

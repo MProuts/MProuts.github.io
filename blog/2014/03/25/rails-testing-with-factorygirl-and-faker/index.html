@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Testing with FactoryGirl and Faker - Full Stack Snacks</title>
+  <meta name="author" content="Michael Prouty">
+
+  
+  <meta name="description" content="In the context of Rails development, fixtures provide an easy way to create sample data and
+make it available to your tests. Every time Rails &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Full Stack Snacks" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-50683410-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Full Stack Snacks</a></h1>
+  
+    <h2>One byte at a time.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:MProuts.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Testing With FactoryGirl and Faker</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-25T19:57:39-04:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In the context of Rails development, fixtures provide an easy way to create sample data and
+make it available to your tests. Every time Rails generates a model, it
+also creates a corresponding .yml in <code>test/fixtures</code> for your fixture code.</p>
+
+<h3>test/fixtures/users.yml</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>meryl:
+</span><span class='line'>  name: Meryl Streep
+</span><span class='line'>  birthday: 1949-06-22
+</span><span class='line'>  occupation: Actress</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can access fixtures in your tests as follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">users</span><span class="p">(</span><span class="ss">:meryl</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While fixtures let you weave elaborate narratives involving Meryl Streep&rsquo;s interactions with your site, they tend not to be very
+DRY.  For example, if you want access to 12 pre-defined instances of <code>User</code> in your specs, you need to define 12 fixures in your
+<strong>users.yml</strong> file.  This process can be cumbersome and error-prone.</p>
+
+<h1>Factory Girl</h1>
+
+<p>There&rsquo;s a gem for that.</p>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;factory_girl_rails&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Factory Girl is Thoughtbot&rsquo;s solution to this problem, and it is awesome.  Rather than hardcode your fixture data, Factory Girl lets you define factories &mdash; methods that dynamically generate objects &mdash; using a friendly DSL.</p>
+
+<h3>spec/factories.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;Meryl Streep&quot;</span>
+</span><span class='line'>    <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
+</span><span class='line'>    <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It then exposes methods for assembling users from said factories in your tests.</p>
+
+<h3>spec/models/users.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">build</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; unpersisted version of Meryl</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; persisted version of Meryl (separate object)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Sequences</h1>
+
+<p>Let&rsquo;s say your user model validates uniqueness on its
+&lsquo;name&rsquo; attribute, and you need to create 20 valid users in
+your tests (each with a unique name).  Two &lsquo;Meryl Streep&rsquo; s will no longer fly.</p>
+
+<p>Luckily, Factory Girl provides a build-in fix in the form of sequences.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">sequence</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;Meryl Streep</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
+</span><span class='line'>  <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then&hellip;</p>
+
+<h3>spec/models/users.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep1&quot;</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep2&quot;</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep3&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Strange example, but you get the picture.</p>
+
+<h1>Faker</h1>
+
+<p>Given that (possibly) not everyone loves Meryl Streep as much as I do,
+wouldn&rsquo;t it be nice if our factory could dynamically generate unique, natural-sounding
+names for each user it created?</p>
+
+<p>There&rsquo;s a gem for that.</p>
+
+<h3>gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;faker&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>spec/factories</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">name</span> <span class="ss">Faker</span><span class="p">:</span><span class="ss">:Name</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'>  <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
+</span><span class='line'>  <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>spec/users_spec.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Anastacio Jast&quot;</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Edna Weimann&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Faker can fake out lots of other things as well:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Internet</span><span class="o">.</span><span class="n">email</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;rosanna_smitham@vandervort.biz&quot;</span>
+</span><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Commerce</span><span class="o">.</span><span class="n">product</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Intelligent Steel Computer&quot;</span>
+</span><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Business</span><span class="o">.</span><span class="n">credit_card_number</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;1212-1221-1121-1234&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;</p>
+
+<p><strong>Meryl Streep1</strong>: Yes, that&rsquo;ll be one Intelligent Steel Computer, please.  Do you accept credit
+cards?<br/>
+<strong>Meryl Streep2</strong>: So, this is the beginning of happiness. This is where it starts.
+And, of course, there will always be more.<br/>
+<strong>Meryl Streep3</strong>: Alright ladies, that&rsquo;s a wrap.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Michael Prouty</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-25T19:57:39-04:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/03/10/bootstrapping-a-sinatra-app/" title="Previous Post: Bootstrapping a Sinatra App">&laquo; Bootstrapping a Sinatra App</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/04/06/friendly-forwarding-with-devise/" title="Next Post: friendly forwarding with devise">friendly forwarding with devise &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  <style>
+<style>
+  .ig-b- { display: inline-block; }
+  .ig-b- img { visibility: hidden; }
+  .ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+  .ig-b-16 { width: 16px; height: 16px; background: url(//badges.instagram.com/static/images/ig-badge-sprite-16.png) no-repeat 0 0; }
+  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .ig-b-16 { background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-16@2x.png); background-size: 60px 178px; } }
+  .gravatar p { margin:0px }
+  .gravatar > .text, .image { float:left }
+  .gravatar .name { font-weight:bold;margin-top:4px; }
+  .gravatar .text { margin-left:5px; }
+  .badge { display:block;margin-bottom:3px; }
+  .clearfix { display:block;clear:both;visibility:hidden; }
+</style>
+<section>
+	<span class="gravatar">
+		<img class="image" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+    <span class="text">
+      <p class="name">Michael Prouty</p>
+      <a href="http://instagram.com/_mprouts?ref=badge" class="ig-b- ig-b-16 badge"><img src="//badges.instagram.com/static/images/ig-badge-16.png" alt="Instagram" /></a><p></p>
+      <p>Ruby Developer</p>
+      <p><a href="http://logcheck.com" target="_blank">LogCheck</a></p>
+    </span>
+    <span class="clearfix">.</span>
+	</span>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/07/15/addressing-ip/">Addressing IP</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/">Check for Stray Pry Calls Before Commit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">Cross-Domain Requests With Angular & Rails</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/18/hello-bower/">Hello, Bower</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/">How to Use Homebrew's Version of Git</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Michael Prouty -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>. Design by <a href="http://octopressthemes.com">Octopress Themes</a>.</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: postgresql | Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/blog/categories/postgresql/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2014-09-06T17:09:35-04:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[psql cheatsheet]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
+    <updated>2014-05-02T15:48:12-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
+    <content type="html"><![CDATA[<p>Django development requires that you know your way around your database
+console.  Here are the basics for PostgreSQL:</p>
+
+<h3>start</h3>
+
+<p><code>
+psql            #Start interactive terminal
+</code></p>
+
+<h3>database</h3>
+
+<p>```
+\list                   #List databases
+\connect <db>            #Switch connection</p>
+
+<p>SELECT
+current_database();    #Show database connection
+```</p>
+
+<h3>tables</h3>
+
+<p><code>
+\d             #List tables
+\d &lt;table&gt;      #List table columns
+</code></p>
+
+<h3>help</h3>
+
+<p><code>
+\?              #List backslash commands
+\help           #List SQL commands
+</code></p>
+
+<h3>quit</h3>
+
+<p><code>
+\q             #Quit  
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>
