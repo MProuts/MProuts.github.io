@@ -9,11 +9,8 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Toss this puppy in your .bashrc for string substitution from
-outside of files. 1
-2
-3
-function ack_sub { ack -l $1 $3 | xargs perl -pi -E &#39;s/&#39 &hellip;">
+  <meta name="description" content="Your shell resource file is a great place to set local environment
+variables for use in development (things like API keys, etc.) &mdash; that is, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +78,69 @@ function ack_sub { ack -l $1 $3 | xargs perl -pi -E &#39;s/&#39 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/09/18/load-secrets-from-bashrc/">Load .secrets From .bashrc</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-18T18:44:28-04:00" pubdate data-updated="true">Sep 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Your shell resource file is a great place to set local environment
+variables for use in development (things like API keys, etc.) &mdash; that is,
+until you decide to check it into source control.</p>
+
+<p><strong>Solution</strong>:
+Toss those variable assignments into a file called <code>.secrets</code> and use the shell
+command <code>source</code> to pull them into your environment when the resource
+file gets loaded.</p>
+
+<h3>.secrets</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>imnottellingimnottelling
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>myfavoritefoodissushi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>.bashrc</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.secrets
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now you can safely push your <code>.bashrc</code> up to Github.</p>
+
+<p>&hellip;after you create a little repo for your <a href="/blog/2014/02/04/manage-your-dotfiles-with-git/">dotfiles</a>, that is! ;)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1129,224 +1189,6 @@ default <code>after_sign_in_path_for</code> method.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/">Testing With FactoryGirl and Faker</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-25T19:57:39-04:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In the context of Rails development, fixtures provide an easy way to create sample data and
-make it available to your tests. Every time Rails generates a model, it
-also creates a corresponding .yml in <code>test/fixtures</code> for your fixture code.</p>
-
-<h3>test/fixtures/users.yml</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>meryl:
-</span><span class='line'>  name: Meryl Streep
-</span><span class='line'>  birthday: 1949-06-22
-</span><span class='line'>  occupation: Actress</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You can access fixtures in your tests as follows:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">users</span><span class="p">(</span><span class="ss">:meryl</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>While fixtures let you weave elaborate narratives involving Meryl Streep&rsquo;s interactions with your site, they tend not to be very
-DRY.  For example, if you want access to 12 pre-defined instances of <code>User</code> in your specs, you need to define 12 fixures in your
-<strong>users.yml</strong> file.  This process can be cumbersome and error-prone.</p>
-
-<h1>Factory Girl</h1>
-
-<p>There&rsquo;s a gem for that.</p>
-
-<h3>Gemfile</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;factory_girl_rails&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Factory Girl is Thoughtbot&rsquo;s solution to this problem, and it is awesome.  Rather than hardcode your fixture data, Factory Girl lets you define factories &mdash; methods that dynamically generate objects &mdash; using a friendly DSL.</p>
-
-<h3>spec/factories.rb</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
-</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;Meryl Streep&quot;</span>
-</span><span class='line'>    <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
-</span><span class='line'>    <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It then exposes methods for assembling users from said factories in your tests.</p>
-
-<h3>spec/models/users.rb</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">build</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
-</span><span class='line'><span class="c1">#=&gt; unpersisted version of Meryl</span>
-</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
-</span><span class='line'><span class="c1">#=&gt; persisted version of Meryl (separate object)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h1>Sequences</h1>
-
-<p>Let&rsquo;s say your user model validates uniqueness on its
-&lsquo;name&rsquo; attribute, and you need to create 20 valid users in
-your tests (each with a unique name).  Two &lsquo;Meryl Streep&rsquo; s will no longer fly.</p>
-
-<p>Luckily, Factory Girl provides a build-in fix in the form of sequences.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">sequence</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;Meryl Streep</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
-</span><span class='line'>  <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
-</span><span class='line'>  <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then&hellip;</p>
-
-<h3>spec/models/users.rb</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep1&quot;</span>
-</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep2&quot;</span>
-</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep3&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Strange example, but you get the picture.</p>
-
-<h1>Faker</h1>
-
-<p>Given that (possibly) not everyone loves Meryl Streep as much as I do,
-wouldn&rsquo;t it be nice if our factory could dynamically generate unique, natural-sounding
-names for each user it created?</p>
-
-<p>There&rsquo;s a gem for that.</p>
-
-<h3>gemfile</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;faker&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>spec/factories</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
-</span><span class='line'>  <span class="nb">name</span> <span class="ss">Faker</span><span class="p">:</span><span class="ss">:Name</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'>  <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
-</span><span class='line'>  <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>spec/users_spec.rb</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;Anastacio Jast&quot;</span>
-</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;Edna Weimann&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Faker can fake out lots of other things as well:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Internet</span><span class="o">.</span><span class="n">email</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;rosanna_smitham@vandervort.biz&quot;</span>
-</span><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Commerce</span><span class="o">.</span><span class="n">product</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;Intelligent Steel Computer&quot;</span>
-</span><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Business</span><span class="o">.</span><span class="n">credit_card_number</span>
-</span><span class='line'><span class="c1">#=&gt; &quot;1212-1221-1121-1234&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&hellip;</p>
-
-<p><strong>Meryl Streep1</strong>: Yes, that&rsquo;ll be one Intelligent Steel Computer, please.  Do you accept credit
-cards?<br/>
-<strong>Meryl Streep2</strong>: So, this is the beginning of happiness. This is where it starts.
-And, of course, there will always be more.<br/>
-<strong>Meryl Streep3</strong>: Alright ladies, that&rsquo;s a wrap.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1391,6 +1233,10 @@ And, of course, there will always be more.<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/09/18/load-secrets-from-bashrc/">Load .secrets From .bashrc</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/09/13/find-and-replace-from-outside-of-files/">Find and Replace From Outside of Files</a>
       </li>
     
@@ -1404,10 +1250,6 @@ And, of course, there will always be more.<br/>
     
       <li class="post">
         <a href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">Cross-Domain Requests With Angular & Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/18/hello-bower/">Hello, Bower</a>
       </li>
     
   </ul>

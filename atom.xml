@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-09-13T22:32:45-04:00</updated>
+  <updated>2014-09-18T19:46:22-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -12,6 +12,42 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Load .secrets from .bashrc]]></title>
+    <link href="http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc/"/>
+    <updated>2014-09-18T18:44:28-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc</id>
+    <content type="html"><![CDATA[<p>Your shell resource file is a great place to set local environment
+variables for use in development (things like API keys, etc.) &mdash; that is,
+until you decide to check it into source control.</p>
+
+<p><strong>Solution</strong>:
+Toss those variable assignments into a file called <code>.secrets</code> and use the shell
+command <code>source</code> to pull them into your environment when the resource
+file gets loaded.</p>
+
+<h3>.secrets</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>imnottellingimnottelling
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>myfavoritefoodissushi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>.bashrc</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.secrets
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now you can safely push your <code>.bashrc</code> up to Github.</p>
+
+<p>&hellip;after you create a little repo for your <a href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/">dotfiles</a>, that is! ;)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Find And Replace From Outside Of Files]]></title>

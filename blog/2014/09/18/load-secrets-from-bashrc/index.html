@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: postgresql - Full Stack Snacks</title>
+  <title>Load .secrets from .bashrc - Full Stack Snacks</title>
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Category: postgresql">
+  <meta name="description" content="Your shell resource file is a great place to set local environment
+variables for use in development (things like API keys, etc.) &mdash; that is, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://MProuts.github.ioblog/categories/postgresql/">
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -76,35 +77,111 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Postgresql</h1>
+    
+      <h1 class="entry-title">Load .secrets From .bashrc</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-18T18:44:28-04:00" pubdate data-updated="true">Sep 18<span>th</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>Your shell resource file is a great place to set local environment
+variables for use in development (things like API keys, etc.) &mdash; that is,
+until you decide to check it into source control.</p>
 
-  
-  <h2>2014</h2>
+<p><strong>Solution</strong>:
+Toss those variable assignments into a file called <code>.secrets</code> and use the shell
+command <code>source</code> to pull them into your environment when the resource
+file gets loaded.</p>
 
-<article>
-  
-<h1><a href="/blog/2014/05/02/psql-cheatsheet/">Psql Cheatsheet</a></h1>
-<time datetime="2014-05-02T15:48:12-04:00" pubdate><span class='month'>May</span> <span class='day'>02</span> <span class='year'>2014</span></time>
+<h3>.secrets</h3>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/postgresql/'>postgresql</a></span>
-</footer>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>imnottellingimnottelling
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>myfavoritefoodissushi
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<h3>.bashrc</h3>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.secrets
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now you can safely push your <code>.bashrc</code> up to Github.</p>
+
+<p>&hellip;after you create a little repo for your <a href="/blog/2014/02/04/manage-your-dotfiles-with-git/">dotfiles</a>, that is! ;)</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Michael Prouty</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-18T18:44:28-04:00" pubdate data-updated="true">Sep 18<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/dot-bashrc/'>.bashrc,</a>, <a class='category' href='/blog/categories/bash/'>bash,</a>, <a class='category' href='/blog/categories/shell/'>shell</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/09/13/find-and-replace-from-outside-of-files/" title="Previous Post: Find And Replace From Outside Of Files">&laquo; Find And Replace From Outside Of Files</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>
