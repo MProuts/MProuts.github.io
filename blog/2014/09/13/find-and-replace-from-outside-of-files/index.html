@@ -5,11 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>How To Use Homebrew's Version of Git - Full Stack Snacks</title>
+  <title>Find And Replace From Outside Of Files - Full Stack Snacks</title>
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it& &hellip;">
+  <meta name="description" content="Toss this puppy in your .bashrc for string substitution from
+outside of files. 1
+2
+3
+function ack_sub { ack -l $1 $3 | xargs perl -pi -E &#39;s/&#39 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git/">
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -80,7 +84,7 @@
   
   <header>
     
-      <h1 class="entry-title">How to Use Homebrew's Version of Git</h1>
+      <h1 class="entry-title">Find and Replace From Outside of Files</h1>
     
     
       <p class="meta">
@@ -96,80 +100,34 @@
   
 
 
-<time datetime="2014-05-04T15:20:02-04:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
+<time datetime="2014-09-13T22:10:03-04:00" pubdate data-updated="true">Sep 13<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it&rsquo;s important to know which version of a particular package gets run when you type a command at the command line.  For example, when you type <code>git status</code>, are you running OSX&rsquo;s version of git or Homebrew&rsquo;s version?</p>
+<div class="entry-content"><p>Toss this puppy in your <code>.bashrc</code> for string substitution from
+outside of files.</p>
 
-<p>Here&rsquo;s the scoop:</p>
-
-<h3>OSX Packages</h3>
-
-<p>OSX’s binaries live in <code>/usr/bin</code>.  They are the defaults that either came
-preinstalled in your machine, or were bundled with Xcode.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/bin</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Homebrew Packages</h3>
-
-<p>Under the covers, Homebrew installs packages or ‘kegs’ in their own directories in <code>/usr/local/Cellar</code>.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/Cellar</span></code></pre></td></tr></table></div></figure>
-
-
-<p>For convenience, Homebrew symlinks binaries nested within these directories to <code>/usr/local/bin</code>.  These links are how you access and run Homebrew binaries.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/bin</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Which Package?</h3>
-
-<p>Which of these two versions gets run is determined by your PATH variable.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git
-</span><span class='line'>/usr/bin/git</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you take a look at your global PATH configuration by running <code>cat etc/paths</code> you&rsquo;ll see that binaries in <code>/usr/bin</code> are
-run before binaries in <code>/usr/local/bin</code> by default.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat etc/paths
-</span><span class='line'>/usr/bin
-</span><span class='line'>/bin
-</span><span class='line'>/usr/sbin
-</span><span class='line'>/sbin
-</span><span class='line'>/usr/local/bin</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="k">function </span>ack_sub <span class="o">{</span>
+</span><span class='line'>  ack -l <span class="nv">$1</span> <span class="nv">$3</span> | xargs perl -pi -E <span class="s1">&#39;s/&#39;</span><span class="nv">$1</span><span class="s1">&#39;/&#39;</span><span class="nv">$2</span><span class="s1">&#39;/g&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>You can move Homebrew&rsquo;s binaries to the front of the line by adding this
-to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshrc</code>).</p>
+<h3>Syntax</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+<blockquote><p><code>ack_sub &lt;target&gt; &lt;substitution&gt; &lt;directory&gt;</code></p></blockquote>
 
+<h3>Example</h3>
 
-<p>Voila!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git 
-</span><span class='line'>/usr/local/bin/git</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ack_sub <span class="s2">&quot;Mikey&quot;</span> <span class="s2">&quot;Michael&quot;</span> <span class="s2">&quot;./taxes&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -193,15 +151,21 @@ to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshr
   
 
 
-<time datetime="2014-05-04T15:20:02-04:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
+<time datetime="2014-09-13T22:10:03-04:00" pubdate data-updated="true">Sep 13<span>th</span>, 2014</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ack/'>ack</a>, <a class='category' href='/blog/categories/bash/'>bash,</a>, <a class='category' href='/blog/categories/perl/'>perl,</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/" >Tweet</a>
   
   
   
@@ -210,10 +174,8 @@ to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshr
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/05/02/psql-cheatsheet/" title="Previous Post: psql cheatsheet">&laquo; psql cheatsheet</a>
+        <a class="basic-alignment left" href="/blog/2014/07/15/addressing-ip/" title="Previous Post: Addressing IP">&laquo; Addressing IP</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/18/hello-bower/" title="Next Post: hello, bower">hello, bower &raquo;</a>
       
     </p>
   </footer>
