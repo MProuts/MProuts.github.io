@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-11-17T13:29:27-05:00</updated>
+  <updated>2014-11-17T13:30:58-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -55,7 +55,7 @@ defined on the plain old Ruby module <code>Enumerable</code>.</p>
 <p>So, what you might assume (as I did) is doing something smart and
 reasonable (i.e.
 performing a SQL count, and comparing the result with zero), is actually
-doing something <strong>VERY</strong> stupid (loading a ton of Ruby objects into memory
+doing something <strong>VERY</strong> stupid (i.e. loading a ton of Ruby objects into memory
 and performing a count on them there).  You can imagine that if users had thousands of
 records each, this line could constitutes a serious resource drain for your application.</p>
 
