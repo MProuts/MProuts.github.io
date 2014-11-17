@@ -37,7 +37,7 @@ defined on the plain old Ruby module ```Enumerable```.
 So, what you might assume (as I did) is doing something smart and
 reasonable (i.e.
 performing a SQL count, and comparing the result with zero), is actually
-doing something **VERY** stupid (loading a ton of Ruby objects into memory
+doing something **VERY** stupid (i.e. loading a ton of Ruby objects into memory
 and performing a count on them there).  You can imagine that if users had thousands of
 records each, this line could constitutes a serious resource drain for your application.
 
