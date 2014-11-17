@@ -5,13 +5,16 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>psql cheatsheet - Full Stack Snacks</title>
+  <title>the big difference between empty and none - Full Stack Snacks</title>
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Django development requires that you know your way around your database
-console. Here are the basics for PostgreSQL: start 1
-psql #Start interactive &hellip;">
+  <meta name="description" content="Given an ActiveRecord class with a has_many association&hellip; 1
+2
+3
+4
+class User &lt; ActiveRecord::Base has_many :records ...
+end &hellip;this is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +23,7 @@ psql #Start interactive &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/">
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -82,7 +85,7 @@ psql #Start interactive &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Psql Cheatsheet</h1>
+      <h1 class="entry-title">The Big Difference Between Empty and None</h1>
     
     
       <p class="meta">
@@ -98,56 +101,101 @@ psql #Start interactive &hellip;">
   
 
 
-<time datetime="2014-05-02T15:48:12-04:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+<time datetime="2014-10-23T18:39:29-04:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Django development requires that you know your way around your database
-console.  Here are the basics for PostgreSQL:</p>
+<div class="entry-content"><p>Given an ActiveRecord class with a has_many association&hellip;</p>
 
-<h3>start</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>psql            #Start interactive terminal</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>database</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\list                    #List databases
-</span><span class='line'>\connect &lt;db&gt;            #Switch connection
-</span><span class='line'>
-</span><span class='line'>SELECT 
-</span><span class='line'>current_database();      #Show database connection</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:records</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>tables</h3>
+<p>&hellip;this is a mistake.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\d              #List tables
-</span><span class='line'>\d &lt;table&gt;      #List table columns</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">none?</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>help</h3>
+<p>Why, you ask?</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\?              #List backslash commands
-</span><span class='line'>\help           #List SQL commands</span></code></pre></td></tr></table></div></figure>
+<p>Let&rsquo;s step back for a second.  On a less-abstract level, the correct way to answer the
+question, &ldquo;Are there any records that belong to this user?&rdquo; is to
+fire a SQL statement with a <code>SELECT count(*)</code> clause, and see whether the result is
+greater than 0.  That&rsquo;s what we want to have happen behind the scenes.</p>
+
+<p>However, that&rsquo;s not what&rsquo;s happening when we call <code>none?</code>, because
+<code>none?</code> is not defined on <code>ActiveRecord::Relation</code> (the
+fancy/magical Rails class that is responsible for abstracting away cross-table SQL queries), but rather, it is
+defined on the plain old Ruby module <code>Enumerable</code>.</p>
+
+<p>So, what you might assume (as I did) is doing something smart and
+reasonable (i.e.
+performing a SQL count, and comparing the result with zero), is actually
+doing something <strong>VERY</strong> stupid (loading a ton of Ruby objects into memory
+and performing a count on them there).  You can imagine that if users had thousands of
+records each, this line could constitutes a serious resource drain for your application.</p>
+
+<h3>Solution</h3>
+
+<blockquote><p>Know thy <code>ActiveRecord::Relation</code> methods.</p></blockquote>
+
+<p>The method you were probably reaching for was <code>ActiveRecord::Relation#empty?</code>, which
+performs a SQL count().  For reference, here&rsquo;s a breakdown of some other
+count-related methods on <code>Enumerable</code> and their <code>ActiveRecord::Relation</code> counterparts.</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th> Question </th>
+<th> Enumberable Method </th>
+<th> ActiveRecord::Relation Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td> <strong>More than zero</strong> objects in collection? </td>
+<td> <code>any?</code> </td>
+<td> <code>any?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>Zero</strong> objects in collection? </td>
+<td> <code>none?</code> </td>
+<td> <code>empty?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>More than one</strong> object in collection? </td>
+<td> <code>x</code> </td>
+<td> <code>many?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>Exactly one</strong> object the collection?   </td>
+<td> <code>one?</code> </td>
+<td> <code>x</code></td>
+</tr>
+</tbody>
+</table>
 
 
-<h3>quit</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\q              #Quit  </span></code></pre></td></tr></table></div></figure>
+<br>
 
 </div>
 
@@ -171,12 +219,12 @@ console.  Here are the basics for PostgreSQL:</p>
   
 
 
-<time datetime="2014-05-02T15:48:12-04:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+<time datetime="2014-10-23T18:39:29-04:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/postgresql/'>postgresql</a>
+    <a class='category' href='/blog/categories/activerecord/'>ActiveRecord,</a>, <a class='category' href='/blog/categories/activerecord-relation/'>ActiveRecord::Relation</a>, <a class='category' href='/blog/categories/enumerable/'>Enumerable,</a>, <a class='category' href='/blog/categories/ruby/'>Ruby,</a>
   
 </span>
 
@@ -185,7 +233,7 @@ console.  Here are the basics for PostgreSQL:</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/" >Tweet</a>
   
   
   
@@ -194,10 +242,8 @@ console.  Here are the basics for PostgreSQL:</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/05/01/star-register-not-working-in-vim/" title="Previous Post: Star Register Not Working In Vim?">&laquo; Star Register Not Working In Vim?</a>
+        <a class="basic-alignment left" href="/blog/2014/09/13/find-and-replace-from-outside-of-files/" title="Previous Post: Find And Replace From Outside Of Files">&laquo; Find And Replace From Outside Of Files</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/04/how-to-use-homebrews-version-of-git/" title="Next Post: How To Use Homebrew's Version of Git">How To Use Homebrew's Version of Git &raquo;</a>
       
     </p>
   </footer>

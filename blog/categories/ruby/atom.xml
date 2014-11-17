@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby, | Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2014-11-17T13:26:49-05:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[the big difference between empty and none]]></title>
+    <link href="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/"/>
+    <updated>2014-10-23T18:39:29-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none</id>
+    <content type="html"><![CDATA[<p>Given an ActiveRecord class with a has_many association&hellip;</p>
+
+<p><code>ruby
+class User &lt; ActiveRecord::Base
+  has_many :records
+  ...
+end
+</code></p>
+
+<p>&hellip;this is a mistake.</p>
+
+<p><code>ruby
+user = User.first
+user.records.none?
+</code></p>
+
+<p>Why, you ask?</p>
+
+<p>Let&rsquo;s step back for a second.  On a less-abstract level, the correct way to answer the
+question, &ldquo;Are there any records that belong to this user?&rdquo; is to
+fire a SQL statement with a <code>SELECT count(*)</code> clause, and see whether the result is
+greater than 0.  That&rsquo;s what we want to have happen behind the scenes.</p>
+
+<p>However, that&rsquo;s not what&rsquo;s happening when we call <code>none?</code>, because
+<code>none?</code> is not defined on <code>ActiveRecord::Relation</code> (the
+fancy/magical Rails class that is responsible for abstracting away cross-table SQL queries), but rather, it is
+defined on the plain old Ruby module <code>Enumerable</code>.</p>
+
+<p>So, what you might assume (as I did) is doing something smart and
+reasonable (i.e.
+performing a SQL count, and comparing the result with zero), is actually
+doing something <strong>VERY</strong> stupid (loading a ton of Ruby objects into memory
+and performing a count on them there).  You can imagine that if users had thousands of
+records each, this line could constitutes a serious resource drain for your application.</p>
+
+<h3>Solution</h3>
+
+<blockquote><p>Know thy <code>ActiveRecord::Relation</code> methods.</p></blockquote>
+
+<p>The method you were probably reaching for was <code>ActiveRecord::Relation#empty?</code>, which
+performs a SQL count().  For reference, here&rsquo;s a breakdown of some other
+count-related methods on <code>Enumerable</code> and their <code>ActiveRecord::Relation</code> counterparts.</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th> Question </th>
+<th> Enumberable Method </th>
+<th> ActiveRecord::Relation Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td> <strong>More than zero</strong> objects in collection? </td>
+<td> <code>any?</code> </td>
+<td> <code>any?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>Zero</strong> objects in collection? </td>
+<td> <code>none?</code> </td>
+<td> <code>empty?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>More than one</strong> object in collection? </td>
+<td> <code>x</code> </td>
+<td> <code>many?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>Exactly one</strong> object the collection?   </td>
+<td> <code>one?</code> </td>
+<td> <code>x</code></td>
+</tr>
+</tbody>
+</table>
+
+
+<br>
+
+]]></content>
+  </entry>
+  
+</feed>
