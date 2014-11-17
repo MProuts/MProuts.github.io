@@ -4,7 +4,7 @@
   <title><![CDATA[Category: perl, | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/perl/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-11-17T13:26:49-05:00</updated>
+  <updated>2014-11-17T13:28:47-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -30,6 +30,12 @@ function ack_sub {
 <h3>Syntax</h3>
 
 <blockquote><p><code>ack_sub &lt;target&gt; &lt;substitution&gt; &lt;directory&gt;</code></p></blockquote>
+
+<h3>Example</h3>
+
+<p><code>sh
+$ ack_sub "Mikey" "Michael" "./taxes"
+</code></p>
 ]]></content>
   </entry>
   

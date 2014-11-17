@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-11-17T13:26:49-05:00</updated>
+  <updated>2014-11-17T13:28:47-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -14,99 +14,38 @@
 
   
   <entry>
-    <title type="html"><![CDATA[the big difference between empty and none]]></title>
-    <link href="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/"/>
-    <updated>2014-10-23T18:39:29-04:00</updated>
-    <id>http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none</id>
-    <content type="html"><![CDATA[<p>Given an ActiveRecord class with a has_many association&hellip;</p>
+    <title type="html"><![CDATA[Load .secrets from .bashrc]]></title>
+    <link href="http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc/"/>
+    <updated>2014-09-18T18:44:28-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc</id>
+    <content type="html"><![CDATA[<p>Your shell resource file is a great place to set local environment
+variables for use in development (things like API keys, etc.) &mdash; that is,
+until you decide to check it into source control.</p>
+
+<p><strong>Solution</strong>:
+Toss those variable assignments into a file called <code>.secrets</code> and use the shell
+command <code>source</code> to pull them into your environment when the resource
+file gets loaded.</p>
+
+<h3>.secrets</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:records</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>imnottellingimnottelling
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>myfavoritefoodissushi
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>&hellip;this is a mistake.</p>
+<h3>.bashrc</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span>
-</span><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">none?</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.secrets
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Why, you ask?</p>
+<p>And now you can safely push your <code>.bashrc</code> up to Github.</p>
 
-<p>Let&rsquo;s step back for a second.  On a less-abstract level, the correct way to answer the
-question, &ldquo;Are there any records that belong to this user?&rdquo; is to
-fire a SQL statement with a <code>SELECT count(*)</code> clause, and see whether the result is
-greater than 0.  That&rsquo;s what we want to have happen behind the scenes.</p>
-
-<p>However, that&rsquo;s not what&rsquo;s happening when we call <code>none?</code>, because
-<code>none?</code> is not defined on <code>ActiveRecord::Relation</code> (the
-fancy/magical Rails class that is responsible for abstracting away cross-table SQL queries), but rather, it is
-defined on the plain old Ruby module <code>Enumerable</code>.</p>
-
-<p>So, what you might assume (as I did) is doing something smart and
-reasonable (i.e.
-performing a SQL count, and comparing the result with zero), is actually
-doing something <strong>VERY</strong> stupid (loading a ton of Ruby objects into memory
-and performing a count on them there).  You can imagine that if users had thousands of
-records each, this line could constitutes a serious resource drain for your application.</p>
-
-<h3>Solution</h3>
-
-<blockquote><p>Know thy <code>ActiveRecord::Relation</code> methods.</p></blockquote>
-
-<p>The method you were probably reaching for was <code>ActiveRecord::Relation#empty?</code>, which
-performs a SQL count().  For reference, here&rsquo;s a breakdown of some other
-count-related methods on <code>Enumerable</code> and their <code>ActiveRecord::Relation</code> counterparts.</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th> Question </th>
-<th> Enumberable Method </th>
-<th> ActiveRecord::Relation Method</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td> <strong>More than zero</strong> objects in collection? </td>
-<td> <code>any?</code> </td>
-<td> <code>any?</code></td>
-</tr>
-<tr>
-<td></td>
-<td> <strong>Zero</strong> objects in collection? </td>
-<td> <code>none?</code> </td>
-<td> <code>empty?</code></td>
-</tr>
-<tr>
-<td></td>
-<td> <strong>More than one</strong> object in collection? </td>
-<td> <code>x</code> </td>
-<td> <code>many?</code></td>
-</tr>
-<tr>
-<td></td>
-<td> <strong>Exactly one</strong> object the collection?   </td>
-<td> <code>one?</code> </td>
-<td> <code>x</code></td>
-</tr>
-</tbody>
-</table>
-
-
-<br>
-
+<p>&hellip;after you create a little repo for your <a href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/">dotfiles</a>, that is! ;)</p>
 ]]></content>
   </entry>
   
@@ -130,6 +69,13 @@ outside of files.</p>
 <h3>Syntax</h3>
 
 <blockquote><p><code>ack_sub &lt;target&gt; &lt;substitution&gt; &lt;directory&gt;</code></p></blockquote>
+
+<h3>Example</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ack_sub <span class="s2">&quot;Mikey&quot;</span> <span class="s2">&quot;Michael&quot;</span> <span class="s2">&quot;./taxes&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
 ]]></content>
   </entry>
   
