@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>check for stray pry calls before commit - Full Stack Snacks</title>
+  <title>Find and Replace from Shell with Sed - Full Stack Snacks</title>
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Tired of accidentally checking binding.pry calls into source? Here&rsquo;s a
-script that will take care of checking for them on your behalf. Place &hellip;">
+  <meta name="description" content="This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0. Much of the change involved updating CSS classes. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ script that will take care of checking for them on your behalf. Place &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/">
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -81,7 +80,7 @@ script that will take care of checking for them on your behalf. Place &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Check for Stray Pry Calls Before Commit</h1>
+      <h1 class="entry-title">Find and Replace From Shell With Sed</h1>
     
     
       <p class="meta">
@@ -97,18 +96,91 @@ script that will take care of checking for them on your behalf. Place &hellip;">
   
 
 
-<time datetime="2014-06-20T19:59:36-07:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+<time datetime="2014-11-18T08:26:18-08:00" pubdate data-updated="true">Nov 18<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Tired of accidentally checking <code>binding.pry</code> calls into source?  Here&rsquo;s a
-script that will take care of checking for them on your behalf.  Place
-this in your project&rsquo;s <code>.git/hooks</code> directory in a file called <code>pre-commit</code>.</p>
+<div class="entry-content"><p>This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0.  Much of the change involved updating CSS classes.  Bootstrap 3&rsquo;s new grid system necessitated a slew of changes in the form <code>span6</code> &ndash;> <code>col-md-6</code>, where a prefix before a number changes, but the number
+stays the same.</p>
 
-<h3>.git/hooks/pre-commit</h3>
+<p>In such cases, you need to include the number character in the regex
+you&rsquo;re matching against (e.g. so that you don&rsquo;t inadvertently change a bunch
+of <code>&lt;span&gt;</code> tags into <code>&lt;col-md-&gt;</code> tags). At the same time, you
+need include the number portion in the replacement string &mdash; i.e.
+ <code>class=span1</code> becomes <code>class=col-md-1</code>, <code>class=span12</code>
+becomes <code>class=col-md-12</code>, etc.</p>
+
+<p>Both of these requirements call for using regex captures.
+However, there were some problems getting regex captures to work with the <a href="/blog/2014/09/13/find-and-replace-from-outside-of-files/">ack_sub</a> function I created earlier (namely, both perl regex captures and bash arguments assign to
+variables prefixed with dollar signs like <code>$1</code>.)</p>
+
+<p>After a little research, a popular unix utility called <code>sed</code>
+surfaced as a tidy solution.  Using the example I gave earlier, the command to change all <code>span6</code> classes to <code>col-md-6</code> ones is
+as follows.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>find . -type f | xargs sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9]+)/col-md-\1/g&#39;</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s break this down.  To start, <code>sed</code> accepts a vi-style regex substitution
+command as its first argument.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span> | sed <span class="s1">&#39;s/ello/i/&#39;</span>
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It also accepts file name as a second argument.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span> &gt; test.txt
+</span><span class='line'>sed <span class="s1">&#39;s/ello/i/&#39;</span> test.txt
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Note</strong>: In this form, <code>sed</code> reads from the file, but does not edit it.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>cat test.txt
+</span><span class='line'>hello
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order to actually <em>edit</em> the file, we&rsquo;ll pass <code>sed</code> the <code>-i</code> flag (for in-place file editing).
+With the <code>-i</code> flag, <code>sed</code> takes three arguments &mdash; the extension to
+append to a backup copy of the original file, followed by the
+substitution command string, followed by the name of the file to execute the command on. If you want to edit the file without creating a backup, you can
+pass an empty string as the first argument.</p>
+
+<p><strong>Warning</strong>: This is risky.  Only try this at
+home if the files you&rsquo;re editing are backed up and/or under version
+control.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/ello/i/&#39;</span> test.txt
+</span><span class='line'>
+</span><span class='line'>cat test.txt
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Great, now in order to use regex captures as we discussed earlier,
+we&rsquo;ll pass <code>sed</code> the <code>-E</code> flag, which enables advanced regex features.  When used in combination with the <code>-i</code> flag, the <code>-E</code> flag goes between the first and second arguments.</p>
+
+<p><strong>Note</strong>: <code>sed</code> regexes don&rsquo;t support the digit-matching escape character <code>\d</code>.  We&rsquo;ll use the character range <code>[0-9]</code> instead.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -117,82 +189,32 @@ this in your project&rsquo;s <code>.git/hooks</code> directory in a file called 
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;span6&quot;</span> &gt; test.txt
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;span12&quot;</span> &gt;&gt; test.txt
+</span><span class='line'>cat test.txt
+</span><span class='line'>span6
+</span><span class='line'>span12
 </span><span class='line'>
-</span><span class='line'>git diff --cached --name-only | <span class="se">\</span>
-</span><span class='line'>    <span class="nv">GREP_COLOR</span><span class="o">=</span><span class="s1">&#39;4;5;37;41&#39;</span> xargs grep --color --with-filename -n pry <span class="o">&amp;&amp;</span> <span class="se">\</span>
-</span><span class='line'>    <span class="nb">echo</span> <span class="s1">&#39;COMMIT REJECTED&#39;</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
-</span><span class='line'>    <span class="nb">exit </span>1
-</span><span class='line'><span class="nb">exit </span>0
+</span><span class='line'>sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9])/col-md-\1/g&#39;</span> test.txt
+</span><span class='line'>cat test.txt
+</span><span class='line'>col-md-6
+</span><span class='line'>col-md-12
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><em>Note</em>: Don&rsquo;t forget to <code>chmod pre-commit u+x</code> to make this file
-executable.</p>
-
-<p>Let&rsquo;s step through this script line by line.</p>
+<p>Beautiful.  Now we can run the command recursively on all of the files
+beneath a given directory using the <code>find</code> in combination with
+ <code>xargs</code>.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>find app/views/ -type f | xargs sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9])/col-md-\1/g&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>First, we use a shebang directive
-to specify the interpreter that will be used to run the code in this file.  Since
-we&rsquo;re writing a shell script we specify <code>/bin/sh</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>git diff --cached --name-only | <span class="se">\</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> <code>git diff</code> shows us any differences between the code in working directory
-and our previous commit.  We pass it the <code>--cached</code> flag to show
-changes to files that have already been staged.  The <code>--name-only</code> flag will
-print just the names of files that have been changed, rather than the
-actual changed contents of those files.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">GREP_COLOR</span><span class="o">=</span><span class="s1">&#39;4;5;37;41&#39;</span> xargs grep --color --with-filename -n pry <span class="o">&amp;&amp;</span> <span class="se">\</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> <code>GREP_COLOR</code> is an environment variable that determines the colors
- <code>grep</code> uses to highlight matches when the <code>--color</code> flag is given.  We
-use <code>xargs</code> to feed the individual file names that resulted from the previous line to <code>grep pry</code>.  The <code>--with-filename</code> and <code>-n</code> flags add the
-file name and line number to the results, respectively.   We use the
-logical operator <code>&amp;&amp;</code> to execute the next line of code only if the
-current line runs successfully.  (I.e. If <code>grep</code> doesn&rsquo;t find any
-occurances of &lsquo;pry&rsquo;, the chain stops here.)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s1">&#39;COMMIT REJECTED&#39;</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
-</span><span class='line'><span class="nb">exit </span>1
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If grep does find a &lsquo;pry&rsquo; anywhere in our staged changes, we print an error message and exit with a status
-of <code>1</code> for &lsquo;error&rsquo;, which tells <code>git</code> to terminate the commit.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">exit </span>0
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Otherwise, we exit with a status of <code>0</code> for &lsquo;successful&rsquo;, which tells <code>git</code> to go ahead with the commit.</p>
-
-<h3>Make This Hook Global</h3>
-
-<p>To make this hook global, run the following command and copy the script
-into <code>~/.git_template/hooks</code>.  Thereafter, every time you call <code>git init</code>, it will be included in your project&rsquo;s <code>.git/hooks</code> directory.</p>
-
-<pre><code>$ git config --global init.templatedir '~/.git_template'
-
-$ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
-</code></pre>
-
-<p>And there you have it.</p>
+<p>Cool.  But be really careful.  In-place file editing is scary.</p>
 </div>
 
 
@@ -215,12 +237,12 @@ $ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
   
 
 
-<time datetime="2014-06-20T19:59:36-07:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+<time datetime="2014-11-18T08:26:18-08:00" pubdate data-updated="true">Nov 18<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/git/'>git</a>
+    <a class='category' href='/blog/categories/command-line/'>command-line</a>, <a class='category' href='/blog/categories/find-and-replace/'>find-and-replace</a>, <a class='category' href='/blog/categories/sed/'>sed</a>, <a class='category' href='/blog/categories/shell/'>shell</a>
   
 </span>
 
@@ -229,7 +251,7 @@ $ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/" >Tweet</a>
   
   
   
@@ -238,10 +260,8 @@ $ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/" title="Previous Post: Cross-Domain Requests With Angular & Rails">&laquo; Cross-Domain Requests With Angular & Rails</a>
+        <a class="basic-alignment left" href="/blog/2014/10/23/the-big-difference-between-empty-and-none/" title="Previous Post: the big difference between empty and none">&laquo; the big difference between empty and none</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/15/addressing-ip/" title="Next Post: Addressing IP">Addressing IP &raquo;</a>
       
     </p>
   </footer>

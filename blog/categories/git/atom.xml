@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-11-17T13:30:58-05:00</updated>
+  <updated>2014-11-25T18:18:11-08:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[check for stray pry calls before commit]]></title>
     <link href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/"/>
-    <updated>2014-06-20T22:59:36-04:00</updated>
+    <updated>2014-06-20T19:59:36-07:00</updated>
     <id>http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit</id>
     <content type="html"><![CDATA[<p>Tired of accidentally checking <code>binding.pry</code> calls into source?  Here&rsquo;s a
 script that will take care of checking for them on your behalf.  Place
@@ -103,7 +103,7 @@ $ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
   <entry>
     <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/"/>
-    <updated>2014-02-04T22:55:48-05:00</updated>
+    <updated>2014-02-04T19:55:48-08:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git</id>
     <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
 
