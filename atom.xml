@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-11-25T18:18:11-08:00</updated>
+  <updated>2015-06-07T15:38:10-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -14,9 +14,87 @@
 
   
   <entry>
+    <title type="html"><![CDATA[SSH Tunneling]]></title>
+    <link href="http://MProuts.github.io/blog/2015/06/07/ssh-tunneling/"/>
+    <updated>2015-06-07T14:10:15-04:00</updated>
+    <id>http://MProuts.github.io/blog/2015/06/07/ssh-tunneling</id>
+    <content type="html"><![CDATA[<p>Say we you have two remote servers, <strong>A</strong> and <strong>B</strong>.  Let&rsquo;s say your machine can
+access <strong>A</strong> but not <strong>B</strong> (via SSH), <em>and</em> that <strong>A</strong> can access
+<strong>B</strong>.  To start a terminal session on <strong>B</strong> from your machine, you could
+SSH onto <strong>A</strong> first, then SSH onto <strong>B</strong> from there.</p>
+
+<pre><code>[me@localhost ~]# ssh root@host_a
+
+Welcome to A!
+Last login: Sun Jun  7 17:45:36 2015
+[root@host_a ~]# ssh ubuntu@host_b
+
+Welcome to B!
+Last login: Sun Jun  7 17:45:36 2015
+[ubuntu@host_b ~]# ...
+</code></pre>
+
+<p>This two-step process works fine for anything you might want to do
+manually on <strong>B</strong>, but what if you need to connect directly from you
+machine to <strong>B</strong> without the intermediate step of first connecting to <strong>A</strong>?</p>
+
+<p>For example, maybe you want to run a local rails development server but connect
+it to a database at <strong>B</strong>&rsquo;s port <code>3306</code>.  You can accomplish this via ssh
+tunneling.</p>
+
+<p>SSH tunneling allows you to forward two-way traffic <em>from</em> a
+port on your local machine <em>to</em> a port on a remote machine <em>through</em> an
+ssh connection to an intermediate machine (gaining the access rights of
+the intermediate machine along the way).</p>
+
+<p>You can set up an ssh tunnel by passing the <code>-L</code> option to the <code>ssh</code>
+command line utility in the following form:</p>
+
+<p><code>ssh -L &lt;local_port&gt;:&lt;end_host&gt;:&lt;end_port&gt; &lt;intermediate_user&gt;@&lt;intermediate_host&gt;</code></p>
+
+<p>Running this command opens a terminal session on the
+intermediate host.  The port forwarding will continue as long as this
+session remains open.</p>
+
+<p>Returning to our example:</p>
+
+<pre><code>[me@localhost ~]# ssh -L 3307:host_b:3306 root@host_a
+
+Welcome to A!
+Last login: Sun Jun  7 17:45:36 2015
+[root@host_a ~]# ...
+</code></pre>
+
+<h4>config/database.yml</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>development:
+</span><span class='line'>  ...
+</span><span class='line'>  username: deploy
+</span><span class='line'>  password: 1234
+</span><span class='line'>  host: 127.0.0.1
+</span><span class='line'>  port: 3307
+</span><span class='line'>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If we then fire up our rails server and point our browser at <code>127.0.0.1:3000</code>,
+we&rsquo;ll see our app connected to the database at <code>host_b:3306</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Find and Replace from Shell with Sed]]></title>
     <link href="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/"/>
-    <updated>2014-11-18T08:26:18-08:00</updated>
+    <updated>2014-11-18T11:26:18-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed</id>
     <content type="html"><![CDATA[<p>This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0.  Much of the change involved updating CSS classes.  Bootstrap 3&rsquo;s new grid system necessitated a slew of changes in the form <code>span6</code> &ndash;> <code>col-md-6</code>, where a prefix before a number changes, but the number
 stays the same.</p>
@@ -136,7 +214,7 @@ beneath a given directory using the <code>find</code> in combination with
   <entry>
     <title type="html"><![CDATA[the big difference between empty and none]]></title>
     <link href="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/"/>
-    <updated>2014-10-23T15:39:29-07:00</updated>
+    <updated>2014-10-23T18:39:29-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none</id>
     <content type="html"><![CDATA[<p>Given an ActiveRecord class with a has_many association&hellip;</p>
 
@@ -233,7 +311,7 @@ count-related methods on <code>Enumerable</code> and their <code>ActiveRecord::R
   <entry>
     <title type="html"><![CDATA[Load .secrets from .bashrc]]></title>
     <link href="http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc/"/>
-    <updated>2014-09-18T15:44:28-07:00</updated>
+    <updated>2014-09-18T18:44:28-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc</id>
     <content type="html"><![CDATA[<p>Your shell resource file is a great place to set local environment
 variables for use in development (things like API keys, etc.) &mdash; that is,
@@ -269,7 +347,7 @@ file gets loaded.</p>
   <entry>
     <title type="html"><![CDATA[Find And Replace From Outside Of Files]]></title>
     <link href="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/"/>
-    <updated>2014-09-13T19:10:03-07:00</updated>
+    <updated>2014-09-13T22:10:03-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files</id>
     <content type="html"><![CDATA[<p>Toss this puppy in your <code>.bashrc</code> for string substitution from
 outside of files.</p>
@@ -299,7 +377,7 @@ outside of files.</p>
   <entry>
     <title type="html"><![CDATA[Addressing IP]]></title>
     <link href="http://MProuts.github.io/blog/2014/07/15/addressing-ip/"/>
-    <updated>2014-07-15T08:44:20-07:00</updated>
+    <updated>2014-07-15T11:44:20-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/07/15/addressing-ip</id>
     <content type="html"><![CDATA[<h3>The Basics</h3>
 
@@ -410,7 +488,7 @@ every device connected to your LAN.</p>
   <entry>
     <title type="html"><![CDATA[check for stray pry calls before commit]]></title>
     <link href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/"/>
-    <updated>2014-06-20T19:59:36-07:00</updated>
+    <updated>2014-06-20T22:59:36-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit</id>
     <content type="html"><![CDATA[<p>Tired of accidentally checking <code>binding.pry</code> calls into source?  Here&rsquo;s a
 script that will take care of checking for them on your behalf.  Place
@@ -507,7 +585,7 @@ $ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
   <entry>
     <title type="html"><![CDATA[Cross-Domain Requests With Angular & Rails]]></title>
     <link href="http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/"/>
-    <updated>2014-06-01T06:54:29-07:00</updated>
+    <updated>2014-06-01T09:54:29-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails</id>
     <content type="html"><![CDATA[<p>Most modern web APIs provide programatic access to an application&rsquo;s internals by exposing RESTful JSON endpoints.  For example, a <code>POST</code> to <code>/pokemon.json</code> with a lump of properly-formatted JSON might create a new pokemon resource on the application server.</p>
 
@@ -689,7 +767,7 @@ we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
   <entry>
     <title type="html"><![CDATA[hello, bower]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/18/hello-bower/"/>
-    <updated>2014-05-18T08:05:16-07:00</updated>
+    <updated>2014-05-18T11:05:16-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/18/hello-bower</id>
     <content type="html"><![CDATA[<p>Bower is a simple package manager for front-end assets like CSS and
 Javascript. It provides an elegant solution for including third-party assets and libraries (e.g.
@@ -737,7 +815,7 @@ installed packages will vary on a project-by-project basis.</p>
   <entry>
     <title type="html"><![CDATA[How To Use Homebrew's Version of Git]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git/"/>
-    <updated>2014-05-04T12:20:02-07:00</updated>
+    <updated>2014-05-04T15:20:02-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git</id>
     <content type="html"><![CDATA[<p>If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it&rsquo;s important to know which version of a particular package gets run when you type a command at the command line.  For example, when you type <code>git status</code>, are you running OSX&rsquo;s version of git or Homebrew&rsquo;s version?</p>
 
@@ -813,7 +891,7 @@ to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshr
   <entry>
     <title type="html"><![CDATA[psql cheatsheet]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
-    <updated>2014-05-02T12:48:12-07:00</updated>
+    <updated>2014-05-02T15:48:12-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
     <content type="html"><![CDATA[<p>Django development requires that you know your way around your database
 console.  Here are the basics for PostgreSQL:</p>
@@ -865,7 +943,7 @@ console.  Here are the basics for PostgreSQL:</p>
   <entry>
     <title type="html"><![CDATA[Star Register Not Working In Vim?]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/"/>
-    <updated>2014-05-01T10:19:04-07:00</updated>
+    <updated>2014-05-01T13:19:04-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim</id>
     <content type="html"><![CDATA[<p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
 
@@ -929,7 +1007,7 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
   <entry>
     <title type="html"><![CDATA[friendly forwarding with devise]]></title>
     <link href="http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise/"/>
-    <updated>2014-04-06T14:10:43-07:00</updated>
+    <updated>2014-04-06T17:10:43-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise</id>
     <content type="html"><![CDATA[<p>It&rsquo;s pretty common to require that a user be logged in to perform certain
 actions around your application. For example, let&rsquo;s say you wanted to make sure a user
@@ -1073,7 +1151,7 @@ default <code>after_sign_in_path_for</code> method.</p>
   <entry>
     <title type="html"><![CDATA[Testing with FactoryGirl and Faker]]></title>
     <link href="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/"/>
-    <updated>2014-03-25T16:57:39-07:00</updated>
+    <updated>2014-03-25T19:57:39-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker</id>
     <content type="html"><![CDATA[<p>In the context of Rails development, fixtures provide an easy way to create sample data and
 make it available to your tests. Every time Rails generates a model, it
@@ -1264,7 +1342,7 @@ And, of course, there will always be more.<br/>
   <entry>
     <title type="html"><![CDATA[Bootstrapping a Sinatra App]]></title>
     <link href="http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app/"/>
-    <updated>2014-03-10T09:00:09-07:00</updated>
+    <updated>2014-03-10T12:00:09-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app</id>
     <content type="html"><![CDATA[<p>Sinatra is a simple open-source web framework for ruby.  It&rsquo;s similar to Rails,
 but much smaller, weighing in around 1,500 lines of code compared to Rail&rsquo;s
@@ -1612,7 +1690,7 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
   <entry>
     <title type="html"><![CDATA[7 Colloquialisms From Code]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code/"/>
-    <updated>2014-02-24T12:19:09-08:00</updated>
+    <updated>2014-02-24T15:19:09-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code</id>
     <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 7 you might not know&hellip;</p>
 
@@ -1854,7 +1932,7 @@ developers for other developers to find.</p>
   <entry>
     <title type="html"><![CDATA[Parameters vs. Arguments]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments/"/>
-    <updated>2014-02-09T10:20:04-08:00</updated>
+    <updated>2014-02-09T13:20:04-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments</id>
     <content type="html"><![CDATA[<blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
 
@@ -1941,7 +2019,7 @@ developers for other developers to find.</p>
   <entry>
     <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/"/>
-    <updated>2014-02-04T19:55:48-08:00</updated>
+    <updated>2014-02-04T22:55:48-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git</id>
     <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
 

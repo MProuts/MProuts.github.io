@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-11-25T18:18:11-08:00</updated>
+  <updated>2015-06-07T15:38:10-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Star Register Not Working In Vim?]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/"/>
-    <updated>2014-05-01T10:19:04-07:00</updated>
+    <updated>2014-05-01T13:19:04-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim</id>
     <content type="html"><![CDATA[<p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
 

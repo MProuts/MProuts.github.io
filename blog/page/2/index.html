@@ -9,7 +9,9 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="The star register provides a convenient way to read and write from the system clipboard in vim. (For example: "*yy in vim, ctrl-v in another &hellip;">
+  <meta name="description" content="Django development requires that you know your way around your database
+console. Here are the basics for PostgreSQL: start 1
+psql #Start interactive &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +85,85 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/05/02/psql-cheatsheet/">Psql Cheatsheet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-02T15:48:12-04:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Django development requires that you know your way around your database
+console.  Here are the basics for PostgreSQL:</p>
+
+<h3>start</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>psql            #Start interactive terminal</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>database</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\list                    #List databases
+</span><span class='line'>\connect &lt;db&gt;            #Switch connection
+</span><span class='line'>
+</span><span class='line'>SELECT 
+</span><span class='line'>current_database();      #Show database connection</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>tables</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\d              #List tables
+</span><span class='line'>\d &lt;table&gt;      #List table columns</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>help</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\?              #List backslash commands
+</span><span class='line'>\help           #List SQL commands</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>quit</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\q              #Quit  </span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/05/01/star-register-not-working-in-vim/">Star Register Not Working in Vim?</a></h1>
     
     
@@ -99,7 +180,7 @@
   
 
 
-<time datetime="2014-05-01T10:19:04-07:00" pubdate data-updated="true">May 1<span>st</span>, 2014</time>
+<time datetime="2014-05-01T13:19:04-04:00" pubdate data-updated="true">May 1<span>st</span>, 2014</time>
         
       </p>
     
@@ -190,7 +271,7 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
   
 
 
-<time datetime="2014-04-06T14:10:43-07:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
+<time datetime="2014-04-06T17:10:43-04:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
         
       </p>
     
@@ -361,7 +442,7 @@ default <code>after_sign_in_path_for</code> method.</p>
   
 
 
-<time datetime="2014-03-25T16:57:39-07:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+<time datetime="2014-03-25T19:57:39-04:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
         
       </p>
     
@@ -579,7 +660,7 @@ And, of course, there will always be more.<br/>
   
 
 
-<time datetime="2014-03-10T09:00:09-07:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
+<time datetime="2014-03-10T12:00:09-04:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
         
       </p>
     
@@ -954,7 +1035,7 @@ Instead, we use a gem called shotgun, which takes care of reloading for us.  Aft
   
 
 
-<time datetime="2014-02-24T12:19:09-08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time>
+<time datetime="2014-02-24T15:19:09-05:00" pubdate data-updated="true">Feb 24<span>th</span>, 2014</time>
         
       </p>
     
@@ -1223,7 +1304,7 @@ developers for other developers to find.</p>
   
 
 
-<time datetime="2014-02-09T10:20:04-08:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
+<time datetime="2014-02-09T13:20:04-05:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
         
       </p>
     
@@ -1337,7 +1418,7 @@ developers for other developers to find.</p>
   
 
 
-<time datetime="2014-02-04T19:55:48-08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
+<time datetime="2014-02-04T22:55:48-05:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
         
       </p>
     
@@ -1508,6 +1589,10 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/07/ssh-tunneling/">SSH Tunneling</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">Find and Replace From Shell With Sed</a>
       </li>
     
@@ -1523,10 +1608,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
         <a href="/blog/2014/09/13/find-and-replace-from-outside-of-files/">Find and Replace From Outside of Files</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/07/15/addressing-ip/">Addressing IP</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1540,7 +1621,7 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Michael Prouty -
+  Copyright &copy; 2015 - Michael Prouty -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>. Design by <a href="http://octopressthemes.com">Octopress Themes</a>.</span>
 </p>
 

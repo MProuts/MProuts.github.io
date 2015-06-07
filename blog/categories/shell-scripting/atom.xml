@@ -4,7 +4,7 @@
   <title><![CDATA[Category: shell scripting | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/shell-scripting/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2014-11-25T18:18:11-08:00</updated>
+  <updated>2015-06-07T15:38:10-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>
     <link href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/"/>
-    <updated>2014-02-04T19:55:48-08:00</updated>
+    <updated>2014-02-04T22:55:48-05:00</updated>
     <id>http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git</id>
     <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
 

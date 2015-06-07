@@ -9,7 +9,9 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0. Much of the change involved updating CSS classes. &hellip;">
+  <meta name="description" content="Say we you have two remote servers, A and B. Let&rsquo;s say your machine can
+access A but not B (via SSH), and that A can access
+B. To start a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +85,111 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/06/07/ssh-tunneling/">SSH Tunneling</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-07T14:10:15-04:00" pubdate data-updated="true">Jun 7<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Say we you have two remote servers, <strong>A</strong> and <strong>B</strong>.  Let&rsquo;s say your machine can
+access <strong>A</strong> but not <strong>B</strong> (via SSH), <em>and</em> that <strong>A</strong> can access
+<strong>B</strong>.  To start a terminal session on <strong>B</strong> from your machine, you could
+SSH onto <strong>A</strong> first, then SSH onto <strong>B</strong> from there.</p>
+
+<pre><code>[me@localhost ~]# ssh root@host_a
+
+Welcome to A!
+Last login: Sun Jun  7 17:45:36 2015
+[root@host_a ~]# ssh ubuntu@host_b
+
+Welcome to B!
+Last login: Sun Jun  7 17:45:36 2015
+[ubuntu@host_b ~]# ...
+</code></pre>
+
+<p>This two-step process works fine for anything you might want to do
+manually on <strong>B</strong>, but what if you need to connect directly from you
+machine to <strong>B</strong> without the intermediate step of first connecting to <strong>A</strong>?</p>
+
+<p>For example, maybe you want to run a local rails development server but connect
+it to a database at <strong>B</strong>&rsquo;s port <code>3306</code>.  You can accomplish this via ssh
+tunneling.</p>
+
+<p>SSH tunneling allows you to forward two-way traffic <em>from</em> a
+port on your local machine <em>to</em> a port on a remote machine <em>through</em> an
+ssh connection to an intermediate machine (gaining the access rights of
+the intermediate machine along the way).</p>
+
+<p>You can set up an ssh tunnel by passing the <code>-L</code> option to the <code>ssh</code>
+command line utility in the following form:</p>
+
+<p><code>ssh -L &lt;local_port&gt;:&lt;end_host&gt;:&lt;end_port&gt; &lt;intermediate_user&gt;@&lt;intermediate_host&gt;</code></p>
+
+<p>Running this command opens a terminal session on the
+intermediate host.  The port forwarding will continue as long as this
+session remains open.</p>
+
+<p>Returning to our example:</p>
+
+<pre><code>[me@localhost ~]# ssh -L 3307:host_b:3306 root@host_a
+
+Welcome to A!
+Last login: Sun Jun  7 17:45:36 2015
+[root@host_a ~]# ...
+</code></pre>
+
+<h4>config/database.yml</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>development:
+</span><span class='line'>  ...
+</span><span class='line'>  username: deploy
+</span><span class='line'>  password: 1234
+</span><span class='line'>  host: 127.0.0.1
+</span><span class='line'>  port: 3307
+</span><span class='line'>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If we then fire up our rails server and point our browser at <code>127.0.0.1:3000</code>,
+we&rsquo;ll see our app connected to the database at <code>host_b:3306</code>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">Find and Replace From Shell With Sed</a></h1>
     
     
@@ -99,7 +206,7 @@
   
 
 
-<time datetime="2014-11-18T08:26:18-08:00" pubdate data-updated="true">Nov 18<span>th</span>, 2014</time>
+<time datetime="2014-11-18T11:26:18-05:00" pubdate data-updated="true">Nov 18<span>th</span>, 2014</time>
         
       </p>
     
@@ -246,7 +353,7 @@ beneath a given directory using the <code>find</code> in combination with
   
 
 
-<time datetime="2014-10-23T15:39:29-07:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
+<time datetime="2014-10-23T18:39:29-04:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
         
       </p>
     
@@ -370,7 +477,7 @@ count-related methods on <code>Enumerable</code> and their <code>ActiveRecord::R
   
 
 
-<time datetime="2014-09-18T15:44:28-07:00" pubdate data-updated="true">Sep 18<span>th</span>, 2014</time>
+<time datetime="2014-09-18T18:44:28-04:00" pubdate data-updated="true">Sep 18<span>th</span>, 2014</time>
         
       </p>
     
@@ -433,7 +540,7 @@ file gets loaded.</p>
   
 
 
-<time datetime="2014-09-13T19:10:03-07:00" pubdate data-updated="true">Sep 13<span>th</span>, 2014</time>
+<time datetime="2014-09-13T22:10:03-04:00" pubdate data-updated="true">Sep 13<span>th</span>, 2014</time>
         
       </p>
     
@@ -490,7 +597,7 @@ outside of files.</p>
   
 
 
-<time datetime="2014-07-15T08:44:20-07:00" pubdate data-updated="true">Jul 15<span>th</span>, 2014</time>
+<time datetime="2014-07-15T11:44:20-04:00" pubdate data-updated="true">Jul 15<span>th</span>, 2014</time>
         
       </p>
     
@@ -628,7 +735,7 @@ every device connected to your LAN.</p>
   
 
 
-<time datetime="2014-06-20T19:59:36-07:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+<time datetime="2014-06-20T22:59:36-04:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
         
       </p>
     
@@ -752,7 +859,7 @@ $ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
   
 
 
-<time datetime="2014-06-01T06:54:29-07:00" pubdate data-updated="true">Jun 1<span>st</span>, 2014</time>
+<time datetime="2014-06-01T09:54:29-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2014</time>
         
       </p>
     
@@ -961,7 +1068,7 @@ we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
   
 
 
-<time datetime="2014-05-18T08:05:16-07:00" pubdate data-updated="true">May 18<span>th</span>, 2014</time>
+<time datetime="2014-05-18T11:05:16-04:00" pubdate data-updated="true">May 18<span>th</span>, 2014</time>
         
       </p>
     
@@ -1036,7 +1143,7 @@ installed packages will vary on a project-by-project basis.</p>
   
 
 
-<time datetime="2014-05-04T12:20:02-07:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
+<time datetime="2014-05-04T15:20:02-04:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
         
       </p>
     
@@ -1118,85 +1225,6 @@ to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshr
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/02/psql-cheatsheet/">Psql Cheatsheet</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-02T12:48:12-07:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Django development requires that you know your way around your database
-console.  Here are the basics for PostgreSQL:</p>
-
-<h3>start</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>psql            #Start interactive terminal</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>database</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\list                    #List databases
-</span><span class='line'>\connect &lt;db&gt;            #Switch connection
-</span><span class='line'>
-</span><span class='line'>SELECT 
-</span><span class='line'>current_database();      #Show database connection</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>tables</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\d              #List tables
-</span><span class='line'>\d &lt;table&gt;      #List table columns</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>help</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\?              #List backslash commands
-</span><span class='line'>\help           #List SQL commands</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>quit</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>\q              #Quit  </span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1241,6 +1269,10 @@ console.  Here are the basics for PostgreSQL:</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/07/ssh-tunneling/">SSH Tunneling</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">Find and Replace From Shell With Sed</a>
       </li>
     
@@ -1256,10 +1288,6 @@ console.  Here are the basics for PostgreSQL:</p>
         <a href="/blog/2014/09/13/find-and-replace-from-outside-of-files/">Find and Replace From Outside of Files</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/07/15/addressing-ip/">Addressing IP</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1273,7 +1301,7 @@ console.  Here are the basics for PostgreSQL:</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Michael Prouty -
+  Copyright &copy; 2015 - Michael Prouty -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>. Design by <a href="http://octopressthemes.com">Octopress Themes</a>.</span>
 </p>
 
