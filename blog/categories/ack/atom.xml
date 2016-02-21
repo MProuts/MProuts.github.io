@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ack | Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/blog/categories/ack/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2015-06-07T15:38:10-04:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Find And Replace From Outside Of Files]]></title>
+    <link href="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/"/>
+    <updated>2014-09-13T22:10:03-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files</id>
+    <content type="html"><![CDATA[<p>Toss this puppy in your <code>.bashrc</code> for string substitution from
+outside of files.</p>
+
+<p><code>sh
+function ack_sub {
+  ack -l $1 $3 | xargs perl -pi -E 's/'$1'/'$2'/g'
+}
+</code></p>
+
+<h3>Syntax</h3>
+
+<blockquote><p><code>ack_sub &lt;target&gt; &lt;substitution&gt; &lt;directory&gt;</code></p></blockquote>
+
+<h3>Example</h3>
+
+<p><code>sh
+$ ack_sub "Mikey" "Michael" "./taxes"
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

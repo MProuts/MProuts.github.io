@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Find and Replace from Shell with Sed - Full Stack Snacks</title>
+  <meta name="author" content="Michael Prouty">
+
+  
+  <meta name="description" content="This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0. Much of the change involved updating CSS classes. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Full Stack Snacks" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-50683410-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Full Stack Snacks</a></h1>
+  
+    <h2>One byte at a time.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:MProuts.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Find and Replace From Shell With Sed</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-18T11:26:18-05:00" pubdate data-updated="true">Nov 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0.  Much of the change involved updating CSS classes.  Bootstrap 3&rsquo;s new grid system necessitated a slew of changes in the form <code>span6</code> &ndash;> <code>col-md-6</code>, where a prefix before a number changes, but the number
+stays the same.</p>
+
+<p>In such cases, you need to include the number character in the regex
+you&rsquo;re matching against (e.g. so that you don&rsquo;t inadvertently change a bunch
+of <code>&lt;span&gt;</code> tags into <code>&lt;col-md-&gt;</code> tags). At the same time, you
+need include the number portion in the replacement string &mdash; i.e.
+ <code>class=span1</code> becomes <code>class=col-md-1</code>, <code>class=span12</code>
+becomes <code>class=col-md-12</code>, etc.</p>
+
+<p>Both of these requirements call for using regex captures.
+However, there were some problems getting regex captures to work with the <a href="/blog/2014/09/13/find-and-replace-from-outside-of-files/">ack_sub</a> function I created earlier (namely, both perl regex captures and bash arguments assign to
+variables prefixed with dollar signs like <code>$1</code>.)</p>
+
+<p>After a little research, a popular unix utility called <code>sed</code>
+surfaced as a tidy solution.  Using the example I gave earlier, the command to change all <code>span6</code> classes to <code>col-md-6</code> ones is
+as follows.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>find . -type f | xargs sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9]+)/col-md-\1/g&#39;</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s break this down.  To start, <code>sed</code> accepts a vi-style regex substitution
+command as its first argument.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span> | sed <span class="s1">&#39;s/ello/i/&#39;</span>
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It also accepts file name as a second argument.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span> &gt; test.txt
+</span><span class='line'>sed <span class="s1">&#39;s/ello/i/&#39;</span> test.txt
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Note</strong>: In this form, <code>sed</code> reads from the file, but does not edit it.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>cat test.txt
+</span><span class='line'>hello
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order to actually <em>edit</em> the file, we&rsquo;ll pass <code>sed</code> the <code>-i</code> flag (for in-place file editing).
+With the <code>-i</code> flag, <code>sed</code> takes three arguments &mdash; the extension to
+append to a backup copy of the original file, followed by the
+substitution command string, followed by the name of the file to execute the command on. If you want to edit the file without creating a backup, you can
+pass an empty string as the first argument.</p>
+
+<p><strong>Warning</strong>: This is risky.  Only try this at
+home if the files you&rsquo;re editing are backed up and/or under version
+control.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/ello/i/&#39;</span> test.txt
+</span><span class='line'>
+</span><span class='line'>cat test.txt
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Great, now in order to use regex captures as we discussed earlier,
+we&rsquo;ll pass <code>sed</code> the <code>-E</code> flag, which enables advanced regex features.  When used in combination with the <code>-i</code> flag, the <code>-E</code> flag goes between the first and second arguments.</p>
+
+<p><strong>Note</strong>: <code>sed</code> regexes don&rsquo;t support the digit-matching escape character <code>\d</code>.  We&rsquo;ll use the character range <code>[0-9]</code> instead.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;span6&quot;</span> &gt; test.txt
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;span12&quot;</span> &gt;&gt; test.txt
+</span><span class='line'>cat test.txt
+</span><span class='line'>span6
+</span><span class='line'>span12
+</span><span class='line'>
+</span><span class='line'>sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9])/col-md-\1/g&#39;</span> test.txt
+</span><span class='line'>cat test.txt
+</span><span class='line'>col-md-6
+</span><span class='line'>col-md-12
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Beautiful.  Now we can run the command recursively on all of the files
+beneath a given directory using the <code>find</code> in combination with
+ <code>xargs</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>find app/views/ -type f | xargs sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9])/col-md-\1/g&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cool.  But be really careful.  In-place file editing is scary.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Michael Prouty</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-18T11:26:18-05:00" pubdate data-updated="true">Nov 18<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/command-line/'>command-line</a>, <a class='category' href='/blog/categories/find-and-replace/'>find-and-replace</a>, <a class='category' href='/blog/categories/sed/'>sed</a>, <a class='category' href='/blog/categories/shell/'>shell</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/" data-via="" data-counturl="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/10/23/the-big-difference-between-empty-and-none/" title="Previous Post: the big difference between empty and none">&laquo; the big difference between empty and none</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/06/07/ssh-tunneling/" title="Next Post: SSH Tunneling">SSH Tunneling &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  <style>
+<style>
+  .ig-b- { display: inline-block; }
+  .ig-b- img { visibility: hidden; }
+  .ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+  .ig-b-16 { width: 16px; height: 16px; background: url(//badges.instagram.com/static/images/ig-badge-sprite-16.png) no-repeat 0 0; }
+  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .ig-b-16 { background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-16@2x.png); background-size: 60px 178px; } }
+  .gravatar p { margin:0px }
+  .gravatar > .text, .image { float:left }
+  .gravatar .name { font-weight:bold;margin-top:4px; }
+  .gravatar .text { margin-left:5px; }
+  .badge { display:block;margin-bottom:3px; }
+  .clearfix { display:block;clear:both;visibility:hidden; }
+</style>
+<section>
+	<span class="gravatar">
+		<img class="image" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+    <span class="text">
+      <p class="name">Michael Prouty</p>
+      <a href="http://instagram.com/_mprouts?ref=badge" class="ig-b- ig-b-16 badge"><img src="//badges.instagram.com/static/images/ig-badge-16.png" alt="Instagram" /></a><p></p>
+      <p>Ruby Developer</p>
+      <p><a href="http://logcheck.com" target="_blank">LogCheck</a></p>
+    </span>
+    <span class="clearfix">.</span>
+	</span>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/06/07/ssh-tunneling/">SSH Tunneling</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">Find and Replace From Shell With Sed</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/23/the-big-difference-between-empty-and-none/">The Big Difference Between Empty and None</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/18/load-secrets-from-bashrc/">Load .secrets From .bashrc</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/13/find-and-replace-from-outside-of-files/">Find and Replace From Outside of Files</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Michael Prouty -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>. Design by <a href="http://octopressthemes.com">Octopress Themes</a>.</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

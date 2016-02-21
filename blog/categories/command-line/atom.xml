@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: command-line | Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/blog/categories/command-line/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2015-06-07T15:38:10-04:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Find and Replace from Shell with Sed]]></title>
+    <link href="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/"/>
+    <updated>2014-11-18T11:26:18-05:00</updated>
+    <id>http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed</id>
+    <content type="html"><![CDATA[<p>This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0.  Much of the change involved updating CSS classes.  Bootstrap 3&rsquo;s new grid system necessitated a slew of changes in the form <code>span6</code> &ndash;> <code>col-md-6</code>, where a prefix before a number changes, but the number
+stays the same.</p>
+
+<p>In such cases, you need to include the number character in the regex
+you&rsquo;re matching against (e.g. so that you don&rsquo;t inadvertently change a bunch
+of <code>&lt;span&gt;</code> tags into <code>&lt;col-md-&gt;</code> tags). At the same time, you
+need include the number portion in the replacement string &mdash; i.e.
+ <code>class=span1</code> becomes <code>class=col-md-1</code>, <code>class=span12</code>
+becomes <code>class=col-md-12</code>, etc.</p>
+
+<p>Both of these requirements call for using regex captures.
+However, there were some problems getting regex captures to work with the <a href="/blog/2014/09/13/find-and-replace-from-outside-of-files/">ack_sub</a> function I created earlier (namely, both perl regex captures and bash arguments assign to
+variables prefixed with dollar signs like <code>$1</code>.)</p>
+
+<p>After a little research, a popular unix utility called <code>sed</code>
+surfaced as a tidy solution.  Using the example I gave earlier, the command to change all <code>span6</code> classes to <code>col-md-6</code> ones is
+as follows.</p>
+
+<p><code>sh
+find . -type f | xargs sed -i '' -E 's/span([0-9]+)/col-md-\1/g';
+</code></p>
+
+<p>Let&rsquo;s break this down.  To start, <code>sed</code> accepts a vi-style regex substitution
+command as its first argument.</p>
+
+<p><code>sh
+echo "hello" | sed 's/ello/i/'
+hi
+</code></p>
+
+<p>It also accepts file name as a second argument.</p>
+
+<p><code>sh
+echo "hello" &gt; test.txt
+sed 's/ello/i/' test.txt
+hi
+</code></p>
+
+<p><strong>Note</strong>: In this form, <code>sed</code> reads from the file, but does not edit it.</p>
+
+<p><code>sh
+cat test.txt
+hello
+</code></p>
+
+<p>In order to actually <em>edit</em> the file, we&rsquo;ll pass <code>sed</code> the <code>-i</code> flag (for in-place file editing).
+With the <code>-i</code> flag, <code>sed</code> takes three arguments &mdash; the extension to
+append to a backup copy of the original file, followed by the
+substitution command string, followed by the name of the file to execute the command on. If you want to edit the file without creating a backup, you can
+pass an empty string as the first argument.</p>
+
+<p><strong>Warning</strong>: This is risky.  Only try this at
+home if the files you&rsquo;re editing are backed up and/or under version
+control.</p>
+
+<p>`&ldquo;sh
+sed -i &rdquo; &rsquo;s/ello/i/&lsquo; test.txt</p>
+
+<p>cat test.txt
+hi
+<code>
+Great, now in order to use regex captures as we discussed earlier,
+we'll pass</code>sed<code>the</code>-E<code>flag, which enables advanced regex features.  When used in combination with the</code>-i<code>flag, the</code>-E``` flag goes between the first and second arguments.</p>
+
+<p><strong>Note</strong>: <code>sed</code> regexes don&rsquo;t support the digit-matching escape character <code>\d</code>.  We&rsquo;ll use the character range <code>[0-9]</code> instead.</p>
+
+<p>```
+echo &ldquo;span6&rdquo; > test.txt
+echo &ldquo;span12&rdquo; >> test.txt
+cat test.txt
+span6
+span12</p>
+
+<p>sed -i &lsquo;&rsquo; -E &rsquo;s/span([0-9])/col-md-\1/g' test.txt
+cat test.txt
+col-md-6
+col-md-12
+```</p>
+
+<p>Beautiful.  Now we can run the command recursively on all of the files
+beneath a given directory using the <code>find</code> in combination with
+ <code>xargs</code>.</p>
+
+<p><code>
+find app/views/ -type f | xargs sed -i '' -E 's/span([0-9])/col-md-\1/g'
+</code></p>
+
+<p>Cool.  But be really careful.  In-place file editing is scary.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,2140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2015-06-07T15:38:10-04:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[SSH Tunneling]]></title>
+    <link href="http://MProuts.github.io/blog/2015/06/07/ssh-tunneling/"/>
+    <updated>2015-06-07T14:10:15-04:00</updated>
+    <id>http://MProuts.github.io/blog/2015/06/07/ssh-tunneling</id>
+    <content type="html"><![CDATA[<p>Say we you have two remote servers, <strong>A</strong> and <strong>B</strong>.  Let&rsquo;s say your machine can
+access <strong>A</strong> but not <strong>B</strong> (via SSH), <em>and</em> that <strong>A</strong> can access
+<strong>B</strong>.  To start a terminal session on <strong>B</strong> from your machine, you could
+SSH onto <strong>A</strong> first, then SSH onto <strong>B</strong> from there.</p>
+
+<pre><code>[me@localhost ~]# ssh root@host_a
+
+Welcome to A!
+Last login: Sun Jun  7 17:45:36 2015
+[root@host_a ~]# ssh ubuntu@host_b
+
+Welcome to B!
+Last login: Sun Jun  7 17:45:36 2015
+[ubuntu@host_b ~]# ...
+</code></pre>
+
+<p>This two-step process works fine for anything you might want to do
+manually on <strong>B</strong>, but what if you need to connect directly from you
+machine to <strong>B</strong> without the intermediate step of first connecting to <strong>A</strong>?</p>
+
+<p>For example, maybe you want to run a local rails development server but connect
+it to a database at <strong>B</strong>&rsquo;s port <code>3306</code>.  You can accomplish this via ssh
+tunneling.</p>
+
+<p>SSH tunneling allows you to forward two-way traffic <em>from</em> a
+port on your local machine <em>to</em> a port on a remote machine <em>through</em> an
+ssh connection to an intermediate machine (gaining the access rights of
+the intermediate machine along the way).</p>
+
+<p>You can set up an ssh tunnel by passing the <code>-L</code> option to the <code>ssh</code>
+command line utility in the following form:</p>
+
+<p><code>ssh -L &lt;local_port&gt;:&lt;end_host&gt;:&lt;end_port&gt; &lt;intermediate_user&gt;@&lt;intermediate_host&gt;</code></p>
+
+<p>Running this command opens a terminal session on the
+intermediate host.  The port forwarding will continue as long as this
+session remains open.</p>
+
+<p>Returning to our example:</p>
+
+<pre><code>[me@localhost ~]# ssh -L 3307:host_b:3306 root@host_a
+
+Welcome to A!
+Last login: Sun Jun  7 17:45:36 2015
+[root@host_a ~]# ...
+</code></pre>
+
+<h4>config/database.yml</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>development:
+</span><span class='line'>  ...
+</span><span class='line'>  username: deploy
+</span><span class='line'>  password: 1234
+</span><span class='line'>  host: 127.0.0.1
+</span><span class='line'>  port: 3307
+</span><span class='line'>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If we then fire up our rails server and point our browser at <code>127.0.0.1:3000</code>,
+we&rsquo;ll see our app connected to the database at <code>host_b:3306</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Find and Replace from Shell with Sed]]></title>
+    <link href="http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/"/>
+    <updated>2014-11-18T11:26:18-05:00</updated>
+    <id>http://MProuts.github.io/blog/2014/11/18/find-and-replace-from-the-shell-with-sed</id>
+    <content type="html"><![CDATA[<p>This came up again while I was in the process of upgrading our app from Bootstrap 2.3 to 3.0.  Much of the change involved updating CSS classes.  Bootstrap 3&rsquo;s new grid system necessitated a slew of changes in the form <code>span6</code> &ndash;> <code>col-md-6</code>, where a prefix before a number changes, but the number
+stays the same.</p>
+
+<p>In such cases, you need to include the number character in the regex
+you&rsquo;re matching against (e.g. so that you don&rsquo;t inadvertently change a bunch
+of <code>&lt;span&gt;</code> tags into <code>&lt;col-md-&gt;</code> tags). At the same time, you
+need include the number portion in the replacement string &mdash; i.e.
+ <code>class=span1</code> becomes <code>class=col-md-1</code>, <code>class=span12</code>
+becomes <code>class=col-md-12</code>, etc.</p>
+
+<p>Both of these requirements call for using regex captures.
+However, there were some problems getting regex captures to work with the <a href="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/">ack_sub</a> function I created earlier (namely, both perl regex captures and bash arguments assign to
+variables prefixed with dollar signs like <code>$1</code>.)</p>
+
+<p>After a little research, a popular unix utility called <code>sed</code>
+surfaced as a tidy solution.  Using the example I gave earlier, the command to change all <code>span6</code> classes to <code>col-md-6</code> ones is
+as follows.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>find . -type f | xargs sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9]+)/col-md-\1/g&#39;</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s break this down.  To start, <code>sed</code> accepts a vi-style regex substitution
+command as its first argument.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span> | sed <span class="s1">&#39;s/ello/i/&#39;</span>
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It also accepts file name as a second argument.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span> &gt; test.txt
+</span><span class='line'>sed <span class="s1">&#39;s/ello/i/&#39;</span> test.txt
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Note</strong>: In this form, <code>sed</code> reads from the file, but does not edit it.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>cat test.txt
+</span><span class='line'>hello
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order to actually <em>edit</em> the file, we&rsquo;ll pass <code>sed</code> the <code>-i</code> flag (for in-place file editing).
+With the <code>-i</code> flag, <code>sed</code> takes three arguments &mdash; the extension to
+append to a backup copy of the original file, followed by the
+substitution command string, followed by the name of the file to execute the command on. If you want to edit the file without creating a backup, you can
+pass an empty string as the first argument.</p>
+
+<p><strong>Warning</strong>: This is risky.  Only try this at
+home if the files you&rsquo;re editing are backed up and/or under version
+control.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/ello/i/&#39;</span> test.txt
+</span><span class='line'>
+</span><span class='line'>cat test.txt
+</span><span class='line'>hi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Great, now in order to use regex captures as we discussed earlier,
+we&rsquo;ll pass <code>sed</code> the <code>-E</code> flag, which enables advanced regex features.  When used in combination with the <code>-i</code> flag, the <code>-E</code> flag goes between the first and second arguments.</p>
+
+<p><strong>Note</strong>: <code>sed</code> regexes don&rsquo;t support the digit-matching escape character <code>\d</code>.  We&rsquo;ll use the character range <code>[0-9]</code> instead.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;span6&quot;</span> &gt; test.txt
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;span12&quot;</span> &gt;&gt; test.txt
+</span><span class='line'>cat test.txt
+</span><span class='line'>span6
+</span><span class='line'>span12
+</span><span class='line'>
+</span><span class='line'>sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9])/col-md-\1/g&#39;</span> test.txt
+</span><span class='line'>cat test.txt
+</span><span class='line'>col-md-6
+</span><span class='line'>col-md-12
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Beautiful.  Now we can run the command recursively on all of the files
+beneath a given directory using the <code>find</code> in combination with
+ <code>xargs</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>find app/views/ -type f | xargs sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9])/col-md-\1/g&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cool.  But be really careful.  In-place file editing is scary.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[the big difference between empty and none]]></title>
+    <link href="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/"/>
+    <updated>2014-10-23T18:39:29-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none</id>
+    <content type="html"><![CDATA[<p>Given an ActiveRecord class with a has_many association&hellip;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:records</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;this is a mistake.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">none?</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Why, you ask?</p>
+
+<p>Let&rsquo;s step back for a second.  On a less-abstract level, the correct way to answer the
+question, &ldquo;Are there any records that belong to this user?&rdquo; is to
+fire a SQL statement with a <code>SELECT count(*)</code> clause, and see whether the result is
+greater than 0.  That&rsquo;s what we want to have happen behind the scenes.</p>
+
+<p>However, that&rsquo;s not what&rsquo;s happening when we call <code>none?</code>, because
+<code>none?</code> is not defined on <code>ActiveRecord::Relation</code> (the
+fancy/magical Rails class that is responsible for abstracting away cross-table SQL queries), but rather, it is
+defined on the plain old Ruby module <code>Enumerable</code>.</p>
+
+<p>So, what you might assume (as I did) is doing something smart and
+reasonable (i.e.
+performing a SQL count, and comparing the result with zero), is actually
+doing something <strong>VERY</strong> stupid (i.e. loading a ton of Ruby objects into memory
+and performing a count on them there).  You can imagine that if users had thousands of
+records each, this line could constitutes a serious resource drain for your application.</p>
+
+<h3>Solution</h3>
+
+<blockquote><p>Know thy <code>ActiveRecord::Relation</code> methods.</p></blockquote>
+
+<p>The method you were probably reaching for was <code>ActiveRecord::Relation#empty?</code>, which
+performs a SQL count().  For reference, here&rsquo;s a breakdown of some other
+count-related methods on <code>Enumerable</code> and their <code>ActiveRecord::Relation</code> counterparts.</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th> Question </th>
+<th> Enumberable Method </th>
+<th> ActiveRecord::Relation Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td> <strong>More than zero</strong> objects in collection? </td>
+<td> <code>any?</code> </td>
+<td> <code>any?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>Zero</strong> objects in collection? </td>
+<td> <code>none?</code> </td>
+<td> <code>empty?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>More than one</strong> object in collection? </td>
+<td> <code>x</code> </td>
+<td> <code>many?</code></td>
+</tr>
+<tr>
+<td></td>
+<td> <strong>Exactly one</strong> object the collection?   </td>
+<td> <code>one?</code> </td>
+<td> <code>x</code></td>
+</tr>
+</tbody>
+</table>
+
+
+<br>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Load .secrets from .bashrc]]></title>
+    <link href="http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc/"/>
+    <updated>2014-09-18T18:44:28-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/09/18/load-secrets-from-bashrc</id>
+    <content type="html"><![CDATA[<p>Your shell resource file is a great place to set local environment
+variables for use in development (things like API keys, etc.) &mdash; that is,
+until you decide to check it into source control.</p>
+
+<p><strong>Solution</strong>:
+Toss those variable assignments into a file called <code>.secrets</code> and use the shell
+command <code>source</code> to pull them into your environment when the resource
+file gets loaded.</p>
+
+<h3>.secrets</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>imnottellingimnottelling
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>myfavoritefoodissushi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>.bashrc</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.secrets
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now you can safely push your <code>.bashrc</code> up to Github.</p>
+
+<p>&hellip;after you create a little repo for your <a href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/">dotfiles</a>, that is! ;)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Find And Replace From Outside Of Files]]></title>
+    <link href="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/"/>
+    <updated>2014-09-13T22:10:03-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files</id>
+    <content type="html"><![CDATA[<p>Toss this puppy in your <code>.bashrc</code> for string substitution from
+outside of files.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="k">function </span>ack_sub <span class="o">{</span>
+</span><span class='line'>  ack -l <span class="nv">$1</span> <span class="nv">$3</span> | xargs perl -pi -E <span class="s1">&#39;s/&#39;</span><span class="nv">$1</span><span class="s1">&#39;/&#39;</span><span class="nv">$2</span><span class="s1">&#39;/g&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Syntax</h3>
+
+<blockquote><p><code>ack_sub &lt;target&gt; &lt;substitution&gt; &lt;directory&gt;</code></p></blockquote>
+
+<h3>Example</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ack_sub <span class="s2">&quot;Mikey&quot;</span> <span class="s2">&quot;Michael&quot;</span> <span class="s2">&quot;./taxes&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Addressing IP]]></title>
+    <link href="http://MProuts.github.io/blog/2014/07/15/addressing-ip/"/>
+    <updated>2014-07-15T11:44:20-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/07/15/addressing-ip</id>
+    <content type="html"><![CDATA[<h3>The Basics</h3>
+
+<p>TCP/IP (or Transmission Control Protocol/Internet Protocol) is the most ubiquetous inter-network protocol in use today.  Computers use
+TCP/IP to connect to other networks as well as to the internet.  An IP
+address is a unique identifier for a device connected to a TCP/IP
+network.</p>
+
+<p>IP addresses consists of four eight-digit binary numbers or <em>octets</em>
+(also called <em>bytes</em>), usually represented in base-10 notation, and
+separated by periods.</p>
+
+<h4>Example Binary Representation</h4>
+
+<blockquote><p>1100000 10101000 00000001 00110110</p></blockquote>
+
+<h4>Example Base-10 Representation</h4>
+
+<blockquote><p>192.168.1.54</p></blockquote>
+
+<h3>Reserved Addresses</h3>
+
+<p>Some addresses are reserved for particular purposes.  A list follows:</p>
+
+<p><strong>0.0.0.0</strong> is reserved for the <strong>Default Route</strong>, meaning that address
+lookups that do not match any route known to the network fall back to
+this address.  It typically points to the default gateway &mdash; the node on
+the network (often your router) that serves as the point of access for connecting to
+other networks or the internet.</p>
+
+<p><strong>255.255.255.255</strong> is reserved for <strong>Network Broadcasts</strong>.  Messages
+sent to this address go to all computers on the network.</p>
+
+<p><strong>127.0.0.1</strong> is the most commonly-used <strong>Loopback Address</strong>, which is
+an address your computer uses to refer to itself.  Messages sent from your computer to this address echo back to your computer.  The hostname &lsquo;localhost&rsquo; resolves to this address.</p>
+
+<h3>Private IP Addresses</h3>
+
+<p>The TCP/IP protocol was devised in the 1970s before the internet took
+off.  The specification for IPv4 addresses (as opposed to the newer
+<a href="http://en.wikipedia.org/wiki/IPv6">IPv6</a>) only provides for <code>256 ^ 4</code> or
+<code>4,294,967,296</code> unique addresses.  If every internet-enabled device was
+assigned a unique address, the pool of unique addresses would have been
+exhausted long ago.</p>
+
+<p>Realizing this, back in 1996, the Internet Engineering Task Force (IETF)
+specified special blocks of <em>private IP addresses</em> &mdash; i.e. addresses that
+could not be used over the internet.  This way, groups of internet-enabled
+devices could share a single globally-unique public IP address through a
+router, while maintaining separate private IP addresses to communicate
+amoungst themselves on a local network.  The uniqueness of a private IP address
+is only enforced amoung devices on a given local network, thus many devices
+can simultaneously use the same local IP address on separate local networks.</p>
+
+<p>Reserved private IP address ranges are as follows:</p>
+
+<table>
+<tr>
+  <th style="font-size:.8em">Class</th>
+  <th style="font-size:.8em">Address Range</th>
+  <th style="font-size:.8em">Leading Bits</th>
+  <th style="font-size:.8em">CIDR Notation</th>
+  <th style="font-size:.8em">Unique Addresses</th>
+</tr>
+<tr>
+  <td>A</td>
+  <td>10.0.0.0 - 10.225.225.225</td>
+  <td>00001010</td>
+  <td>10.0.0.0/8</td>
+  <td style="text-align:right">16,777,216</td>
+</tr>
+<tr>
+  <td>B</td>
+  <td>172.16.0.0 - 172.31.255.255</td>
+  <td>10101100 0001</td>
+  <td>172.16.0.0/12</td>
+  <td style="text-align:right">1,048,576</td>
+</tr>
+<tr>
+  <td>C</td>
+  <td>192.168.0.0 - 192.168.255.255</td>
+  <td>11000000 10101000</td>
+  <td>192.168.0.0/16</td>
+  <td style="text-align:right">65,536</td>
+</tr>
+</table>
+
+
+<br>
+
+
+<p>Since the number of computers connected to a LAN is typically much
+smaller than 65,536, most routers limit their IP assignments to 255
+addresses in the range 192.168.0.1 &ndash; 192.168.0.255.</p>
+
+<p>If you check your private IP address under network preferences (assuming you&rsquo;re
+on a Mac), it is probably in the form &lsquo;192.168.0.X.&rsquo;</p>
+
+<h3>Public IP Addresses</h3>
+
+<p>If you google
+<a href="https://www.google.com/search?q=what+is+my+ip+address">&lsquo;what is my ip address&rsquo;</a>,
+you will quickly find your router&rsquo;s public IP address.  This will be the same for
+every device connected to your LAN.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[check for stray pry calls before commit]]></title>
+    <link href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/"/>
+    <updated>2014-06-20T22:59:36-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit</id>
+    <content type="html"><![CDATA[<p>Tired of accidentally checking <code>binding.pry</code> calls into source?  Here&rsquo;s a
+script that will take care of checking for them on your behalf.  Place
+this in your project&rsquo;s <code>.git/hooks</code> directory in a file called <code>pre-commit</code>.</p>
+
+<h3>.git/hooks/pre-commit</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'>git diff --cached --name-only | <span class="se">\</span>
+</span><span class='line'>    <span class="nv">GREP_COLOR</span><span class="o">=</span><span class="s1">&#39;4;5;37;41&#39;</span> xargs grep --color --with-filename -n pry <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span><span class='line'>    <span class="nb">echo</span> <span class="s1">&#39;COMMIT REJECTED&#39;</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>Note</em>: Don&rsquo;t forget to <code>chmod pre-commit u+x</code> to make this file
+executable.</p>
+
+<p>Let&rsquo;s step through this script line by line.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>First, we use a shebang directive
+to specify the interpreter that will be used to run the code in this file.  Since
+we&rsquo;re writing a shell script we specify <code>/bin/sh</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git diff --cached --name-only | <span class="se">\</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> <code>git diff</code> shows us any differences between the code in working directory
+and our previous commit.  We pass it the <code>--cached</code> flag to show
+changes to files that have already been staged.  The <code>--name-only</code> flag will
+print just the names of files that have been changed, rather than the
+actual changed contents of those files.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">GREP_COLOR</span><span class="o">=</span><span class="s1">&#39;4;5;37;41&#39;</span> xargs grep --color --with-filename -n pry <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> <code>GREP_COLOR</code> is an environment variable that determines the colors
+ <code>grep</code> uses to highlight matches when the <code>--color</code> flag is given.  We
+use <code>xargs</code> to feed the individual file names that resulted from the previous line to <code>grep pry</code>.  The <code>--with-filename</code> and <code>-n</code> flags add the
+file name and line number to the results, respectively.   We use the
+logical operator <code>&amp;&amp;</code> to execute the next line of code only if the
+current line runs successfully.  (I.e. If <code>grep</code> doesn&rsquo;t find any
+occurances of &lsquo;pry&rsquo;, the chain stops here.)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s1">&#39;COMMIT REJECTED&#39;</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+</span><span class='line'><span class="nb">exit </span>1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If grep does find a &lsquo;pry&rsquo; anywhere in our staged changes, we print an error message and exit with a status
+of <code>1</code> for &lsquo;error&rsquo;, which tells <code>git</code> to terminate the commit.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Otherwise, we exit with a status of <code>0</code> for &lsquo;successful&rsquo;, which tells <code>git</code> to go ahead with the commit.</p>
+
+<h3>Make This Hook Global</h3>
+
+<p>To make this hook global, run the following command and copy the script
+into <code>~/.git_template/hooks</code>.  Thereafter, every time you call <code>git init</code>, it will be included in your project&rsquo;s <code>.git/hooks</code> directory.</p>
+
+<pre><code>$ git config --global init.templatedir '~/.git_template'
+
+$ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
+</code></pre>
+
+<p>And there you have it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cross-Domain Requests With Angular & Rails]]></title>
+    <link href="http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/"/>
+    <updated>2014-06-01T09:54:29-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails</id>
+    <content type="html"><![CDATA[<p>Most modern web APIs provide programatic access to an application&rsquo;s internals by exposing RESTful JSON endpoints.  For example, a <code>POST</code> to <code>/pokemon.json</code> with a lump of properly-formatted JSON might create a new pokemon resource on the application server.</p>
+
+<p>Javascript frameworks like Angular were designed to
+sit on top of APIs, accessing data through endpoints like
+the one described above. When an Angular app and the API it consumes are
+hosted on separate domains, data access is complicated by a security restriction implemented by most browsers called the <code>same-origin policy</code>.  Under the <code>same-origin policy</code>, client-side scripts running in one domain are prevented from obtaining data retrieved from another domain.</p>
+
+<p>Luckily, most browsers also provide a mechanism for getting
+around this restriction called <code>cross-origin resource sharing</code>, or <code>CORS</code>.  Here&rsquo;s
+what you need to know to get it working with jQuery and Rails.</p>
+
+<h1>GET</h1>
+
+<p>Let&rsquo;s say that you have your Angular app running in development on port 8000,
+and your Rails API running on port 3000. When your Angular app loads, it will probably need to request some data
+from the server.</p>
+
+<h3>app.js</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$http</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/pokemon.json&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">pokedex</span><span class="p">.</span><span class="nx">pokemons</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But this produces an error.</p>
+
+<p><img src="http://MProuts.github.io/images/cors_get_request.png"></p>
+
+<p>Under the <code>same-origin policy</code>, the browser will block cross-domain <code>XMLHttpRequests</code> unless the server&rsquo;s response to such requests includes an <code>access-control-allow-origin</code> header that matches the
+requesting script&rsquo;s <code>origin</code> (In our case, <code>http://localhost:8000</code>).</p>
+
+<p>In Rails, we can simply add this header to all responses
+in our application controller as follows.</p>
+
+<h3>application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_filter</span> <span class="ss">:set_access_control_headers</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">set_access_control_headers</span>
+</span><span class='line'>  <span class="n">headers</span><span class="o">[</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>POST</h1>
+
+<p> <code>POST</code> should now also work.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">data</span><span class="o">:</span> <span class="nx">mydata</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>DELETE</h1>
+
+<p> <code>GET</code> and <code>POST</code> are considered <em>simple requests</em> under the
+ <code>CORS</code> standard, meaning that providing the access control headers is
+ sufficient for cross-domain requests.</p>
+
+<p>But what about <code>DELETE</code>?</p>
+
+<h3>app.js</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments/&#39;</span> <span class="o">+</span> <span class="nx">comment</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">contentType</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;produces&hellip;</p>
+
+<p><img src="http://MProuts.github.io/images/cors_delete_request.png"></p>
+
+<p>&hellip;and in the Rails log&hellip;</p>
+
+<pre><code>Started OPTIONS "/pokemon/11/comments/119" for 127.0.0.1 at 2014-06-01 11:38:14 -0400
+
+ActionController::RoutingError (No route matches [OPTIONS] "/pokemon/11/comments/119"):
+</code></pre>
+
+<h1>Preflighted Requests</h1>
+
+<p>Under <code>CORS</code>, requests using methods other than <code>GET</code> or <code>POST</code> need to be <em>preflighted</em>.  Essentially, before the
+actual request can take place, the client sends a preliminary
+ <code>OPTIONS</code> request with an <code>access-control-request-method</code>
+header, asking permission to use a particular HTTP method with a given URL.  In our case, we
+want to use <code>DELETE</code> at <code>/pokemon/11/comments/119</code>.  jQuery is smart enough to initiate the preflight
+request for us&hellip;</p>
+
+<pre><code>OPTIONS /pokemon/11/comments/119
+Origin: http://localhost:8000
+Access-Control-Request-Method: DELETE
+</code></pre>
+
+<p>&hellip;so if the server responds with&hellip;</p>
+
+<pre><code>Access-Control-Allow-Origin: http://localhost:8000
+Access-Control-Allow-Methods: DELETE
+</code></pre>
+
+<p>&hellip;then the browser will allow the original request to go through.</p>
+
+<p>Rather than roll our own system for handling this exchange,
+we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;rack-cors&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s1">&#39;rack/cors&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>config/application.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">use</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Cors</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">allow</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">origins</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+</span><span class='line'>    <span class="n">resource</span> <span class="sr">%r{/pokemon/\d+/comments/\d+}</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:headers</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;Accept&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:methods</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:delete</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As configured above, <code>rack-cors</code> will intercept the preflight <code>OPTIONS</code> request from jQuery and grant <code>DELETE</code> access to <code>localhost:8000</code>.</p>
+
+<p>And there you have it.  :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[hello, bower]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/18/hello-bower/"/>
+    <updated>2014-05-18T11:05:16-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/18/hello-bower</id>
+    <content type="html"><![CDATA[<p>Bower is a simple package manager for front-end assets like CSS and
+Javascript. It provides an elegant solution for including third-party assets and libraries (e.g.
+Bootstrap, jQuery) into different projects on your machine.  Here&rsquo;s how it
+works:</p>
+
+<h3>Get Bower</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ npm install -g bower</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Install a Package</h3>
+
+<p>Bower installs packages on a project-by-project basis.  Make sure
+you&rsquo;re inside of the project directory where you want a package installed first,
+then run:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bower install &lt;package&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This command creates a directory inside your project called <code>bower-components/</code>
+containing the package you&rsquo;ve installed, as well as any dependencies.</p>
+
+<h3>Use a Package</h3>
+
+<p>To use a Bower package, simply reference the appropriate files in <code>bower-components/</code> manually.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script src="http://MProuts.github.io/bower_components/jquery/jquery.js"&gt;&lt;/script&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>List Packages</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bower list</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Use this command to list all packages installed on a given project.  Again, the list of
+installed packages will vary on a project-by-project basis.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How To Use Homebrew's Version of Git]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git/"/>
+    <updated>2014-05-04T15:20:02-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/04/how-to-use-homebrews-version-of-git</id>
+    <content type="html"><![CDATA[<p>If you’re using Homebrew with OSX, chances are you have multiple copies of the same software packages living on your machine. With this in mind, it&rsquo;s important to know which version of a particular package gets run when you type a command at the command line.  For example, when you type <code>git status</code>, are you running OSX&rsquo;s version of git or Homebrew&rsquo;s version?</p>
+
+<p>Here&rsquo;s the scoop:</p>
+
+<h3>OSX Packages</h3>
+
+<p>OSX’s binaries live in <code>/usr/bin</code>.  They are the defaults that either came
+preinstalled in your machine, or were bundled with Xcode.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Homebrew Packages</h3>
+
+<p>Under the covers, Homebrew installs packages or ‘kegs’ in their own directories in <code>/usr/local/Cellar</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/Cellar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For convenience, Homebrew symlinks binaries nested within these directories to <code>/usr/local/bin</code>.  These links are how you access and run Homebrew binaries.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ls /usr/local/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Which Package?</h3>
+
+<p>Which of these two versions gets run is determined by your PATH variable.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git
+</span><span class='line'>/usr/bin/git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you take a look at your global PATH configuration by running <code>cat etc/paths</code> you&rsquo;ll see that binaries in <code>/usr/bin</code> are
+run before binaries in <code>/usr/local/bin</code> by default.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat etc/paths
+</span><span class='line'>/usr/bin
+</span><span class='line'>/bin
+</span><span class='line'>/usr/sbin
+</span><span class='line'>/sbin
+</span><span class='line'>/usr/local/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can move Homebrew&rsquo;s binaries to the front of the line by adding this
+to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshrc</code>).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voila!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ which git 
+</span><span class='line'>/usr/local/bin/git</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[psql cheatsheet]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
+    <updated>2014-05-02T15:48:12-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
+    <content type="html"><![CDATA[<p>Django development requires that you know your way around your database
+console.  Here are the basics for PostgreSQL:</p>
+
+<h3>start</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>psql            #Start interactive terminal</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>database</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\list                    #List databases
+</span><span class='line'>\connect &lt;db&gt;            #Switch connection
+</span><span class='line'>
+</span><span class='line'>SELECT 
+</span><span class='line'>current_database();      #Show database connection</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>tables</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\d              #List tables
+</span><span class='line'>\d &lt;table&gt;      #List table columns</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>help</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\?              #List backslash commands
+</span><span class='line'>\help           #List SQL commands</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>quit</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\q              #Quit  </span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Star Register Not Working In Vim?]]></title>
+    <link href="http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim/"/>
+    <updated>2014-05-01T13:19:04-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/05/01/star-register-not-working-in-vim</id>
+    <content type="html"><![CDATA[<p>The star register provides a convenient way to read and write from the system clipboard in vim.  (For example: <code>"*yy</code> in vim, <code>ctrl-v</code> in another application.)</p>
+
+<p>For this to work, you need a version of vim
+compiled with the <code>clipboard</code> feature included.  You can easily check
+the features included in your vim version by running:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version
+</span><span class='line'>...
+</span><span class='line'>-clipboard       +iconv           +path_extra      -toolbar
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you see <code>+clipboard</code>, you&rsquo;re in good shape.</p>
+
+<p>Elsif you see <code>-clipboard</code>, read on for the fix.</p>
+
+<p>1) Get the latest version of vim.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install vim</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2) Check which local version of vim is being used.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>which vim
+</span><span class='line'>/usr/bin/vim</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3) If you don&rsquo;t see <code>/usr/local/bin/vim</code>,
+add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Prefer Homebrew binaries
+</span><span class='line'>export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4) Run <code>vim --version</code> again to make sure it worked.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim --version 
+</span><span class='line'>...
+</span><span class='line'>+clipboard       +iconv           +path_extra      -toolbar
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Success!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[friendly forwarding with devise]]></title>
+    <link href="http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise/"/>
+    <updated>2014-04-06T17:10:43-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s pretty common to require that a user be logged in to perform certain
+actions around your application. For example, let&rsquo;s say you wanted to make sure a user
+was
+signed in before being able to see any user&rsquo;s profile. Assuming you&rsquo;re using Devise for
+authentication, your code might look something like this:</p>
+
+<h3>controllers/users_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="n">before_action</span> <span class="ss">:set_user</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:show</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">before_action</span> <span class="ss">:require_login</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:show</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">set_user</span>
+</span><span class='line'>    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">require_login</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">new_user_session_path</span><span class="p">,</span> <span class="ss">:notice</span> <span class="o">=&gt;</span> <span class="s2">&quot;Please sign in.&quot;</span>  <span class="k">unless</span> <span class="n">user_signed_in?</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, our before action, <code>require_login</code>, conditionally redirects to the login page if a request hits the <code>user#show</code> action and no user is signed in.
+Note that we make use of Devise&rsquo;s handy <code>user_signed_in?</code> method to make this happen.</p>
+
+<p>Cool.</p>
+
+<h1>Now what?</h1>
+
+<p>But what will the user see after they log in?  In other words:</p>
+
+<p>If I&hellip;</p>
+
+<p>   1) browse to a restricted page,<br/>
+   2) get redirected to login page,<br/>
+   3) sign in,<br/>
+   4) ???</p>
+
+<p>&hellip;then where do I go next?</p>
+
+<p>Out of the box, Devise redirects to the <code>root_url</code> upon successfully signing in a
+user.  In certain cases, this may make sense from the perspective of the
+user.  However, in the case outlined above, redirecting to the <code>root_url</code> breaks
+the deal our application struck with the user in step 2.</p>
+
+<p>Here are the same four lines in plain English:</p>
+
+<p>1) User: &ldquo;Hey application, show me this thing.&#8221;<br/>
+2) Application: &#8220;Hey user, I will, as long as you log in first.&#8221;<br/>
+3) User: &#8220;Totes, np!&rdquo; &lt;logs in cheerfully> <br/>
+4) Application: &ldquo;Here&rsquo;s the homepage, what can I help you with?&rdquo;</p>
+
+<p>Absurd, I say.  Absurd.</p>
+
+<h1>Forward!</h1>
+
+<p>So we need to make our application less rude by giving it a tiny bit of short-term
+memory, but how can we accomplish this in a stateless protocol like HTTP?</p>
+
+<p>Answer: Sessions.</p>
+
+<p>A session (or &ldquo;user session&rdquo;) is a mechanism for persisting bits of
+user-specific data across multiple HTTP request cycles, giving the illusion that
+an application <em>maintains state</em>, or remembers things about its past interactions with a particular user.</p>
+
+<p>How exactly sessions are implemented is beyond the scope of this post, but for now, we&rsquo;ll content ourselves with the fact
+that we can stick information into a hash-like variable called <code>session</code> in our
+controllers, and then retreive it when handling subsequent requests.</p>
+
+<p>Back to our example.  In order to keep track of which page the user was asking
+for
+when we told them to sign in, we can jot down a reminder for ourselves in the <code>session</code>.</p>
+
+<h3>controllers/users_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="kp">private</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">require_login</span>
+</span><span class='line'>  <span class="k">unless</span> <span class="n">user_signed_in?</span>
+</span><span class='line'>    <span class="n">session</span><span class="o">[</span><span class="ss">:forward_url</span><span class="o">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">fullpath</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">new_user_session_path</span><span class="p">,</span> <span class="ss">:notice</span> <span class="o">=&gt;</span> <span class="s2">&quot;Please sign in.&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That way, instead of trying to remember our entire conversation, (which is, well, impossible),
+we simply check the session for reminders
+everytime we log a user in.</p>
+
+<h3>controllers/application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">after_sign_in_path_for</span> <span class="n">user</span>
+</span><span class='line'>    <span class="n">session</span><span class="o">[</span><span class="ss">:forward_url</span><span class="o">]</span> <span class="p">?</span> <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:forward_url</span><span class="p">)</span> <span class="p">:</span> <span class="k">super</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Devise calls a method aptly name <code>after_sign_in_path_for</code> to determine where to send the client after login.
+This method is implemented internally in Devise, but we can override it by <em>duck
+punching</em> it in our <code>ApplicationController</code>.</p>
+
+<p>Our implentation checks for a reminder in the session, deletes and returns that
+reminder if
+it exists, and otherwise passes the call up the inheritance tree to Devise&rsquo;s
+default <code>after_sign_in_path_for</code> method.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing with FactoryGirl and Faker]]></title>
+    <link href="http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker/"/>
+    <updated>2014-03-25T19:57:39-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/03/25/rails-testing-with-factorygirl-and-faker</id>
+    <content type="html"><![CDATA[<p>In the context of Rails development, fixtures provide an easy way to create sample data and
+make it available to your tests. Every time Rails generates a model, it
+also creates a corresponding .yml in <code>test/fixtures</code> for your fixture code.</p>
+
+<h3>test/fixtures/users.yml</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>meryl:
+</span><span class='line'>  name: Meryl Streep
+</span><span class='line'>  birthday: 1949-06-22
+</span><span class='line'>  occupation: Actress</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can access fixtures in your tests as follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">users</span><span class="p">(</span><span class="ss">:meryl</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While fixtures let you weave elaborate narratives involving Meryl Streep&rsquo;s interactions with your site, they tend not to be very
+DRY.  For example, if you want access to 12 pre-defined instances of <code>User</code> in your specs, you need to define 12 fixures in your
+<strong>users.yml</strong> file.  This process can be cumbersome and error-prone.</p>
+
+<h1>Factory Girl</h1>
+
+<p>There&rsquo;s a gem for that.</p>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;factory_girl_rails&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Factory Girl is Thoughtbot&rsquo;s solution to this problem, and it is awesome.  Rather than hardcode your fixture data, Factory Girl lets you define factories &mdash; methods that dynamically generate objects &mdash; using a friendly DSL.</p>
+
+<h3>spec/factories.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;Meryl Streep&quot;</span>
+</span><span class='line'>    <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
+</span><span class='line'>    <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It then exposes methods for assembling users from said factories in your tests.</p>
+
+<h3>spec/models/users.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">build</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; unpersisted version of Meryl</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; persisted version of Meryl (separate object)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Sequences</h1>
+
+<p>Let&rsquo;s say your user model validates uniqueness on its
+&lsquo;name&rsquo; attribute, and you need to create 20 valid users in
+your tests (each with a unique name).  Two &lsquo;Meryl Streep&rsquo; s will no longer fly.</p>
+
+<p>Luckily, Factory Girl provides a build-in fix in the form of sequences.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">sequence</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;Meryl Streep</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
+</span><span class='line'>  <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then&hellip;</p>
+
+<h3>spec/models/users.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep1&quot;</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep2&quot;</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Meryl Streep3&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Strange example, but you get the picture.</p>
+
+<h1>Faker</h1>
+
+<p>Given that (possibly) not everyone loves Meryl Streep as much as I do,
+wouldn&rsquo;t it be nice if our factory could dynamically generate unique, natural-sounding
+names for each user it created?</p>
+
+<p>There&rsquo;s a gem for that.</p>
+
+<h3>gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;faker&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>spec/factories</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">name</span> <span class="ss">Faker</span><span class="p">:</span><span class="ss">:Name</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'>  <span class="n">birthday</span> <span class="s2">&quot;1949-06-22&quot;</span>
+</span><span class='line'>  <span class="n">occupation</span> <span class="s2">&quot;Actress&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>spec/users_spec.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Anastacio Jast&quot;</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Edna Weimann&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Faker can fake out lots of other things as well:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Internet</span><span class="o">.</span><span class="n">email</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;rosanna_smitham@vandervort.biz&quot;</span>
+</span><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Commerce</span><span class="o">.</span><span class="n">product</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Intelligent Steel Computer&quot;</span>
+</span><span class='line'><span class="ss">Faker</span><span class="p">:</span><span class="ss">:Business</span><span class="o">.</span><span class="n">credit_card_number</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;1212-1221-1121-1234&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;</p>
+
+<p><strong>Meryl Streep1</strong>: Yes, that&rsquo;ll be one Intelligent Steel Computer, please.  Do you accept credit
+cards?<br/>
+<strong>Meryl Streep2</strong>: So, this is the beginning of happiness. This is where it starts.
+And, of course, there will always be more.<br/>
+<strong>Meryl Streep3</strong>: Alright ladies, that&rsquo;s a wrap.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bootstrapping a Sinatra App]]></title>
+    <link href="http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app/"/>
+    <updated>2014-03-10T12:00:09-04:00</updated>
+    <id>http://MProuts.github.io/blog/2014/03/10/bootstrapping-a-sinatra-app</id>
+    <content type="html"><![CDATA[<p>Sinatra is a simple open-source web framework for ruby.  It&rsquo;s similar to Rails,
+but much smaller, weighing in around 1,500 lines of code compared to Rail&rsquo;s
+~100,000.</p>
+
+<p>Its stripped-down nature means that out of the box, Sinatra does less for you (automatically) than does Rails.  For example, if you tell Sinatra to <code>generate</code> a <code>scaffold</code> for you, it will respond politely that it has no idea what the [Sinatra] you&rsquo;re talking about.  What&rsquo;s more, much of the nitty-gritty of configuring you&rsquo;re environment (such as managing your environmental dependencies and database connections) is left up to you, the programmer.</p>
+
+<p>Thus, working with Sinatra, you pay a higher setup cost upfront (than in Rails),
+in exchange for a much smaller codebase, and a better understanding of how your
+application does everything that it does. The following is aimed at minimizing
+that cost while maximizing understanding.</p>
+
+<p>Ready?  Here goes:</p>
+
+<h1>1) Database/ActiveRecord</h1>
+
+<p>This example uses Sqlite with ActiveRecord.  As mentioned, in Sinatra, you&rsquo;re in charge of establishing and managing your database connection manually.  It’s convention to put this, along with all of your other environmental dependencies in a file called <code>environment.rb</code> in your project’s <code>config/</code> directory.</p>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">source</span> <span class="s2">&quot;https://rubygems.org&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;sinatra&quot;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;sqlite3&quot;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;activerecord&quot;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;sinatra-activerecord&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>config/environment.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#Set SINATRA_ENV to development if not already set</span>
+</span><span class='line'><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span> <span class="o">||=</span> <span class="s2">&quot;development&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;bundler/setup&#39;</span>
+</span><span class='line'><span class="no">Bundler</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="ss">:default</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">establish_connection</span><span class="p">(</span>
+</span><span class='line'>  <span class="ss">:adapter</span> <span class="o">=&gt;</span> <span class="s2">&quot;sqlite3&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:database</span> <span class="o">=&gt;</span> <span class="s2">&quot;db/project_</span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">.sqlite&quot;</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, our <code>environment.rb</code> requires our bundled gems and sets our database connection conditionally based on our current environment (which we’ve stored in an environment variable).</p>
+
+<h3>controllers/application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span>
+</span><span class='line'>  <span class="n">register</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:ActiveRecordExtension</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Rakefile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;./config/environment&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;sinatra/activerecord/rake&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">namespace</span> <span class="ss">:db</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:down</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">FileUtils</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="s1">&#39;./db/development.sqlite&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:up</span> <span class="k">do</span>
+</span><span class='line'>    <span class="ss">Rake</span><span class="p">:</span><span class="ss">:Task</span><span class="o">[</span><span class="s2">&quot;db:migrate&quot;</span><span class="o">].</span><span class="n">invoke</span>
+</span><span class='line'>    <span class="ss">Rake</span><span class="p">:</span><span class="ss">:Task</span><span class="o">[</span><span class="s2">&quot;db:seed&quot;</span><span class="o">].</span><span class="n">invoke</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now that we’ve taken care of connecting to our database, we can think about interacting with it.  The <code>sinatra-activerecord</code> gem provides familiar database interface in the form of predefined Rake tasks like <code>rake db:migrate</code>  and <code>rake db:rollback</code>.  To use it, we include it in our Gemfile, register it in our ApplicationController, and require it in our Rakefile.</p>
+
+<p>In addition to the tasks provided by <code>sinatra-activerecord</code>, I wrote two custom rake tasks — one for deleting the entire database, and one for migrating and re-seeding it.</p>
+
+<h3>config.ru</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migrator</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migrator</span><span class="o">.</span><span class="n">needs_migration?</span>
+</span><span class='line'>  <span class="k">raise</span> <span class="s1">&#39;Migrations are pending run `rake db:migrate` to resolve the issue.&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>spec/spec_helper.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migrator</span><span class="o">.</span><span class="n">needs_migration?</span>
+</span><span class='line'>  <span class="k">raise</span> <span class="s1">&#39;Migrations are pending. Run `rake db:migrate SINATRA_ENV=test` to resolve the issue.&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally, we raise helpful reminders in <code>config.ru</code> and our <code>spec_helper.rb</code> if either gets run when there are still pending migrations.</p>
+
+<h1>2) Console, Local Server</h1>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">group</span> <span class="ss">:development</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;pry&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;shotgun&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Rakefile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:environment</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">require</span> <span class="s1">&#39;./config/environment&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="ss">:console</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+</span><span class='line'>  <span class="no">Pry</span><span class="o">.</span><span class="n">start</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In addition to managing our database conneciton, we’ll have to roll own console and server tasks in Sinatra as well.  We could rackup directly from our config.ru, however, this would mean stopping and starting the development server any time we made any changes to our application.
+Instead, we use a gem called shotgun, which takes care of reloading for us.  After installing type <code>shotgun</code> to fire up the server.</p>
+
+<p>Pry provides a feature-rich debugging shell.  To use it as our console we simply define a rake task that requires our environment and starts Pry.</p>
+
+<h1>3) MVC Structure</h1>
+
+<p>Sinatra lets you place your model and controller code side-by-side in a general application file.   (It  will look for views in a top-level <code>views/</code> directory by default.) This may be a good option for you, depending on the size and complexity of your project.  However, if your requirements necessitate breaking your application up into a more Railsy MVC structure, here’s how to do it.</p>
+
+<hr />
+
+<h3>controllers/application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(1) Define an application controller that inherits from <code>Sinatra::Base</code>.<br/>
+(2) Mount it as middlewear in <code>config.ru</code>.<br/>
+(3) Define individual resource controllers that inherit from <code>ApplicationController</code>.<br/>
+(4) Mount them as middle-wear on top of <code>ApplicationController</code>.</p>
+
+<h3>config.ru</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="n">use</span> <span class="no">UsersController</span>
+</span><span class='line'><span class="n">use</span> <span class="no">OutfitsController</span>
+</span><span class='line'><span class="n">use</span> <span class="no">ArticlesController</span>
+</span><span class='line'><span class="n">run</span> <span class="no">ApplicationController</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<p>(5) Move your views to <code>app/views</code>.<br/>
+(6) Move your models to <code>app/models</code>.</p>
+
+<h3>app/controllers/application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">set</span> <span class="ss">:views</span><span class="p">,</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;../views/&quot;</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">set</span> <span class="ss">:method_override</span><span class="p">,</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="n">set</span> <span class="ss">:sessions</span><span class="p">,</span> <span class="kp">true</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(7) Tell Sinatra about the new location of your views.<br/>
+(8) Turn on method_override if you want to use RESTful HTTP verbs via the hidden input hack.<br/>
+(9) Turn on sessions if you plan to use them.</p>
+
+<hr />
+
+<h3>config.ru</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">use</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Static</span><span class="p">,</span> <span class="ss">:root</span> <span class="o">=&gt;</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span> <span class="ss">:urls</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;/images&quot;</span><span class="p">,</span><span class="s2">&quot;/javascripts&quot;</span><span class="p">,</span><span class="s2">&quot;/stylesheets&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(10) Tell Sinatra about the new location of your static resources.</p>
+
+<hr />
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;require_all&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>config/environment.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="n">require_all</span> <span class="s1">&#39;app&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now that our application code is split across many files within or <code>app/</code> directory, it’d be nice to have a way to require all of those files in one fell swoop.  Luckily, that’s exactly what the <code>require_all</code> gem lets us do.  Just include it your <code>Gemfile</code> and <code>require_all</code> your application directory (conventionally ‘app’) in your <code>environment.rb</code>.</p>
+
+<h1>4) Testing</h1>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;https://github.com/bmabey/database_cleaner.git&#39;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;rspec&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;rack-test&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;pry&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To get up and running with testing we’ll put <code>rspec</code> and a few other gems in our gemfile.  After <code>bundling</code> and running <code>rspec --init</code>, open your <code>spec_helper</code> and include Rack::Test::Methods in the configuration block to get access to rack::test stub methods.</p>
+
+<p>E.g.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">post</span> <span class="err">‘</span><span class="o">/</span><span class="n">students</span><span class="err">’</span><span class="p">,</span> <span class="p">{</span> <span class="err">“</span><span class="nb">name</span><span class="err">”</span> <span class="o">=&gt;</span> <span class="err">“</span><span class="no">Michael</span><span class="err">”</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> in your controller specs.</p>
+
+<h3>spec/spec_helper.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">require_relative</span> <span class="s1">&#39;../config/environment&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">include</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Test</span><span class="o">::</span><span class="no">Methods</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Another useful tool is the DatabaseCleaner, which resets your database between examples in your tests to ensure your tests are database-independent.</p>
+
+<p>Phew.  So there you have it &mdash; a basic bootstrap for a MVC app in Sinatra.  Enjoy, and don’t spend it all in one place.  ;)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[7 Colloquialisms From Code]]></title>
+    <link href="http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code/"/>
+    <updated>2014-02-24T15:19:09-05:00</updated>
+    <id>http://MProuts.github.io/blog/2014/02/24/7-colloquialisms-from-code</id>
+    <content type="html"><![CDATA[<p>Beyond specific technical jargon (&ldquo;loop,&rdquo; &ldquo;thread,&rdquo; &ldquo;iteration&rdquo;), the language of programming languages is rich in strange, historically-specific colloquialisms.  Here are 7 you might not know&hellip;</p>
+
+<h2>Spaghetti Code: </h2>
+
+<p><strong><em>noun</em></strong> 1. pejoritave term for code whose flow of execution is muddled, often associated with poor usage of the GOTO keyword. <em>I was going to give her write access to my repo, but I hear she writes spaghetti code.</em></p>
+
+<p><img class="left" src="http://upload.wikimedia.org/wikipedia/commons/9/93/Spaghetti.jpg" width="300" height="300">
+<img src="http://MProuts.github.io/images/fortran.png" height="400" width="400"/></p>
+
+<p><strong>See also</strong>:
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Ravioli_code">Ravioli Code</a>,
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Lasagna_code">Lasagna Code</a>,
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Spaghetti_with_meatballs">Spaghetti With Meatballs Code</a>,
+<a href="http://en.wikipedia.org/wiki/Spaghetti_code#Macaroni_code">Macaroni Code</a></p>
+
+<h2>Syntactic Sugar:</h2>
+
+<p><strong><em>noun</em></strong>
+1. optional syntax in a programming language that makes code more readable,
+   consice or otherwise sweeter for the humans that interact with it. <em>I take my
+   [syntactic] sugar with coffee and cream.</em></p>
+
+<p><img class="left" src="http://www.usafutures.com/sugar_trading_broker.jpg" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Salty</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">keep_parantheses</span><span class="p">(</span><span class="n">on</span><span class="p">);</span> <span class="k">end</span>
+</span><span class='line'><span class="o">[].</span><span class="n">&lt;</span><span class="o">&lt;</span><span class="p">(</span><span class="s2">&quot;Something&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="mi">4</span><span class="o">.</span><span class="n">+</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span><span class='line'><span class="mi">4</span><span class="o">.</span><span class="n">%</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Sweet</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">leave_parentheses</span> <span class="n">off</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="o">[]</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;Something Else&quot;</span>
+</span><span class='line'><span class="mi">4</span> <span class="o">+</span> <span class="mi">4</span>
+</span><span class='line'><span class="mi">4</span> <span class="o">%</span> <span class="mi">4</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Duck Typing</h2>
+
+<p><strong><em>noun</em></strong>
+1. A style of dynamic typing where an object&rsquo;s type is defined by what it can do
+   rather than what it <em>is</em> (i.e. its class).</p>
+
+<p><strong>etymology:</strong>
+From the popular saying, &ldquo;If it looks like a duck and quacks like a duck, it must
+be a duck.&rdquo;</p>
+
+<p><img class="left" src="http://www.stanford.edu/dept/CTL/cgi-bin/academicskillscoaching/wp-content/uploads/2012/07/baby-duck.jpg" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Duck</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;quack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Dog</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;woofquack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">ducks</span> <span class="o">=</span> <span class="o">[</span><span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Dog</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+</span><span class='line'><span class="n">ducks</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">duck</span><span class="o">|</span> <span class="n">duck</span><span class="o">.</span><span class="n">quack</span> <span class="p">}</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;quack!&quot;, &quot;woofquack!&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Duck Punching</h2>
+
+<p><strong><em>noun</em></strong>
+1. Modifying code at runtime (e.g. overriding methods, attributes) without
+   changing the underlying source code.</p>
+
+<p><strong>etymology:</strong>
+From the popular saying, &ldquo;If it looks like a duck, but barks like a dog at runtime, you
+must have punched it.&rdquo; ;)</p>
+
+<p><img class="left" src="http://www.justindlevine.com/wp-content/uploads/2013/11/duck-1.jpg" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Duck</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;quack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># later, at runtime...</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Duck</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;woof, ouch!&quot;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">quack</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;woof, ouch!&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Twiddle-Wakka</h2>
+
+<p><strong>noun</strong>
+1. Mysterious squiggle-carrot operator (also known as the pessimistic operator) used to
+specify versions in ruby Gemfiles.
+<em>I see your twiddle-wakka, and raise you a scope resolution operator.</em></p>
+
+<p><img class="left" src="http://MProuts.github.io/images/twiddle.png" width="300" height="300"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;rails&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;pry&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#...</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#Highest version &gt;= 3.2.1 and &lt; 3.3.0</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;sapphire&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 3.2.1&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#Highest version &gt;= 2.1 and &lt; 2.2</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;diamond&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 2.1&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Shaving A Yak</h2>
+
+<p><strong><em>gerandial noun</em></strong>
+1. The state of being engaged in an activity that is remotely related to the original
+task at hand, often after a long chain of troubleshooting digressions. <em>I intended to shave a yak, but pretty soon, I was filing my taxes.</em></p>
+
+<p><img class="left" src="http://a-z-animals.com/media/animals/images/original/yak9.jpg" width="320" height="320"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">make_dinner</span>
+</span><span class='line'>  <span class="n">buy_ingredients</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">buy_ingrediens</span>
+</span><span class='line'>  <span class="n">earn_money</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">earn_money</span>
+</span><span class='line'>  <span class="n">shave_yak</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">shave_yak</span>
+</span><span class='line'>  <span class="k">raise</span> <span class="s2">&quot;Gross, what am I even doing?&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Easter Egg</h2>
+
+<p><strong>noun</strong>
+1. Inside jokes and other funny superfluous tidbits intentionally left in source code by
+developers for other developers to find.</p>
+
+<p><img class="left" src="http://MProuts.github.io/images/easter-egg.png" width="285" height="285"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="n">hidden_treasure</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span>
+</span><span class='line'>    <span class="no">ALL</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+</span><span class='line'><span class="c1">#      .-&quot;-.</span>
+</span><span class='line'><span class="c1">#    .&#39;=^=^=&#39;.</span>
+</span><span class='line'><span class="c1">#   /=^=^=^=^=\</span>
+</span><span class='line'><span class="c1">#  :^= HAPPY =^;      Can you spot the Easter egg</span>
+</span><span class='line'><span class="c1">#  |^ EASTER! ^|       in this source code?</span>
+</span><span class='line'><span class="c1">#  :^=^=^=^=^=^:  </span>
+</span><span class='line'><span class="c1">#   \=^=^=^=^=/</span>
+</span><span class='line'><span class="c1">#    `.=^=^=.&#39;</span>
+</span><span class='line'><span class="c1">#      `~~~`</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Parameters vs. Arguments]]></title>
+    <link href="http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments/"/>
+    <updated>2014-02-09T13:20:04-05:00</updated>
+    <id>http://MProuts.github.io/blog/2014/02/09/parameters-vs-arguments</id>
+    <content type="html"><![CDATA[<blockquote><p>&ldquo;The beginning of wisdom is to call things by their proper names.&rdquo;</p>
+
+<p>-Confucius</p></blockquote>
+
+<p>Why are two concepts so basic to everything we do with computers so hard for most of us to differentiate?  The short answer is that it&rsquo;s often not a useful distinction, so we abstract it out of our thought processes in order to make room for other things.  The long answer follows.  (Read on, interested reader!)</p>
+
+<p>In order to understand why the distinciton feels unnatural, we first have to understand the distinction itself.  Here goes:</p>
+
+<h3>Parameters</h3>
+
+<p>Parameters exist in <em>method declarations</em>.  They are placeholders for what later gets passed into the method.  Syntactically, they say &ldquo;something goes here.&rdquo;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">plate_food</span><span class="p">(</span><span class="n">plate_goes_here</span><span class="p">,</span>  <span class="n">food_goes_here</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># code to place food on plate</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example, <code>plate_goes_here</code> and <code>food_goes_here</code> are parameters.</p>
+
+<h3>Arguments</h3>
+
+<p>Arguments, on the other hand, exist in method <em>calls</em>.   They <strong>are</strong> the actual things that get passed to a method.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_plate</span> <span class="o">=</span> <span class="n">plate</span><span class="o">.</span><span class="n">new</span> <span class="s2">&quot;porcelain&quot;</span>
+</span><span class='line'><span class="n">some_food</span> <span class="o">=</span> <span class="n">food</span><span class="o">.</span><span class="n">new</span> <span class="s2">&quot;kimchi&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">plate_food</span><span class="p">(</span><span class="n">my_plate</span><span class="p">,</span> <span class="n">some_food</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example, <code>my_plate</code> and <code>some_food</code> are arguments.</p>
+
+<h3>How They&rsquo;re Related</h3>
+
+<p>In programming, methods are for storing behavior.  We &ldquo;parameterize&rdquo; methods in order to allow them to interact with data without having to specify that data.  That way, we can use the method over and over again, passing in different pieces of data at our whim.  <em>Parameters</em> act as placeholders in the method definition for hard data that is passed as <em>arguments</em> every time the method is actually invoked.</p>
+
+<blockquote><p>parameter:hypothetical::argument:concrete</p></blockquote>
+
+<h3>The Confusing Part&hellip;</h3>
+
+<p>This distinction becomes murky, because programmers tend to name placeholders (logically) for the things that will eventually replace them.</p>
+
+<p>To return to the previous example, instead of naming our parameters <code>plate_goes_here</code> and <code>food_goes_here</code>, we go with <code>plate</code> and <code>food</code> instead.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">plate_food</span><span class="p">(</span><span class="n">plate</span><span class="p">,</span>  <span class="n">food</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># code to place food on plate</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A particularly glaring example of this placetaker-for-placeholder conflation happens in Ruby when we name our splat parameters <code>*args</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">clean_plates</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">args</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">plate</span><span class="o">|</span> <span class="n">plate</span><span class="o">.</span><span class="n">wash</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Is Understanding This <em>All</em> That Important?</h3>
+
+<p>Practically, probably not.</p>
+
+<p>If you have a bent for philosophy or linguistics, this is the type of conceptual relationship you might explore further in an introductory course in <a href="http://en.wikipedia.org/wiki/Semiotics">semiotics</a> or <a href="http://en.wikipedia.org/wiki/Semantics">semantics</a>.</p>
+
+<p>But my sense is that this distinction is muddled in most higher-level applied programming <em>by design</em>.  After all, given the option to hide a conceptual layer from themselves, most programmers take it without even thinking about it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Manage Your Dotfiles With Git]]></title>
+    <link href="http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git/"/>
+    <updated>2014-02-04T22:55:48-05:00</updated>
+    <id>http://MProuts.github.io/blog/2014/02/04/manage-your-dotfiles-with-git</id>
+    <content type="html"><![CDATA[<p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
+
+<p>This turned out to be a little trickier than I expected&hellip;</p>
+
+<h2>Separate Your Dots</h2>
+
+<p>The first problem I encountered is that your system expects dotfiles to live in your home directory at paths like <code>~/.vimrc</code>. This isn&rsquo;t a great place for a git repository because, well, that&rsquo;s where <em>ALL</em> of the rest of your user files live.  On the other hand, if you move them into their own directory,</p>
+
+<pre><code>$ mkdir ~/dotfiles/
+$ mv ~/.bash_profile /dotfiles/bash_profile
+</code></pre>
+
+<p>they will no longer be accessible to programs that use them to load your customization.</p>
+
+<h2>Symlinks</h2>
+
+<p>Enter symlinks.  Symlinks basically let you create a named pointer (or <em>symbolic link</em>) to a file at a different location in the file system.  When the system tries to open this pointer, it will link to the target file, and open that instead.  In our case, this means that we can stash all of our resource files in <code>~/dotfiles</code> and create links to make them accessible to programs looking for them in <code>~/</code>. Here&rsquo;s the line of code that makes that happen.</p>
+
+<pre><code>$ ln -s /dotfiles/bash_profile ~/.bash_profile
+</code></pre>
+
+<p>This is basically just saying:
+&ldquo;Create a link from stashed file <code>/dotfiles/bash_profile</code> to its original location at <code>~/.bash_profile</code>.  (I decided to remove the dot from the stashed file for convenience.)</p>
+
+<h2>Git It!</h2>
+
+<p>With the symlink in place, our <code>bash_profile</code> should now be working from its new location.  (Note: You may need to close and reopen terminal to see a change). All that&rsquo;s left to do is initialize our git repo and make our first commit.</p>
+
+<pre><code>$ cd ~/dotfiles
+$ git init
+$ git add .
+$ git commit -m "Initial commit"
+</code></pre>
+
+<h2>Syntax Highlighting</h2>
+
+<p>You&rsquo;ll notice that as a side effect of moving our <code>bash_profile</code>, we no longer get pretty syntax highlighting when we open it in an editor.</p>
+
+<p>  <strong>dotfiles/bash_profile</strong></p>
+
+<pre><code>PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+
+CDPATH=~/dev/
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+export PS1="\W ☕ "
+export GREP_OPTIONS='--color=always'
+export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
+</code></pre>
+
+<p>The solution is to explicitly tell the editor the file type (a shell script) by appending <code>.sh</code> to the filename.</p>
+
+<p>  <strong>dotfiles/bash_profile.sh</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/Applications/Postgres.app/Contents/MacOS/bin:$PATH&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">CDPATH</span><span class="o">=</span>~/dev/
+</span><span class='line'>
+</span><span class='line'><span class="o">[[</span> -s <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">source</span> <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="c"># Load RVM into a shell session *as a function*</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\W ☕ &quot;</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">GREP_OPTIONS</span><span class="o">=</span><span class="s1">&#39;--color=always&#39;</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">LSCOLORS</span><span class="o">=</span><span class="s2">&quot;GxGxBxDxCxEgEdxbxgxcxd&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Aaaaah. Much better.</p>
+
+<h2>Generate Symlinks with a Script</h2>
+
+<p>Great, so now version control and syntax hightlighting are working, but we&rsquo;ve introduced another problem.  Namely, it&rsquo;s a pain to manually maintain these symlinks.  As your list of dotfiles grows, or when you change computers, it would be nice to have a way to dynamically generate links to these stashed resource files. Solution: write a little shell script to link all of the files in <code>/dotfiles</code> to the home directory for you.  I just threw this in the same directory.</p>
+
+<p><strong>linkdotfiles.sh</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">dir</span><span class="o">=</span>~/dotfiles          <span class="c"># dotfiles directory</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for </span>file in <span class="nv">$dir</span>/*; <span class="k">do</span>
+</span><span class='line'><span class="k">  if</span> <span class="o">[</span> <span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span> !<span class="o">=</span> <span class="s2">&quot;linkdotfiles&quot;</span> <span class="o">]</span>
+</span><span class='line'>  <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Linking&quot;</span> <span class="k">$(</span>basename <span class="nv">$file</span><span class="k">)</span> <span class="s2">&quot;...&quot;</span>
+</span><span class='line'>    ln -s <span class="nv">$file</span> ~/.<span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span>
+</span><span class='line'>  <span class="k">fi</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;... all done!&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To run:</p>
+
+<pre><code>$ sh linkdotfiles.sh
+</code></pre>
+
+<p>All done.  :)</p>
+]]></content>
+  </entry>
+  
+</feed>
