@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2016-02-21T13:04:59-05:00</updated>
+  <updated>2016-02-21T13:10:48-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -360,7 +360,7 @@ beneath a given directory using the <code>find</code> in combination with
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[the big difference between empty and none]]></title>
+    <title type="html"><![CDATA[The Big Difference Between Empty And None]]></title>
     <link href="http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none/"/>
     <updated>2014-10-23T18:39:29-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/10/23/the-big-difference-between-empty-and-none</id>
@@ -634,7 +634,7 @@ every device connected to your LAN.</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[check for stray pry calls before commit]]></title>
+    <title type="html"><![CDATA[Check For Stray Pry Calls Before Commit]]></title>
     <link href="http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit/"/>
     <updated>2014-06-20T22:59:36-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/06/20/check-for-stray-binding-dot-prys-before-commit</id>
@@ -913,7 +913,7 @@ we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[hello, bower]]></title>
+    <title type="html"><![CDATA[Hello, Bower]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/18/hello-bower/"/>
     <updated>2014-05-18T11:05:16-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/18/hello-bower</id>
@@ -1037,7 +1037,7 @@ to your preferred shell&rsquo;s resource file (<code>bashrc</code> or <code>zshr
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[psql cheatsheet]]></title>
+    <title type="html"><![CDATA[PSQL Cheatsheet]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
     <updated>2014-05-02T15:48:12-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
@@ -1153,7 +1153,7 @@ add the following lines to <code>~/.bashrc</code> or <code>~/.zshrc</code>:</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[friendly forwarding with devise]]></title>
+    <title type="html"><![CDATA[Friendly Forwarding With Devise]]></title>
     <link href="http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise/"/>
     <updated>2014-04-06T17:10:43-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/04/06/friendly-forwarding-with-devise</id>

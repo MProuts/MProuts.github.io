@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2016-02-21T13:04:59-05:00</updated>
+  <updated>2016-02-21T13:10:48-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[psql cheatsheet]]></title>
+    <title type="html"><![CDATA[PSQL Cheatsheet]]></title>
     <link href="http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet/"/>
     <updated>2014-05-02T15:48:12-04:00</updated>
     <id>http://MProuts.github.io/blog/2014/05/02/psql-cheatsheet</id>
