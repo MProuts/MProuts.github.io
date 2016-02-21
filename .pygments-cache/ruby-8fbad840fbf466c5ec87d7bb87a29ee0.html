@@ -1,0 +1,9 @@
+<div class="highlight"><pre><span class="n">config</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">use</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Cors</span> <span class="k">do</span>
+  <span class="n">allow</span> <span class="k">do</span>
+    <span class="n">origins</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+    <span class="n">resource</span> <span class="sr">%r{/pokemon/\d+/comments/\d+}</span><span class="p">,</span>
+      <span class="ss">:headers</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;Accept&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">]</span><span class="p">,</span>
+      <span class="ss">:methods</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:delete</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

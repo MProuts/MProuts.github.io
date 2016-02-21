@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="nb">echo</span> <span class="s2">&quot;span6&quot;</span> &gt; test.txt
+<span class="nb">echo</span> <span class="s2">&quot;span12&quot;</span> &gt;&gt; test.txt
+cat test.txt
+span6
+span12
+
+sed -i <span class="s1">&#39;&#39;</span> -E <span class="s1">&#39;s/span([0-9])/col-md-\1/g&#39;</span> test.txt
+cat test.txt
+col-md-6
+col-md-12
+</pre></div>

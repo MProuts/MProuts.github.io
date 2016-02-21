@@ -1,0 +1,12 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Duck</span> 
+  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;quack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Dog</span>
+  <span class="k">def</span> <span class="nf">quack</span><span class="p">;</span> <span class="s2">&quot;woofquack!&quot;</span><span class="p">;</span> <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ducks</span> <span class="o">=</span> <span class="o">[</span><span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Dog</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+<span class="n">ducks</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">duck</span><span class="o">|</span> <span class="n">duck</span><span class="o">.</span><span class="n">quack</span> <span class="p">}</span>
+<span class="c1">#=&gt; [&quot;quack!&quot;, &quot;woofquack!&quot;]</span>
+</pre></div>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: syslog, | Full Stack Snacks]]></title>
+  <link href="http://MProuts.github.io/blog/categories/syslog/atom.xml" rel="self"/>
+  <link href="http://MProuts.github.io/"/>
+  <updated>2016-02-21T13:04:59-05:00</updated>
+  <id>http://MProuts.github.io/</id>
+  <author>
+    <name><![CDATA[Michael Prouty]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Install Papertrail's remote_syslog with Ansible]]></title>
+    <link href="http://MProuts.github.io/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi/"/>
+    <updated>2016-02-21T11:25:15-05:00</updated>
+    <id>http://MProuts.github.io/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi</id>
+    <content type="html"><![CDATA[<h2>Files</h2>
+
+<h4>/files/remote_syslog.conf</h4>
+
+<p>Download the
+<a href="https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.upstart.conf">example config</a>
+from Papertrail.  Change the last line to:
+<code>exec /usr/local/bin/remote_syslog -D</code></p>
+
+<h4>/templates/log_files.yml</h4>
+
+<p>Download the
+<a href="https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example">example config</a>
+from Papertrail.  Change <code>host</code> and <code>port</code> under <code>destination</code>.  You
+might want to store these values as variables in <code>/group_vars</code> in case
+they vary across groups (e.g. between your Staging and Production
+environments).
+Also, edit paths under <code>files</code> to reflect that log files you want to
+send to Papertrail.</p>
+
+<h2>Tasks</h2>
+
+<h4>/tasks/main.yml</h4>
+
+<h2>```</h2>
+
+<h1>#</h1>
+
+<h1>Papertail</h1>
+
+<h1>#</h1>
+
+<ul>
+<li><p>name: Download remote_syslog tarball
+get_url:
+  url: <a href="https://github.com/papertrail/remote_syslog2/releases/download/v0.16/remote_syslog_linux_amd64.tar.gz">https://github.com/papertrail/remote_syslog2/releases/download/v0.16/remote_syslog_linux_amd64.tar.gz</a>
+  dest: /home/deploy/remote_syslog.tar.gz
+  # only downloadeds if destination file doesn&rsquo;t already exist
+  force: no</p></li>
+<li><p>name: Unarchive remote_syslog tarball
+unarchive:
+  src: /home/deploy/remote_syslog.tar.gz
+  dest: /home/deploy/
+  # only runs if this file doesn&rsquo;t already exist
+  creates: /home/deploy/remote_syslog
+  copy: no</p></li>
+<li><p>name: Copy remote_syslog executable into place
+file:
+  src: /home/deploy/remote_syslog/remote_syslog
+  dest: /usr/local/bin/remote_syslog
+  state: link</p></li>
+<li><p>name: Copy remote_syslog config file
+template:
+  src: log_files.yml.j2
+  dest: &ldquo;/etc/log_files.yml&rdquo;
+  owner: root
+  group: root</p></li>
+<li><p>name: Copy remote_syslog service config file
+copy:
+  src: remote_syslog.upstart.conf
+  dest: &ldquo;/etc/init/remote_syslog.conf&rdquo;
+  mode: 0644
+  owner: root
+  group: root
+notify: Restart remote_syslog</p></li>
+<li><p>name: Register remote_syslog service
+service: name=remote_syslog enabled=yes
+notify: Restart remote_syslog
+```</p></li>
+</ul>
+
+
+<h4>/handlers/main.yml</h4>
+
+<p>```
+&ndash; name: Restart remote_syslog
+  service:</p>
+
+<pre><code>name: remote_syslog
+state: restarted
+</code></pre>
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+</feed>

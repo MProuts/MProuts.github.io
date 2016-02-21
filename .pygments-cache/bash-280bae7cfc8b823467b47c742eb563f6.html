@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="nv">dir</span><span class="o">=</span>~/dotfiles          <span class="c"># dotfiles directory</span>
+
+<span class="k">for </span>file in <span class="nv">$dir</span>/*; <span class="k">do</span>
+<span class="k">  if</span> <span class="o">[</span> <span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span> !<span class="o">=</span> <span class="s2">&quot;linkdotfiles&quot;</span> <span class="o">]</span>
+  <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Linking&quot;</span> <span class="k">$(</span>basename <span class="nv">$file</span><span class="k">)</span> <span class="s2">&quot;...&quot;</span>
+    ln -s <span class="nv">$file</span> ~/.<span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span>
+  <span class="k">fi</span>
+<span class="k">done</span>
+<span class="nb">echo</span> <span class="s2">&quot;... all done!&quot;</span>
+</pre></div>

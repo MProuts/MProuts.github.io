@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ssh | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/ssh/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2015-06-07T15:38:10-04:00</updated>
+  <updated>2016-02-21T13:04:59-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -16,54 +16,55 @@
   <entry>
     <title type="html"><![CDATA[SSH Tunneling]]></title>
     <link href="http://MProuts.github.io/blog/2015/06/07/ssh-tunneling/"/>
-    <updated>2015-06-07T14:10:15-04:00</updated>
+    <updated>2015-06-07T11:36:28-04:00</updated>
     <id>http://MProuts.github.io/blog/2015/06/07/ssh-tunneling</id>
-    <content type="html"><![CDATA[<p>Say we you have two remote servers, <strong>A</strong> and <strong>B</strong>.  Let&rsquo;s say your machine can
-access <strong>A</strong> but not <strong>B</strong> (via SSH), <em>and</em> that <strong>A</strong> can access
-<strong>B</strong>.  To start a terminal session on <strong>B</strong> from your machine, you could
-SSH onto <strong>A</strong> first, then SSH onto <strong>B</strong> from there.</p>
+    <content type="html"><![CDATA[<p>Say you have two remote servers, <strong>A</strong> and <strong>B</strong>. Let’s say your machine can
+access <strong>A</strong> but not <strong>B</strong> (via SSH), and from <strong>A</strong> you can access <strong>B</strong>. To start a
+terminal session on <strong>B</strong> from your machine, you could SSH onto <strong>A</strong> first,
+then SSH onto <strong>B</strong> from there.</p>
 
-<pre><code>[me@localhost ~]# ssh root@host_a
+<p>```
+[me@localhost ~]# ssh root@host_a</p>
 
-Welcome to A!
+<p>Welcome to A!
 Last login: Sun Jun  7 17:45:36 2015
-[root@host_a ~]# ssh ubuntu@host_b
+[root@host_a ~]# ssh ubuntu@host_b</p>
 
-Welcome to B!
+<p>Welcome to B!
 Last login: Sun Jun  7 17:45:36 2015
-[ubuntu@host_b ~]# ...
-</code></pre>
+[ubuntu@host_b ~]# &hellip;
+```</p>
 
 <p>This two-step process works fine for anything you might want to do
-manually on <strong>B</strong>, but what if you need to connect directly from you
-machine to <strong>B</strong> without the intermediate step of first connecting to <strong>A</strong>?</p>
+manually on <strong>B</strong>, but what if you need to connect directly from you machine
+to <strong>B</strong> without the intermediate step of first connecting to <strong>A</strong>?</p>
 
-<p>For example, maybe you want to run a local rails development server but connect
-it to a database at <strong>B</strong>&rsquo;s port <code>3306</code>.  You can accomplish this via ssh
-tunneling.</p>
+<p>For example, maybe you want to run a local rails development server but
+connect it to a database at <strong>B</strong>’s port <code>3306</code>. You can accomplish this via
+ssh tunneling.</p>
 
-<p>SSH tunneling allows you to forward two-way traffic <em>from</em> a
-port on your local machine <em>to</em> a port on a remote machine <em>through</em> an
-ssh connection to an intermediate machine (gaining the access rights of
-the intermediate machine along the way).</p>
+<p>SSH tunneling allows you to forward two-way traffic <em>from</em> a port on your
+local machine <em>to</em> a port on a remote machine <em>through</em> an ssh connection to
+an intermediate machine (gaining the access rights of the intermediate
+machine along the way).</p>
 
-<p>You can set up an ssh tunnel by passing the <code>-L</code> option to the <code>ssh</code>
-command line utility in the following form:</p>
+<p>You can set up an ssh tunnel by passing the <code>-L</code> option to the <code>ssh</code> command
+line utility in the following form:</p>
 
 <p><code>ssh -L &lt;local_port&gt;:&lt;end_host&gt;:&lt;end_port&gt; &lt;intermediate_user&gt;@&lt;intermediate_host&gt;</code></p>
 
-<p>Running this command opens a terminal session on the
-intermediate host.  The port forwarding will continue as long as this
-session remains open.</p>
+<p>Running this command opens a terminal session on the intermediate host.
+The port forwarding will continue as long as this session remains open.</p>
 
 <p>Returning to our example:</p>
 
-<pre><code>[me@localhost ~]# ssh -L 3307:host_b:3306 root@host_a
+<p>```
+[me@localhost ~]# ssh -L 3307:host_b:3306 root@host_a</p>
 
-Welcome to A!
+<p>Welcome to A!
 Last login: Sun Jun  7 17:45:36 2015
-[root@host_a ~]# ...
-</code></pre>
+[root@host_a ~]# &hellip;
+```</p>
 
 <h4>config/database.yml</h4>
 
@@ -75,12 +76,12 @@ development:
   host: 127.0.0.1
   port: 3307</p>
 
-<p>&hellip;</p>
+<p>&hellip;
+```</p>
 
-<p>```</p>
-
-<p>If we then fire up our rails server and point our browser at <code>127.0.0.1:3000</code>,
-we&rsquo;ll see our app connected to the database at <code>host_b:3306</code>.</p>
+<p>If we then fire up our rails server and point our browser at
+<code>127.0.0.1:3000</code>, we’ll see our app connected to the database at
+<code>host_b:3306</code>.</p>
 ]]></content>
   </entry>
   

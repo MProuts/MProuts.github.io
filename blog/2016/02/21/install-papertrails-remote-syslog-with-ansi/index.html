@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Install Papertrail's remote_syslog with Ansible - Full Stack Snacks</title>
+  <meta name="author" content="Michael Prouty">
+
+  
+  <meta name="description" content="Files /files/remote_syslog.conf Download the
+example config
+from Papertrail. Change the last line to:
+exec /usr/local/bin/remote_syslog -D /templates &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://MProuts.github.io/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Full Stack Snacks" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-50683410-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Full Stack Snacks</a></h1>
+  
+    <h2>One byte at a time.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:MProuts.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Install Papertrail's Remote_syslog With Ansible</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-02-21T11:25:15-05:00" pubdate data-updated="true">Feb 21<span>st</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Files</h2>
+
+<h4>/files/remote_syslog.conf</h4>
+
+<p>Download the
+<a href="https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.upstart.conf">example config</a>
+from Papertrail.  Change the last line to:
+<code>exec /usr/local/bin/remote_syslog -D</code></p>
+
+<h4>/templates/log_files.yml</h4>
+
+<p>Download the
+<a href="https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example">example config</a>
+from Papertrail.  Change <code>host</code> and <code>port</code> under <code>destination</code>.  You
+might want to store these values as variables in <code>/group_vars</code> in case
+they vary across groups (e.g. between your Staging and Production
+environments).
+Also, edit paths under <code>files</code> to reflect that log files you want to
+send to Papertrail.</p>
+
+<h2>Tasks</h2>
+
+<h4>/tasks/main.yml</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>---
+</span><span class='line'># #########
+</span><span class='line'># Papertail
+</span><span class='line'># #########
+</span><span class='line'>
+</span><span class='line'>- name: Download remote_syslog tarball
+</span><span class='line'>  get_url:
+</span><span class='line'>    url: https://github.com/papertrail/remote_syslog2/releases/download/v0.16/remote_syslog_linux_amd64.tar.gz
+</span><span class='line'>    dest: /home/deploy/remote_syslog.tar.gz
+</span><span class='line'>    # only downloadeds if destination file doesn't already exist
+</span><span class='line'>    force: no
+</span><span class='line'>
+</span><span class='line'>- name: Unarchive remote_syslog tarball
+</span><span class='line'>  unarchive:
+</span><span class='line'>    src: /home/deploy/remote_syslog.tar.gz
+</span><span class='line'>    dest: /home/deploy/
+</span><span class='line'>    # only runs if this file doesn't already exist
+</span><span class='line'>    creates: /home/deploy/remote_syslog
+</span><span class='line'>    copy: no
+</span><span class='line'>
+</span><span class='line'>- name: Copy remote_syslog executable into place
+</span><span class='line'>  file:
+</span><span class='line'>    src: /home/deploy/remote_syslog/remote_syslog
+</span><span class='line'>    dest: /usr/local/bin/remote_syslog
+</span><span class='line'>    state: link
+</span><span class='line'>
+</span><span class='line'>- name: Copy remote_syslog config file
+</span><span class='line'>  template:
+</span><span class='line'>    src: log_files.yml.j2
+</span><span class='line'>    dest: "/etc/log_files.yml"
+</span><span class='line'>    owner: root
+</span><span class='line'>    group: root
+</span><span class='line'>
+</span><span class='line'>- name: Copy remote_syslog service config file
+</span><span class='line'>  copy:
+</span><span class='line'>    src: remote_syslog.upstart.conf
+</span><span class='line'>    dest: "/etc/init/remote_syslog.conf"
+</span><span class='line'>    mode: 0644
+</span><span class='line'>    owner: root
+</span><span class='line'>    group: root
+</span><span class='line'>  notify: Restart remote_syslog
+</span><span class='line'>
+</span><span class='line'>- name: Register remote_syslog service
+</span><span class='line'>  service: name=remote_syslog enabled=yes
+</span><span class='line'>  notify: Restart remote_syslog</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>/handlers/main.yml</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- name: Restart remote_syslog
+</span><span class='line'>  service:
+</span><span class='line'>    name: remote_syslog
+</span><span class='line'>    state: restarted</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Michael Prouty</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-02-21T11:25:15-05:00" pubdate data-updated="true">Feb 21<span>st</span>, 2016</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ansible/'>Ansible,</a>, <a class='category' href='/blog/categories/papertrail/'>Papertrail,</a>, <a class='category' href='/blog/categories/syslog/'>syslog,</a>, <a class='category' href='/blog/categories/unix/'>unix</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MProuts.github.io/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi/" data-via="" data-counturl="http://MProuts.github.io/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/06/07/ssh-tunneling/" title="Previous Post: SSH Tunneling">&laquo; SSH Tunneling</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  <style>
+<style>
+  .ig-b- { display: inline-block; }
+  .ig-b- img { visibility: hidden; }
+  .ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+  .ig-b-16 { width: 16px; height: 16px; background: url(//badges.instagram.com/static/images/ig-badge-sprite-16.png) no-repeat 0 0; }
+  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .ig-b-16 { background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-16@2x.png); background-size: 60px 178px; } }
+  .gravatar p { margin:0px }
+  .gravatar > .text, .image { float:left }
+  .gravatar .name { font-weight:bold;margin-top:4px; }
+  .gravatar .text { margin-left:5px; }
+  .badge { display:block;margin-bottom:3px; }
+  .clearfix { display:block;clear:both;visibility:hidden; }
+</style>
+<section>
+	<span class="gravatar">
+		<img class="image" src="http://www.gravatar.com/avatar/c0181972be1b5d6dce3cbea1a0fa99d8" alt="Gravatar of Michael Prouty " title="Gravatar of Michael Prouty" />
+    <span class="text">
+      <p class="name">Michael Prouty</p>
+      <a href="http://instagram.com/_mprouts?ref=badge" class="ig-b- ig-b-16 badge"><img src="//badges.instagram.com/static/images/ig-badge-16.png" alt="Instagram" /></a><p></p>
+      <p>Ruby Developer</p>
+      <p><a href="http://logcheck.com" target="_blank">LogCheck</a></p>
+    </span>
+    <span class="clearfix">.</span>
+	</span>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi/">Install Papertrail's Remote_syslog With Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/07/ssh-tunneling/">SSH Tunneling</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">Find and Replace From Shell With Sed</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/23/the-big-difference-between-empty-and-none/">The Big Difference Between Empty and None</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/18/load-secrets-from-bashrc/">Load .secrets From .bashrc</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Michael Prouty -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>. Design by <a href="http://octopressthemes.com">Octopress Themes</a>.</span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

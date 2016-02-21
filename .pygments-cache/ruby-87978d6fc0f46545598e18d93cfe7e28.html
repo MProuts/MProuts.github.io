@@ -1,0 +1,8 @@
+<div class="highlight"><pre><span class="n">task</span> <span class="ss">:environment</span> <span class="k">do</span>
+  <span class="nb">require</span> <span class="s1">&#39;./config/environment&#39;</span>
+<span class="k">end</span>
+
+<span class="n">task</span> <span class="ss">:console</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+  <span class="no">Pry</span><span class="o">.</span><span class="n">start</span>
+<span class="k">end</span>
+</pre></div>

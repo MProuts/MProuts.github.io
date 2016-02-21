@@ -1,0 +1,6 @@
+<div class="highlight"><pre><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span>
+
+<span class="k">if</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migrator</span><span class="o">.</span><span class="n">needs_migration?</span>
+  <span class="k">raise</span> <span class="s1">&#39;Migrations are pending. Run `rake db:migrate SINATRA_ENV=test` to resolve the issue.&#39;</span>
+<span class="k">end</span>
+</pre></div>

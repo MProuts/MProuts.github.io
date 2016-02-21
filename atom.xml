@@ -4,7 +4,7 @@
   <title><![CDATA[Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2015-06-07T15:38:10-04:00</updated>
+  <updated>2016-02-21T13:04:59-05:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -14,56 +14,204 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Install Papertrail's remote_syslog with Ansible]]></title>
+    <link href="http://MProuts.github.io/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi/"/>
+    <updated>2016-02-21T11:25:15-05:00</updated>
+    <id>http://MProuts.github.io/blog/2016/02/21/install-papertrails-remote-syslog-with-ansi</id>
+    <content type="html"><![CDATA[<h2>Files</h2>
+
+<h4>/files/remote_syslog.conf</h4>
+
+<p>Download the
+<a href="https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.upstart.conf">example config</a>
+from Papertrail.  Change the last line to:
+<code>exec /usr/local/bin/remote_syslog -D</code></p>
+
+<h4>/templates/log_files.yml</h4>
+
+<p>Download the
+<a href="https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example">example config</a>
+from Papertrail.  Change <code>host</code> and <code>port</code> under <code>destination</code>.  You
+might want to store these values as variables in <code>/group_vars</code> in case
+they vary across groups (e.g. between your Staging and Production
+environments).
+Also, edit paths under <code>files</code> to reflect that log files you want to
+send to Papertrail.</p>
+
+<h2>Tasks</h2>
+
+<h4>/tasks/main.yml</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>---
+</span><span class='line'># #########
+</span><span class='line'># Papertail
+</span><span class='line'># #########
+</span><span class='line'>
+</span><span class='line'>- name: Download remote_syslog tarball
+</span><span class='line'>  get_url:
+</span><span class='line'>    url: https://github.com/papertrail/remote_syslog2/releases/download/v0.16/remote_syslog_linux_amd64.tar.gz
+</span><span class='line'>    dest: /home/deploy/remote_syslog.tar.gz
+</span><span class='line'>    # only downloadeds if destination file doesn't already exist
+</span><span class='line'>    force: no
+</span><span class='line'>
+</span><span class='line'>- name: Unarchive remote_syslog tarball
+</span><span class='line'>  unarchive:
+</span><span class='line'>    src: /home/deploy/remote_syslog.tar.gz
+</span><span class='line'>    dest: /home/deploy/
+</span><span class='line'>    # only runs if this file doesn't already exist
+</span><span class='line'>    creates: /home/deploy/remote_syslog
+</span><span class='line'>    copy: no
+</span><span class='line'>
+</span><span class='line'>- name: Copy remote_syslog executable into place
+</span><span class='line'>  file:
+</span><span class='line'>    src: /home/deploy/remote_syslog/remote_syslog
+</span><span class='line'>    dest: /usr/local/bin/remote_syslog
+</span><span class='line'>    state: link
+</span><span class='line'>
+</span><span class='line'>- name: Copy remote_syslog config file
+</span><span class='line'>  template:
+</span><span class='line'>    src: log_files.yml.j2
+</span><span class='line'>    dest: "/etc/log_files.yml"
+</span><span class='line'>    owner: root
+</span><span class='line'>    group: root
+</span><span class='line'>
+</span><span class='line'>- name: Copy remote_syslog service config file
+</span><span class='line'>  copy:
+</span><span class='line'>    src: remote_syslog.upstart.conf
+</span><span class='line'>    dest: "/etc/init/remote_syslog.conf"
+</span><span class='line'>    mode: 0644
+</span><span class='line'>    owner: root
+</span><span class='line'>    group: root
+</span><span class='line'>  notify: Restart remote_syslog
+</span><span class='line'>
+</span><span class='line'>- name: Register remote_syslog service
+</span><span class='line'>  service: name=remote_syslog enabled=yes
+</span><span class='line'>  notify: Restart remote_syslog</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>/handlers/main.yml</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- name: Restart remote_syslog
+</span><span class='line'>  service:
+</span><span class='line'>    name: remote_syslog
+</span><span class='line'>    state: restarted</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[SSH Tunneling]]></title>
     <link href="http://MProuts.github.io/blog/2015/06/07/ssh-tunneling/"/>
-    <updated>2015-06-07T14:10:15-04:00</updated>
+    <updated>2015-06-07T11:36:28-04:00</updated>
     <id>http://MProuts.github.io/blog/2015/06/07/ssh-tunneling</id>
-    <content type="html"><![CDATA[<p>Say we you have two remote servers, <strong>A</strong> and <strong>B</strong>.  Let&rsquo;s say your machine can
-access <strong>A</strong> but not <strong>B</strong> (via SSH), <em>and</em> that <strong>A</strong> can access
-<strong>B</strong>.  To start a terminal session on <strong>B</strong> from your machine, you could
-SSH onto <strong>A</strong> first, then SSH onto <strong>B</strong> from there.</p>
+    <content type="html"><![CDATA[<p>Say you have two remote servers, <strong>A</strong> and <strong>B</strong>. Let’s say your machine can
+access <strong>A</strong> but not <strong>B</strong> (via SSH), and from <strong>A</strong> you can access <strong>B</strong>. To start a
+terminal session on <strong>B</strong> from your machine, you could SSH onto <strong>A</strong> first,
+then SSH onto <strong>B</strong> from there.</p>
 
-<pre><code>[me@localhost ~]# ssh root@host_a
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[me@localhost ~]# ssh root@host_a
+</span><span class='line'>
+</span><span class='line'>Welcome to A!
+</span><span class='line'>Last login: Sun Jun  7 17:45:36 2015
+</span><span class='line'>[root@host_a ~]# ssh ubuntu@host_b
+</span><span class='line'>
+</span><span class='line'>Welcome to B!
+</span><span class='line'>Last login: Sun Jun  7 17:45:36 2015
+</span><span class='line'>[ubuntu@host_b ~]# ...</span></code></pre></td></tr></table></div></figure>
 
-Welcome to A!
-Last login: Sun Jun  7 17:45:36 2015
-[root@host_a ~]# ssh ubuntu@host_b
-
-Welcome to B!
-Last login: Sun Jun  7 17:45:36 2015
-[ubuntu@host_b ~]# ...
-</code></pre>
 
 <p>This two-step process works fine for anything you might want to do
-manually on <strong>B</strong>, but what if you need to connect directly from you
-machine to <strong>B</strong> without the intermediate step of first connecting to <strong>A</strong>?</p>
+manually on <strong>B</strong>, but what if you need to connect directly from you machine
+to <strong>B</strong> without the intermediate step of first connecting to <strong>A</strong>?</p>
 
-<p>For example, maybe you want to run a local rails development server but connect
-it to a database at <strong>B</strong>&rsquo;s port <code>3306</code>.  You can accomplish this via ssh
-tunneling.</p>
+<p>For example, maybe you want to run a local rails development server but
+connect it to a database at <strong>B</strong>’s port <code>3306</code>. You can accomplish this via
+ssh tunneling.</p>
 
-<p>SSH tunneling allows you to forward two-way traffic <em>from</em> a
-port on your local machine <em>to</em> a port on a remote machine <em>through</em> an
-ssh connection to an intermediate machine (gaining the access rights of
-the intermediate machine along the way).</p>
+<p>SSH tunneling allows you to forward two-way traffic <em>from</em> a port on your
+local machine <em>to</em> a port on a remote machine <em>through</em> an ssh connection to
+an intermediate machine (gaining the access rights of the intermediate
+machine along the way).</p>
 
-<p>You can set up an ssh tunnel by passing the <code>-L</code> option to the <code>ssh</code>
-command line utility in the following form:</p>
+<p>You can set up an ssh tunnel by passing the <code>-L</code> option to the <code>ssh</code> command
+line utility in the following form:</p>
 
 <p><code>ssh -L &lt;local_port&gt;:&lt;end_host&gt;:&lt;end_port&gt; &lt;intermediate_user&gt;@&lt;intermediate_host&gt;</code></p>
 
-<p>Running this command opens a terminal session on the
-intermediate host.  The port forwarding will continue as long as this
-session remains open.</p>
+<p>Running this command opens a terminal session on the intermediate host.
+The port forwarding will continue as long as this session remains open.</p>
 
 <p>Returning to our example:</p>
 
-<pre><code>[me@localhost ~]# ssh -L 3307:host_b:3306 root@host_a
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[me@localhost ~]# ssh -L 3307:host_b:3306 root@host_a
+</span><span class='line'>
+</span><span class='line'>Welcome to A!
+</span><span class='line'>Last login: Sun Jun  7 17:45:36 2015
+</span><span class='line'>[root@host_a ~]# ...</span></code></pre></td></tr></table></div></figure>
 
-Welcome to A!
-Last login: Sun Jun  7 17:45:36 2015
-[root@host_a ~]# ...
-</code></pre>
 
 <h4>config/database.yml</h4>
 
@@ -82,12 +230,12 @@ Last login: Sun Jun  7 17:45:36 2015
 </span><span class='line'>  host: 127.0.0.1
 </span><span class='line'>  port: 3307
 </span><span class='line'>
-</span><span class='line'>...
-</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
 
 
-<p>If we then fire up our rails server and point our browser at <code>127.0.0.1:3000</code>,
-we&rsquo;ll see our app connected to the database at <code>host_b:3306</code>.</p>
+<p>If we then fire up our rails server and point our browser at
+<code>127.0.0.1:3000</code>, we’ll see our app connected to the database at
+<code>host_b:3306</code>.</p>
 ]]></content>
   </entry>
   

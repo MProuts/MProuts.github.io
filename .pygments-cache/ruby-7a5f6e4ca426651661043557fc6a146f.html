@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="c1">#Set SINATRA_ENV to development if not already set</span>
+<span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span> <span class="o">||=</span> <span class="s2">&quot;development&quot;</span>
+
+<span class="nb">require</span> <span class="s1">&#39;bundler/setup&#39;</span>
+<span class="no">Bundler</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="ss">:default</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span><span class="p">)</span>
+
+<span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">establish_connection</span><span class="p">(</span>
+  <span class="ss">:adapter</span> <span class="o">=&gt;</span> <span class="s2">&quot;sqlite3&quot;</span><span class="p">,</span>
+  <span class="ss">:database</span> <span class="o">=&gt;</span> <span class="s2">&quot;db/project_</span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;SINATRA_ENV&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">.sqlite&quot;</span>
+<span class="p">)</span>
+</pre></div>
