@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "hello, bower"
+title: "Hello, Bower"
 date: 2014-05-18 11:05:16 -0400
 comments: true
 categories: 

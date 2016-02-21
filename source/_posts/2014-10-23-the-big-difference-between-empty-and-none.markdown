@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "the big difference between empty and none"
+title: "The Big Difference Between Empty And None"
 date: 2014-10-23 18:39:29 -0400
 comments: true
 categories: ActiveRecord, Ruby, Enumerable, ActiveRecord::Relation

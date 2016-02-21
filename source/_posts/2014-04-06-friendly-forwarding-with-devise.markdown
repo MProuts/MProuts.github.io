@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "friendly forwarding with devise"
+title: "Friendly Forwarding With Devise"
 date: 2014-04-06 17:10:43 -0400
 comments: true
 categories: 

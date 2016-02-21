@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "check for stray pry calls before commit"
+title: "Check For Stray Pry Calls Before Commit"
 date: 2014-06-20 22:59:36 -0400
 comments: true
 categories: git

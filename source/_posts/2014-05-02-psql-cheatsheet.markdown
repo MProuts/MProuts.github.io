@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "psql cheatsheet"
+title: "PSQL Cheatsheet"
 date: 2014-05-02 13:48:12 -0600
 comments: true
 categories: postgresql
