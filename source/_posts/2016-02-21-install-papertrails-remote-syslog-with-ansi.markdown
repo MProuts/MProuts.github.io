@@ -6,6 +6,27 @@ comments: true
 categories: Ansible, Papertrail, syslog, unix
 ---
 
+## Files
+
+#### /files/remote_syslog.conf
+
+Download the
+[example config](https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.upstart.conf)
+from Papertrail.  Change the last line to:
+`exec /usr/local/bin/remote_syslog -D`
+
+#### /templates/log_files.yml
+
+Download the
+[example config](https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example)
+from Papertrail.  Change `host` and `port` under `destination`.  You
+might want to store these values as variables in `/group_vars` in case
+they vary across groups (e.g. between your Staging and Production
+environments).
+Also, edit paths under `files` to reflect that log files you want to
+send to Papertrail.
+
+## Tasks
 
 #### /tasks/main.yml
 
@@ -65,22 +86,3 @@ categories: Ansible, Papertrail, syslog, unix
     name: remote_syslog
     state: restarted
 ```
-
-#### /files/remote_syslog.conf
-
-Download the
-[example config](https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.upstart.conf)
-from papertrail.  Change the last line to:
-`exec /usr/local/bin/remote_syslog -D`
-
-#### /templates/log_files.yml
-
-Download the
-[example config](https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example)
-from papertrail.  Change `host` and `port` under `destination`.  You
-might want to store these values as variables in `/group_vars` in case
-they vary across groups (e.g. between your Staging and Production
-environments).
-Also, edit paths under `files` to reflect that log files you want to
-send to papertrail.
-
