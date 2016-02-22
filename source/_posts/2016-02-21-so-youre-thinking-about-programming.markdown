@@ -102,69 +102,87 @@ actually want to do through negation.)
 
 So but THE POINT IS for NOW just have an open mind and see how much
 serotonin gets released in your brain when you get your first
-tic-tac-toe game to run.  The pressure’s off, go have some fun with it.
-Report back after.
+tic-tac-toe game to run.  The pressure’s off -- try to have some fun
+with it.
 
-<specifics>
+And here's how I suggest trying to have that fun:
 
+1. Pick a programming language to focus on. Unless you have a clear
+   picture of what you want to do/where you want to
+   work, this will necessarily be a pretty arbitrary
+   decision.  Don't worry too much about picking the right language.  I
+   think it's helpful to limit yourself to one while you're getting your
+   bearings, but all of the concepts you'll be learning are transferable
+   between languages (So in no way will you be like locking yourself into
+   anything.  Actually, the opposite it true -- by learning your first programming language, it
+   will make the process of learning your second one easier.).  If
+   you're having some trouble deciding, it may be helpful to take my
+   harry potter sorting hat quiz (see below).
 
+Which of these best describes you?  a. Slitherin b. Hufflepuff c.
+Ravenclaw d. Muggle
 
+Results ————— a. javascript b. ruby c. python d. php
 
-<gif>
+2. Create a free account over at
+[Codecademy](https://www.codecademy.com). Complete the course for the
+programming language you chose in step 1.  In addition complete the following
+tracks:
+  - HTML & CSS
+  - Javascript (no need to repeat if that's what you chose in step 1)
+  - jQuery
+  - Learn the Command Line
+  - Learn SQL
+  - Learn Git
+There's also some fun activities on codecademy, so feel free to take
+detours.  Remember, the goal here is fun.  Try to commit an hour or two
+to this each day until you're finished if you can.
 
-links codeacadymy
-
-So after you’ve flirted with it for a while, dated, had your honeymoon
-phase, if you’re still liking it, feeling like this is something you
-might want to do professionally, maybe it’s time to take things to the
-next level.  
-
-> Try to cut down to working part time and start devouring online
-> resources as a second part time job for three to six months.
-
-This should be the big jump, not the jump into a bootcamp.
-
-Like I’m not kidding, coffee shop every day for four hours.  Be that
-person.  Order a Macciato.  Stake out a spot next to the outlet.  Go
-there every day.  Work at it hard.  
-
-Don’t stress out too much about picking a language or framework.
-
-If you’ve done some reading and still can’t pick, take my simple quiz
-
-1. Which of these best describes you?  a. Slitherin b. Hufflepuff c.
-Ravenclaw
-
-Results ————— a. javascript b. ruby c. python
-
-Regardless, here other topics you’re going to want to start to get to
-know about:
-- html
-- css
-- javascript (cause that’s what runs in the browser even if that’s not
-what you picked from above to run on the server)
-- jquery
-- unix essentials
-- git
-
-There’s tons of great free resources to start with, then I would suggest
-graduating to a couple modest paid subscription services.  
-- treehouse
-- codeschool
-
-> Start going to Meetups, talks, hacker hours — get help, make friends,
-> we’re all in this together
-
-- meetup.com, subscribe to events related to your results from the harry
-potter quiz
-
-> Start thinking about bootcamps
-
-Depending on how disciplined you’ve been, probably around the
-three-month mark is when I would say you could start doing some research
+3. Start going to meetups.  Keep going to meetups.  This is super
+   important.  meetup.com, subscribe to events related to your results
+   from the harry potter quiz
 about bootcamps.  You’ve made some friends, hacked some stuff together,
 gone to talks and forced yourself to mingle even though you just wanted
 to sit in the back and eat the free pizza.
+
+
+3. You likey?
+
+
+Alright, the fun is over!
+
+4. If you answered yes to No. 3, then the next step is to turn up the
+   resistence a little bit on your self study.  I would suggest getting
+   a paid subscription to either [treehouse] or [codeschool].  Whereas
+   codecadey's a great way to hit the ground running, these
+   sites provide a combination of slightly more in-depth video lectures
+   with accompanying exercises.  After signing up, go through the course
+   material offered for the language you've chosen as well as all of the topics
+   listed in part 2.  There will be some redundancy here, but that's actually good.
+
+ 5. The next step is to tackle a framework.  Here's where we're starting
+    to get a little more specific.  If a programming language is like
+    legos, a framework is like a specific lego set -- it's good at
+    building a particular thing.  That being said, I think it's still
+    the case that learning about one will make learning a second one
+    easier.
+
+ 6. If you've started digging into codeschool/treehouse and are still
+    stoked on this idea, then you need to think about freeing up some
+    time to pursue this.  If it's at all possible to cuver your expenses
+    working part time, that's a great option.  Start to treat
+    programming like a second job -- go to a coffeeshop and do it for
+    four hours a day every day. 
+
+> Try to cut down to working part time and start devouring online
+> resources as a second part time job for three to six months.
+Like I’m not kidding, coffee shop every day for four hours.  Be that
+person.  Order a Macciato.  Stake out a spot next to the outlet.  Go
+there every day.  Work at it hard.
+
+    This should be the big jump, not the jump into a bootcamp.
+
+  7. Decide whether to take the bootcamp route or to go it alone.
 
 I think it’s really important to realize that coding bootcamps are
 businesses.  No matter how approachable they are or much eye contact
@@ -179,6 +197,9 @@ dealing with configuration) and then force feeding you a ton of material
 about a specific language and framework.  You’re paying for the benefit
 of not getting stuck for too long on things that aren’t that important
 for your learning in this moment.  And also for curriculum.  
+
+Another way they function is that they hold a substantial wager that you
+make on yourself succeeding.  Once you've paid them
 
 As much as they try to market their programs as no-brainer money back
 decisions, deciding to enroll in a bootcamp at its heart is a cold,
