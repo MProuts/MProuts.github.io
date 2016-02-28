@@ -112,7 +112,7 @@ And here's how I suggest having that fun:
 
   c) Ravenclaw
 
-  d) What's that? (Muggle)
+  d) What's that?
 
   **Results**
 
@@ -128,9 +128,9 @@ And here's how I suggest having that fun:
 [Codecademy](https://www.codecademy.com).** Complete the tracks for the
 following topics:
 
-- The programming language you chose in Step 1
+- \<Programming Language from Step 1\>
 - HTML & CSS
-- Javascript (no need to repeat if that's what you chose in step 1)
+- Javascript (no need to repeat if your house is Slitherin)
 - jQuery
 - Learn the Command Line
 - Learn SQL
@@ -160,19 +160,45 @@ If your answered yes, then fun is over!  Jk, you can still have
 fun with it.  But...
 
 **4. The next step is to turn up the resistence a little bit on your self study.**  I would suggest getting
-   a paid subscription to either [Treehouse](https://teamtreehouse.com/) or [Codeschool](https://teamtreehouse.com/) (or both!).  Whereas
+   a paid subscription to either [Treehouse](https://teamtreehouse.com/) or [Codeschool](https://teamtreehouse.com/), or both.  Whereas
    codecadey's a great way to hit the ground running, these
    sites provide a combination of slightly more in-depth video lectures
    and exercises.  After signing up, go through the course
-   material offered for the language you've chosen as well as all of the topics
+   material offered for the language you've chosen, as well as all of the topics
    listed in Step 2.  There will be some redundancy here, but that's actually a good thing.
 
-**5. The next step is to tackle a framework.**  Here's where we're starting
-to get a little more specific.  If a programming language is like
-legos, a framework is like a specific lego set -- it's good at
-building a particular thing.  That being said, I think it's still
-the case that learning about one will make learning a second one
-easier.
+**5. The next step is to tackle a framework.**  If a programming
+language is like a big in of legos, a framework is like a specific lego
+set -- it's good at building a particular thing, e.g. a website.  Start
+learning the web framework that corresponds to the language you've been
+learning.
+
+
+| Language   | Framework |  Resources |
+| --------   | --------- | --------- |
+| Javascript | Meteor.js | [Start here](http://joshowens.me/getting-started-with-meteor-js/)
+| Ruby       | Rails     | [Start here](https://www.railstutorial.org/book)
+| Python     | Django    | [Start here](https://www.djangoproject.com/start/)
+| PHP        | Laravel   | [Start here](https://laravel.com/docs/4.2/quick)
+<p></p>
+
+Definitely start going to meetups for the framework you're learning.
+Getting frameworks installed can be a nightmare, so do your best to
+figure things out yourself (Google is your friend), but limit the amount of time
+you spend chasing around configuration errors (to like a few hours).  If you're really stuck
+on something, ask the internet, or go to a meetup and ask someone there.
+While you're waiting for help, you can always work on something else.
+Oh, and the website you subscribed to in Step 4 probably has some
+content related to your framework, so definitely go through those
+lectures as well.
+
+By the end of this stage, you should have a framework installed on your
+computer and have followed a tutorial to make some basic website that can save and
+delete stuff from a database (like a microblog or a todo list) using
+that framework.  Again, redundancy is your friend, so if you find a second getting started
+tutorial for your framework, do it!  Having several authors'
+commentaries will help reenforce all of the new concepts you're
+learning.
 
 * * *
 <p></p>
@@ -182,39 +208,50 @@ perpetually dealing with this brokenness?" <-
 * * *
 <p></p>
 
-**6. Partially quit your job.** If you've started digging into codeschool/treehouse and are still
-stoked on this idea, then you need to think about freeing up some
-time to pursue this.  If it's at all possible to cuver your expenses
+**6. Partially quit your job.** Ok, here's where it starts to get real.
+If you've digging into Codeschool/Treehouse, going to meetups, and are
+starting to build stuff with a framework and are *still
+stoked on this idea*, then you need to think about freeing up some more
+time in your schedule to stare blankly at stack traces in the console.
+
+If it's at all possible to cover your expenses
 working part time, that's a great option.  Start to treat
 programming like a second job -- go to a coffeeshop and do it for
-four hours a day every day. 
+four hours a day every day.  You shouldn't have any trouble coming up
+with topics to improve on.  Figure out how the unix file system works,
+chose a text editor and start trying to master it, set up a cute bash
+prompt.
 
-> Try to cut down to working part time and start devouring online
-> resources as a second part time job for three to six months.
-Like I’m not kidding, coffee shop every day for four hours.  Be that
-person.  Order a Macciato.  Stake out a spot next to the outlet.  Go
-there every day.  Work at it hard.
+This step (as opposed to enrolling in a bootcamp) should be
+where the big jump takes place.  Start thinking of yourself as a
+programmer and doing this all the time.
 
-    This should be the big jump, not the jump into a bootcamp.
+Remember, even when you're stuck, you're learning.
+Even when it feels like you're not moving, you are.  Don't get
+frustrated, you got this.
 
-  7. Decide whether to take the bootcamp route or to go it alone.
+**7. Decide whether to take the bootcamp route or to go it alone.**
 
-I think it’s really important to realize that coding bootcamps are
-businesses.  No matter how approachable they are or much eye contact
-they make with you or how often they tell you they love you, they don’t
-necessarily have your best interests in mind.  But what they *do*
-necessarily have in mind, as a *business*, is their *own* best
-interests.  That said, what bootcamps have going for them is that they
+Let's start this section off with a simple fact:
+Bootcamps are businesses.  That means that no matter how approachable they seem, or much
+eye contact they make, or how often they tell you they love you, they don’t
+necessarily have your best interests in mind.  And what they *do*
+necessarily have in mind, at the end of the *day*, as a *business*, in
+this crazy game we call *capitalism*, are their *own* best interests.  So just keep that in mind.
+
+That said, what bootcamps have going for them is that they
 can help you cover a ton of ground quickly.   They do this by taking
 care of the parts of programming that would be the costliest/least
-beneficial to you at this point (i.e. setting up your environment and
-dealing with configuration) and then force feeding you a ton of material
-about a specific language and framework.  You’re paying for the benefit
-of not getting stuck for too long on things that aren’t that important
-for your learning in this moment.  And also for curriculum.  
+beneficial to you at this point in your programming career (i.e. setting
+up your environment and dealing with configuration) and then force
+feeding you a ton of material about a specific language and framework in
+a short period of time with 24-hour, in-person customer support.  You’re
+paying for the benefit of not getting stuck for too long on anything.
+And also for a nice big buffet of curriculum (so that you don't have to
+wonder if you're doing what you should be doing).
 
-Another way they function is that they hold a substantial wager that you
-make on yourself succeeding.  Once you've paid them
+Another way that they function is that they can help you place a big bet on
+yourself.
 
 As much as they try to market their programs as no-brainer money back
 decisions, deciding to enroll in a bootcamp at its heart is a cold,
