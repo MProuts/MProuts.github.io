@@ -116,6 +116,9 @@ And here's how I suggest having that fun:
 
   d) What's that?
 
+<iframe src="//giphy.com/embed/P9OJMLH7QGPVm" width="480" height="204" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+<p></p>
+
   **Results**
 
   | You answered... | Go with: |
@@ -242,7 +245,7 @@ eye contact they make, or how often they tell you that they love you, they don�
 necessarily have your best interests in mind.  And what they *do*
 necessarily have in mind, at the end of the *day*, as a *business*, in
 this crazy game we call *capitalism*, are their *own* best interests.
-So just keep that filed away under *corporate realness* in the back of your head.
+So just keep that filed away under "corporate realness" in the back of your head.
 
 That said, what bootcamps do have going for them is that they
 can help you cover a ton of ground quickly.   They do this by taking
@@ -252,7 +255,7 @@ up your environment and dealing with configuration problems) and then by force
 feeding you a ton of material about a specific language and framework in
 a short period of time, all with convenient, 24-hour roadside assistance.  You’re
 paying for the benefit of not getting stuck for too long on anything.
-And also for a nice big buffet of curriculum (so that you don't have to
+And also for a nice big buffet of curated curriculum (so that you don't have to
 wonder about whether you're spending your time wisely or not.)
 
 Another way they function is that they can help you place a
@@ -263,7 +266,7 @@ out the other end.
 
 As much as their marketing departments will try to capture your
 imagination with romanticized notions of progress and success whilst
-shrouding risks in money-back guarantees, deciding to enroll in a
+cloaking risks with money-back guarantees, deciding to enroll in a
 bootcamp should be a
 cold, precise, financial decision.  You're paying for a service.  Be
 skeptical of placement promises — you’re going to have to hustle to find a job,
@@ -285,7 +288,7 @@ experienced kindergarten through Pomona College.  It was
 Whatever.  The point is, it felt like having finals week for twice the usual number of
 classes for two months straight.  This isn't meant to discourage you -- some people
 thrive in intense situations.  But intense it will be.  Just something
-to keep filed away back there next to *corporate realness*.
+to keep filed away back there next to "corporate realness".
 
 And maybe you decide the bootcamp thing is not for you.  Maybe you'd
 rather take your time, maybe you'd rather save your money.  It's totally
