@@ -225,14 +225,14 @@ programming like a second job -- go to a coffeeshop and do it for
 four hours a day, every day.  You shouldn't have any trouble coming up
 with topics to study.  Figure out how the unix file system works,
 chose a text editor and start trying to master it, set up a cute bash
-prompt.
+prompt.  :snale:
 
 This step (not enrolling in a bootcamp) should be
-where the big jump takes place.  Start thinking of yourself as a
-programmer and doing this all the time.  Commit to this. Remember, even
-when you're stuck, you're learning.
-Even when it feels like you're not moving, you are.  Don't get
-frustrated -- you got this.
+where the big leap of faith takes place. Free up time for this by
+letting some other things go. Start thinking of yourself as a
+programmer and doing this all the time. Remember, even when you're
+stuck, you're learning. Even when it feels like you're not moving, you
+are.  Don't get frustrated -- you got this.
 
 **7. Decide whether to take the bootcamp route or to go it alone.**
 
@@ -241,18 +241,19 @@ Bootcamps are businesses.  That means that no matter how approachable they seem,
 eye contact they make, or how often they tell you that they love you, they don’t
 necessarily have your best interests in mind.  And what they *do*
 necessarily have in mind, at the end of the *day*, as a *business*, in
-this crazy game we call *capitalism*, are their *own* best interests.  So just keep that in mind.
+this crazy game we call *capitalism*, are their *own* best interests.
+So just keep that filed away under *corporate realness* in the back of your head.
 
-That said, what bootcamps have going for them is that they
+That said, what bootcamps do have going for them is that they
 can help you cover a ton of ground quickly.   They do this by taking
 care of the parts of programming that would be the costliest/least
 beneficial to you at this point in your programming career (i.e. setting
-up your environment and dealing with configuration problems) and then force
+up your environment and dealing with configuration problems) and then by force
 feeding you a ton of material about a specific language and framework in
-a short period of time, all with 24-hour roadside assistance.  You’re
+a short period of time, all with convenient, 24-hour roadside assistance.  You’re
 paying for the benefit of not getting stuck for too long on anything.
 And also for a nice big buffet of curriculum (so that you don't have to
-wonder about whether you're spanding your time wisely or not.)
+wonder about whether you're spending your time wisely or not.)
 
 Another way they function is that they can help you place a
 significant wager on your own success as a programmer.  Once you
@@ -260,43 +261,45 @@ quit your job and give them a big old chunk of your
 savings account, it's sort of imperitive that you slog through it and make it
 out the other end.
 
-As much as their marketing departments will try to inflate you with
-romanticized notions of progress and success whilst shrouding risks with
-money-back guarantees, deciding to enroll in a bootcamp should be a
+As much as their marketing departments will try to capture your
+imagination with romanticized notions of progress and success whilst
+shrouding risks in money-back guarantees, deciding to enroll in a
+bootcamp should be a
 cold, precise, financial decision.  You're paying for a service.  Be
 skeptical of placement promises — you’re going to have to hustle to find a job,
-and one way or another you’re going to be putting a ton of time and
-money on the line for this service.  And if they do find you a job, just
-remember that they take a big old bite out of your first year's salary
-as a thank you to themselves.
+and you’re going to be putting a ton of time and
+money on the line until you do.  This endeavor is anything but riskless.
+Proceed intelligently. Oh, and just remember, if they do find you a job,
+they take a big old bite out of your first year's salary as a thank you to themselves.
 
 So be skeptical, ask for a tours, kick the tires.  Remember that this is
 just a vehicle to transport you from point A to point B at lightning
 speed, and that when you reach point B, you're still more or less on
-your own to find a job.
+your own and you will still have assumed a ton of of risk along the way.
 
-Oh, and this might relate more to the program I went to, but I wouldn't
-be surprised if it was generalizable across most similar bootcamp
-programs:  namely, the intensity was unlike anything I've
-experienced in kindergarten through Pomona.  It was
-12 hour days, 6-7 days a week, working your brain to the bone.  Stem?
-Whatever.  Think finals for twice the number of classes for two
-months straight.  This isn't meant to discourage you -- some people
-thrive in intensity.  But intense it will be.  Just something to keep in
-mind.
+Oh, and although this might relate particularly to the program I went
+to, I think it it's probably generalizable, and bears mentioning --
+namely, the intensity was unlike anything I've
+experienced kindergarten through Pomona College.  It was
+12-hour days, six to seven days/week, working your brain to the bone.  (Stem?)
+Whatever.  The point is, it felt like having finals week for twice the usual number of
+classes for two months straight.  This isn't meant to discourage you -- some people
+thrive in intense situations.  But intense it will be.  Just something
+to keep filed away back there next to *corporate realness*.
 
 And maybe you decide the bootcamp thing is not for you.  Maybe you'd
 rather take your time, maybe you'd rather save your money.  It's totally
 possible to get into programming without a bootcamp.  It's just maybe a
-little harder and less supported.  And it might take longer.   I'm guessing.
+little harder and less supported.  And it might take longer.   (I'm guessing.)
 But people do it every day, even. (Or even, every day there are people
-who are doing it.)
+who are doing it.) (I'm guessing.)
 
-In the absense of a heavy cash deposit, you may need to perform a little
+*The point is*, in the absense of a heavy cash deposit, you may need to perform a little
 extra legwork to keep your dream tethered to reality.  But if you can
 keep your cool when things break, and find some support when you're
-really stuck, and stick to a super strict part-time/full-time job
-schedule, then there are free resources available to learn anything
-tech-related under the sun.  (The internet sun.)
+really stuck, and stick to a super strict part-time (or even full-time) treat-it-like-a-job
+schedule, then there are free resources available to learn almost anything
+tech-related under the sun.  (The internet sun.)  (Under the sun of the
+internet, anything, even.)
 
-Ok, so get thee to a coffeeshop!
+Ok, now get thee to a coffeeshop!
