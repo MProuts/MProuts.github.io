@@ -56,7 +56,7 @@ I was a musician before I was a programmer, so I kind of tend to see starting ou
 relation to starting a new
 musical instrument — just like there are crazy virtuoso musicians
 who’ve been at it since birth, so too are there crazy virtuoso
-programmers who have been at it since apple’s logo had a raindow on it.
+programmers who have been at it since Apple’s logo had a raindow on it.
 And there’s like a similar amount of ground to cover between not being
 good at [violin|programming] and being good at [violin|programming].
 
@@ -76,7 +76,7 @@ music lessons.  Except the only difference is that there is no surplus
 of talented violinist roles in our economy, but there *is* such a surplus
 of programming roles for the time being.  So the playing field is
 advantageous for people who want to pick up a laptop and start
-screeching out their first Ode to Code.
+screeching out their first little Odes to Code.
 
 <iframe width="420" height="315" src="https://www.youtube.com/embed/JPoSqKU2Lxw" frameborder="0" allowfullscreen></iframe>
 
@@ -245,10 +245,8 @@ are.  Don't get frustrated -- you've got this!
 Let's start this section off with a simple fact:
 Bootcamps are businesses.  That means that no matter how approachable they seem, or much
 eye contact they make, or how often they tell you that they love you, they don’t
-necessarily have your best interests in mind.  And what they *do*
-necessarily have in mind, at the end of the *day*, as a *business*, in
-this crazy game we call *capitalism*, are their *own* best interests.
-So just keep that filed away under "corporate realness" in the back of your head.
+necessarily have your best interests in mind.  So just keep that filed
+away under "corporate realness" in the back of your head.
 
 That said, what bootcamps do have going for them is that they
 can help you cover a ton of ground quickly.   They do this by taking
@@ -312,6 +310,6 @@ schedule, then there are free resources available to help you learn almost anyth
 tech-related under the sun.  (The internet sun.)  (Under the sun of the
 internet.)
 
-Ok, now get out there and make some noise!
+That's all I got.  If anyone's still reading, get out there and make some noise!
 
 :violin:
