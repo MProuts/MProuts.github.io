@@ -66,7 +66,7 @@ So let’s actually just run with this comparison and reframe this
 discussion a little bit — imagine you woke up tomorrow morning and decided that you
 wanted to become a concert violinist.  That’s awesome!  Really cool.
 But making that happen means that you’re going to really suck at playing
-the violin.  Like really suck.  And probably in your lifetime you might
+the violin.  Like *really* suck.  And probably in your lifetime you might
 not really make it to the level of someone who’s been doing it since
 they were like 4 or 5.
 
@@ -79,9 +79,9 @@ screeching out their first Ode to Code.
 
 <iframe width="420" height="315" src="https://www.youtube.com/embed/JPoSqKU2Lxw" frameborder="0" allowfullscreen></iframe>
 
-So but music analogies aside, at the end of the day, if it turns out that *programming is not very
+So but musical analogies aside, at the end of the day, if it turns out that *programming is not very
 interesting to you* in the first place, then you might be talking about
-trading a boring and (maybe) manageable job for boring and very
+trading a boring and (maybe) manageable job for a boring and very
 difficult one that you’re necessarily going to suck at for a very long
 time and will have to work and stuggle constantly to get better at.  Maybe not the
 best trade.
@@ -174,15 +174,16 @@ No, I'm kidding.  You can still have fun.  However...
 **5. The next step is to tackle a framework.**  "What's a framework?"
 you ask.  If a programming language is like a big bin of general-purpose
 lego pieces, a framework is like a specific lego set that is intended to
-build a specific thing, e.g. a website.  (Not my analogy, but it's a good
-one.) So, now that you have a general grasp of a *programming language*,
-you're going to start learning the corresponding *web framework*, which is
-a collection of tools written in that language that you can use to make
-a website.
+build a specific thing, e.g. a website.
 
 ![lego-kwik-e-mart](http://www.adweek.com/files/imagecache/node-blog/blogs/lego-kwik-e-mart-hed-2015.jpg)
 
-| Language   | Framework |  Resources |
+So, now that you have a basic grasp of a *programming language* under
+your belt, you're going to start learning the corresponding *web framework*, which is
+a collection of tools written in that language that is used to build
+a website.
+
+| Language   | Framework |  More info |
 | --------   | --------- | --------- |
 | Javascript | Meteor.js | [Start here](http://joshowens.me/getting-started-with-meteor-js/)
 | Ruby       | Rails     | [Start here](https://www.railstutorial.org/book)
@@ -190,8 +191,8 @@ a website.
 | PHP        | Laravel   | [Start here](https://laravel.com/docs/4.2/quick)
 <p></p>
 
-Definitely start going to meetups for the framework you're learning.
-Getting frameworks installed can be a nightmare, so do your best to
+Definitely also start going to meetups for the framework you're learning.
+Getting a framework installed can be a nightmare, so do your best to
 figure things out yourself (Google is your friend), but limit the amount of time
 you spend chasing around configuration errors (to like an hour or two).  If you're really stuck
 on something, take a break.  Ask the internet, or go to a meetup and ask someone there.
@@ -211,7 +212,7 @@ learning.
 * * *
 <p></p>
 -> **Pause**.  Ask yourself: "Even though this is frustrating sometimes
-and stuff's often broken, can I see myself making a career out of
+and stuff's often broken, can I still see myself making a career out of
 perpetually dealing with stuff being broken?" <-
 * * *
 <p></p>
@@ -219,8 +220,8 @@ If your answered yes, then shit's about to get real.  I suggest
 you...
 
 **6. Partially quit your job.** If you're digging into
-Codeschool/Treehouse, going to meetups, have started building stuff with
-a framework *and* you're still completely stoked on this idea, then you need to think
+Codeschool/Treehouse, going to meetups, and messing around with a
+framework *and* you're still completely stoked on this idea, then you need to think
 about freeing up some more time in your schedule to stare blankly at
 stack traces in the console.
 
@@ -228,9 +229,9 @@ If it's at all possible to cover your expenses
 working part time, that's a great option.  Start to treat
 programming like a second job -- go to a coffeeshop and do it for
 four hours/day, every day.  You shouldn't have any trouble coming up
-with topics to study -- Figure out how the unix file system works,
+with topics to study -- figure out how the unix file system works,
 chose a text editor and start trying to master all it's hotkeys, set up a cute bash
-prompt.  :snale:
+prompt.  :snail:
 
 This step (not enrolling in a bootcamp) should be
 where the dramatic leap of faith takes place. Free up time for this by
@@ -266,8 +267,8 @@ quit your job and give them a big old chunk of your
 savings account, it's sort of imperitive that you slog through it and make it
 out the other end.
 
-As much as their marketing departments will try to capture your
-imagination with romanticized notions of progress and success whilst
+As much as they will try to appeal to your imagination with
+romanticized notions of progress and success whilst
 cloaking risks with placement guarantees, deciding to enroll in a
 bootcamp should be a
 cold, precise, financial decision.  You're paying for a service.  Be

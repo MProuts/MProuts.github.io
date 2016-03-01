@@ -1,2 +1,9 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
+
+// Reset image styles for Emoji
+.emoji {
+  box-shadow: none;
+  border: 0;
+  height: 20px;
+}

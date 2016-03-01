@@ -101,3 +101,6 @@ facebook_like: false
 
 # Gravatar
 gravatar_email: michael.prouty@gmail.com
+
+# Gemoji
+emoji_dir: /images/emoji
