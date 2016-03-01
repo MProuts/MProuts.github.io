@@ -8,7 +8,7 @@ categories:
   - "Suzuki Violin Method"
 ---
 
-#### Advice from another adult beginner who is slightly ahead of you in the Suzuki violin books, but who is enjoying her adult music lessons over at the YMCA just fine.
+#### Advice from another adult beginner who is only slightly ahead of you in the Suzuki violin books, but who is enjoying her adult music lessons over at the YMCA just fine.
 
 It almost feels clique to say this, but it seems like everyone has been doing
 software these days.  (["Everyone has been doing emails."](https://www.youtube.com/watch?v=PNFI5SUhqLs)).  As someone who
@@ -18,7 +18,7 @@ same.  If that's you, this is my advice.
 
 So yes, you’re thinking about programming.  That’s awesome!  It’s really
 a great gig.  It can be super satisfying and creative and interesting
-and lucrative.  Lot’s of opportunity in that sector.  Yada
+and lucrative.  Lots of opportunity in that sector.  Yada
 yada. You should definitely do it.  (Seriously though, **do eet**!) That is, if
 you really want to do it -- which brings me to my first piece of advice:
 
@@ -39,8 +39,8 @@ than that boring job you have now.
 
 "Why is that?" you ask.  Well for one thing, it’s hard.  And, at least in my limited
 experience, it keeps being hard.  My co-worker recently pointed out that
-the "development" in "software development" implies that you're always *developing* something you've
-never *developed* before, meaning that you're always reaching into new conceptual territory.  So the idea isn't that you're going to acquire a
+the "development" in "software development" implies that you're always
+*developing* something that never existed before, meaning that you're always reaching into new conceptual territory.  So the idea isn't that you're going to acquire a
 skillset and use it to build things over and over again, rather it's that you're going to
 acquire the skillset of acquiring new skillsets, and use that to continually
 do stuff you've never done before. You get me?  
@@ -64,8 +64,9 @@ good at [violin|programming] and being good at [violin|programming].
 
 So let’s actually just run with this comparison and reframe this
 discussion a little bit — imagine you woke up tomorrow morning and decided that you
-wanted to become a concert violinist.  That’s awesome!  Really cool.
-But making that happen means that you’re going to really suck at playing
+wanted to become a professional violinist.  That’s awesome!  Really cool.
+But making that happen means that you're going to have to go through a
+long period where you really suck at playing
 the violin.  Like *really* suck.  And probably in your lifetime you might
 not really make it to the level of someone who’s been doing it since
 they were like 4 or 5.
@@ -101,7 +102,7 @@ And here's how I suggest having that fun:
    between languages, so in no way will you be like locking yourself into
    anything.  Actually, the opposite is true -- learning your first
    programming language will make learning a second one way easier.  If
-   you're having some trouble deciding, let the following Harry Potter Sorting Hat
+   you're having trouble deciding, let the following Harry Potter Sorting Hat
   Quiz™ guide your decision:
 
   With which of the following Hogwarts houses do you most closely identify?
@@ -139,7 +140,7 @@ following topics:
 - Learn SQL
 - Learn Git
 
-There's also some fun activities on Codecademy, so feel free to take
+There are also some fun activities on Codecademy, so feel free to take
 detours.  Remember, the goal here is to have fun.  Try to commit an hour or two
 to this each day until you're finished if you can.
 
@@ -161,12 +162,12 @@ chance that someone here can help you.
 <p></p>
 If you answered yes, then the fun is over!
 
-No, I'm kidding.  You can still have fun.  However...
+No, I keed you.  However...
 
 **4. The next step is to turn up the resistence a little bit on your self study.**  I would suggest getting
    a paid subscription to either [Treehouse](https://teamtreehouse.com/) or [Codeschool](https://teamtreehouse.com/), or both.  Whereas
    codecadey's a great way to hit the ground running, these
-   sites provide a combination of slightly more in-depth video lectures
+   sites provide a slightly more in-depth combination of video lectures
    and exercises.  After signing up, go through the course
    material offered for the language you've chosen, as well as all of the topics
    listed in Step 2.  There will be some redundancy here, but that's actually a good thing.  Really binge on these resources.
@@ -181,39 +182,38 @@ build a specific thing, e.g. a website.
 So, now that you have a basic grasp of a *programming language* under
 your belt, you're going to start learning the corresponding *web framework*, which is
 a collection of tools written in that language that is used to build
-a website.
+websites.  Follow the appropriate link below to get started.
 
 | Language   | Framework |  More info |
 | --------   | --------- | --------- |
 | Javascript | Meteor.js | [Start here](http://joshowens.me/getting-started-with-meteor-js/)
 | Ruby       | Rails     | [Start here](https://www.railstutorial.org/book)
 | Python     | Django    | [Start here](https://www.djangoproject.com/start/)
-| PHP        | Laravel   | [Start here](https://laravel.com/docs/4.2/quick)
+| PHP        | Laravel(?) | [Start here](https://laravel.com/docs/4.2/quick)
 <p></p>
 
 Definitely also start going to meetups for the framework you're learning.
 Getting a framework installed can be a nightmare, so do your best to
 figure things out yourself (Google is your friend), but limit the amount of time
-you spend chasing around configuration errors (to like an hour or two).  If you're really stuck
-on something, take a break.  Ask the internet, or go to a meetup and ask someone there.
+you spend chasing around configuration errors (to like a few hours).  If you're really stuck
+on something, take a break.  Ask the internet (e.g. post on a forum), or go to a meetup and ask someone there.
 While you're waiting for help, you can always work on something else.
 Oh, and the website you subscribed to in Step 4 probably has some
 content related to your framework, so definitely go through those
 lectures as well.
 
 By the end of this stage, you should have a framework installed on your
-computer and have followed a tutorial to make some basic website that can save and
-delete stuff from a database (like a microblog or a todo list) using
-that framework.  Again, redundancy is your friend, so if you find a second "Getting Started"
-tutorial for your framework, do it!  Having multiple authors'
-commentaries will help reenforce all of the new concepts you're
-learning.
+computer and should have made some basic website (following a tutorial)
+that can save and delete stuff from a database (like a microblog or a todo list).
+Again, redundancy is your friend, so if you find a second "Getting Started" tutorial for your
+framework, do it!  Having multiple authors' commentaries will help
+reenforce all of the new concepts you're learning.
 
 * * *
 <p></p>
 -> **Pause**.  Ask yourself: "Even though this is frustrating sometimes
 and stuff's often broken, can I still see myself making a career out of
-perpetually dealing with stuff being broken?" <-
+perpetually dealing with stuff being broken like this?" <-
 * * *
 <p></p>
 If your answered yes, then shit's about to get real.  I suggest
@@ -230,7 +230,7 @@ working part time, that's a great option.  Start to treat
 programming like a second job -- go to a coffeeshop and do it for
 four hours/day, every day.  You shouldn't have any trouble coming up
 with topics to study -- figure out how the unix file system works,
-chose a text editor and start trying to master all it's hotkeys, set up a cute bash
+chose a text editor and start trying to master all its hotkeys, set up a cute bash
 prompt.  :snail:
 
 This step (not enrolling in a bootcamp) should be
@@ -238,7 +238,7 @@ where the dramatic leap of faith takes place. Free up time for this by
 letting some other things go. Start thinking of yourself as a
 programmer and working on this all the time. Remember, even when you're
 stuck, you're learning. Even when it feels like you're not moving, you
-are.  Don't get frustrated -- you've got this.
+are.  Don't get frustrated -- you've got this!
 
 **7. Decide whether to take the bootcamp route or to go it alone.**
 
@@ -259,7 +259,11 @@ feeding you a ton of material about a specific language and framework in
 a short period of time, all with convenient, 24-hour roadside assistance.  You’re
 paying for the benefit of not getting stuck for too long on anything.
 And also for a nice big buffet of curated curriculum (so that you never
-have to stop and wonder, "Is this what I should be reading?  Is this what I should be doing?")
+have to stop and wonder, "Is this what I should be reading?  Is this
+what I should be doing?")
+
+<iframe src="//giphy.com/embed/7TC1KQ4fdwob6" width="480" height="275" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+<p></p>
 
 Another way they function is that they can help you place a
 significant wager on your own success as a programmer.  Once you
@@ -267,50 +271,47 @@ quit your job and give them a big old chunk of your
 savings account, it's sort of imperitive that you slog through it and make it
 out the other end.
 
-As much as they will try to appeal to your imagination with
-romanticized notions of progress and success whilst
-cloaking risks with placement guarantees, deciding to enroll in a
-bootcamp should be a
+As much as they will try to appeal to your imagination with romanticized
+notions of progress and success whilst cloaking some very real risks
+with placement guarantees, deciding to enroll in a bootcamp should be a
 cold, precise, financial decision.  You're paying for a service.  Be
-skeptical of job promises — you’re going to have to hustle to find a job,
-and you’re going to be putting a ton of time and
-money on the line until you do.  This proposition is anything but riskless.
-Proceed intelligently. (Oh, and just remember, if they do find you a job,
-they take a big old bite out of your first year's salary as a thank you
-to themselves.  So add that under "Corporate Realness.")
+skeptical of job promises — you’re going to have to hustle to find (and keep) a job, and you’re going to be putting a ton of time and money on
+the line until you do.  This proposition is anything but riskless.
+Proceed intelligently. (Oh, and just remember, if you do get a placement
+through a bootcamp, they usually take a big old bite out of your first year's salary as a thank
+you to themselves.)
 
 So be skeptical, ask for a tours, kick the tires.  Remember that this is
 just a vehicle to transport you from point A to point B at lightning
-speed.  Remember that when you reach point B, you're still more or less on
-your own, and you will still have assumed a ton of of risk along the way.
+speed.  You can actually cover a lot of ground just fine on your
+own -- in fact, you'll be able to make the most out of the performance boost
+offered by a bootcamp if you spend three to six months mastering the
+basics on your own beforehand.  Expect that when you reach point B,
+you will still more or less be on your own, and that you will have assumed a
+ton of of risk along the way.
 
-:picture car related:
-
-Oh, and although this might relate particularly to the program I went
-to, I think it it's probably generalizable, and bears mentioning --
-namely, the intensity was unlike anything I've
+Oh, and although this might relate particularly to the program attended, I think it it's probably generalizable, and bears mentioning --
+namely, the intensity was unlike anything I'd
 experienced kindergarten through college.  It was
 12-hour days, six to seven days/week, working your brain to the bone.  (Stem?)
 Whatever.  The point is, it felt like having finals week for twice the usual number of
 courses for two months straight.  This isn't meant to discourage you -- some people
-thrive in intense situations.  But intense it will be.
-
-:frazzled picture:
+thrive in intense situations -- but intense it will be.
 
 And maybe you decide the bootcamp thing is not for you.  Maybe you'd
 rather take your time, maybe you'd rather save your money.  It's totally
 possible to get into programming without a bootcamp.  It's just maybe a
 little harder and less supported.  And it might take longer.   (I'm guessing.)
-But people do it every day.  (Everyone's been doing software!)
+But people do it every day.  (Everyone has been doing software.)
 
 *The point is*, in the absense of a heavy cash deposit, you may need to perform a little
 extra legwork to keep your dream tethered to reality.  But if you can
 keep your cool when things break, and find some support when you're
 really stuck, and stick to a super strict part-time (or even full-time) treat-it-like-a-job
-schedule, then there are free resources available to learn almost anything
+schedule, then there are free resources available to help you learn almost anything
 tech-related under the sun.  (The internet sun.)  (Under the sun of the
 internet.)
 
-Ok, now get thee to a coffeeshop!
+Ok, now get out there and make some noise!
 
-:picture of coffee:
+:violin:
