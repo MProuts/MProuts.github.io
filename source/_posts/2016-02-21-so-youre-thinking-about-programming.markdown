@@ -310,6 +310,6 @@ schedule, then there are free resources available to help you learn almost anyth
 tech-related under the sun.  (The internet sun.)  (Under the sun of the
 internet.)
 
-That's all I got.  If anyone's still reading, get out there and make some noise!
+That's all I got.  If anyone's still reading this, get out there and make some noise!
 
 :violin:
