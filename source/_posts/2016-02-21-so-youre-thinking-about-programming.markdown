@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "So, You're Thinking About Programming"
-date: 2016-02-21 13:17:48 -0500
+date: 2016-03-01 13:17:48 -0500
 comments: true
 categories:
   - "Life Advice"
