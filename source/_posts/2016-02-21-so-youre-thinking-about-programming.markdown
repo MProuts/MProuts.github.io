@@ -47,7 +47,7 @@ do stuff you've never done before. You get me?
 
 So it's way more about continually dealing with
 not knowing stuff (i.e. humility, learning), than about knowing stuff
-and being like,”Wow, so cool, rad, this is awesome, I’m awesome.”
+and being like, "Wow, so cool, rad, this is awesome, I’m awesome."
 
 <iframe src="//giphy.com/embed/YYCQ6YYNz0rew" width="480" height="391" frameBorder="0"></iframe>
 <p></p>
@@ -107,7 +107,7 @@ And here's how I suggest having that fun:
 
   With which of the following Hogwarts houses do you most closely identify?
 
-  a) Slitherin
+  a) Slytherin
 
   b) Hufflepuff
 
@@ -166,7 +166,7 @@ No, I keed you.  However...
 
 **4. The next step is to turn up the resistence a little bit on your self study.**  I would suggest getting
    a paid subscription to either [Treehouse](https://teamtreehouse.com/) or [Codeschool](https://teamtreehouse.com/), or both.  Whereas
-   codecadey's a great way to hit the ground running, these
+   codecademy's a great way to hit the ground running, these
    sites provide a slightly more in-depth combination of video lectures
    and exercises.  After signing up, go through the course
    material offered for the language you've chosen, as well as all of the topics
