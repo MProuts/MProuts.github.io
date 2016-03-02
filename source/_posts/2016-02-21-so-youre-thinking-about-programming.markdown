@@ -10,7 +10,7 @@ categories:
 
 #### Advice from another adult beginner who is only slightly ahead of you in the Suzuki violin books, but who is enjoying her adult music lessons over at the YMCA just fine.
 
-It almost feels clique to say this, but it seems like everyone has been doing
+It almost feels cliché to say this, but it seems like everyone has been doing
 software these days.  (["Everyone has been doing emails."](https://www.youtube.com/watch?v=PNFI5SUhqLs)).  As someone who
 not so unrecently took the plunge into software development, I've been
 getting a lot of questions from people who are considering doing the
