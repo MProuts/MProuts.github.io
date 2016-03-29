@@ -47,5 +47,5 @@ ruby -I"lib:test" <filepath>
 `xarg`'s `-I` argument basically just lets you specify where an
 argument fits inside shell command that's receiving
 it.  In this case, `{}` in `ruby -I"lib:test" {}` gets replaced once in
-succession by each of the file names we found with in the first clause
+succession by each of the file names we found in the first clause
 with `ack`.
