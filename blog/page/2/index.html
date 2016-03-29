@@ -9,8 +9,7 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Bower is a simple package manager for front-end assets like CSS and
-Javascript. It provides an elegant solution for including third-party assets and &hellip;">
+  <meta name="description" content="Most modern web APIs provide programatic access to an application&rsquo;s internals by exposing RESTful JSON endpoints. For example, a POST to / &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,215 @@ Javascript. It provides an elegant solution for including third-party assets and
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">Cross-Domain Requests With Angular & Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-01T09:54:29-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Most modern web APIs provide programatic access to an application&rsquo;s internals by exposing RESTful JSON endpoints.  For example, a <code>POST</code> to <code>/pokemon.json</code> with a lump of properly-formatted JSON might create a new pokemon resource on the application server.</p>
+
+<p>Javascript frameworks like Angular were designed to
+sit on top of APIs, accessing data through endpoints like
+the one described above. When an Angular app and the API it consumes are
+hosted on separate domains, data access is complicated by a security restriction implemented by most browsers called the <code>same-origin policy</code>.  Under the <code>same-origin policy</code>, client-side scripts running in one domain are prevented from obtaining data retrieved from another domain.</p>
+
+<p>Luckily, most browsers also provide a mechanism for getting
+around this restriction called <code>cross-origin resource sharing</code>, or <code>CORS</code>.  Here&rsquo;s
+what you need to know to get it working with jQuery and Rails.</p>
+
+<h1>GET</h1>
+
+<p>Let&rsquo;s say that you have your Angular app running in development on port 8000,
+and your Rails API running on port 3000. When your Angular app loads, it will probably need to request some data
+from the server.</p>
+
+<h3>app.js</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$http</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/pokemon.json&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">pokedex</span><span class="p">.</span><span class="nx">pokemons</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But this produces an error.</p>
+
+<p><img src="/images/cors_get_request.png"></p>
+
+<p>Under the <code>same-origin policy</code>, the browser will block cross-domain <code>XMLHttpRequests</code> unless the server&rsquo;s response to such requests includes an <code>access-control-allow-origin</code> header that matches the
+requesting script&rsquo;s <code>origin</code> (In our case, <code>http://localhost:8000</code>).</p>
+
+<p>In Rails, we can simply add this header to all responses
+in our application controller as follows.</p>
+
+<h3>application_controller.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_filter</span> <span class="ss">:set_access_control_headers</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">set_access_control_headers</span>
+</span><span class='line'>  <span class="n">headers</span><span class="o">[</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>POST</h1>
+
+<p> <code>POST</code> should now also work.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">data</span><span class="o">:</span> <span class="nx">mydata</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>DELETE</h1>
+
+<p> <code>GET</code> and <code>POST</code> are considered <em>simple requests</em> under the
+ <code>CORS</code> standard, meaning that providing the access control headers is
+ sufficient for cross-domain requests.</p>
+
+<p>But what about <code>DELETE</code>?</p>
+
+<h3>app.js</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments/&#39;</span> <span class="o">+</span> <span class="nx">comment</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">contentType</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;produces&hellip;</p>
+
+<p><img src="/images/cors_delete_request.png"></p>
+
+<p>&hellip;and in the Rails log&hellip;</p>
+
+<pre><code>Started OPTIONS "/pokemon/11/comments/119" for 127.0.0.1 at 2014-06-01 11:38:14 -0400
+
+ActionController::RoutingError (No route matches [OPTIONS] "/pokemon/11/comments/119"):
+</code></pre>
+
+<h1>Preflighted Requests</h1>
+
+<p>Under <code>CORS</code>, requests using methods other than <code>GET</code> or <code>POST</code> need to be <em>preflighted</em>.  Essentially, before the
+actual request can take place, the client sends a preliminary
+ <code>OPTIONS</code> request with an <code>access-control-request-method</code>
+header, asking permission to use a particular HTTP method with a given URL.  In our case, we
+want to use <code>DELETE</code> at <code>/pokemon/11/comments/119</code>.  jQuery is smart enough to initiate the preflight
+request for us&hellip;</p>
+
+<pre><code>OPTIONS /pokemon/11/comments/119
+Origin: http://localhost:8000
+Access-Control-Request-Method: DELETE
+</code></pre>
+
+<p>&hellip;so if the server responds with&hellip;</p>
+
+<pre><code>Access-Control-Allow-Origin: http://localhost:8000
+Access-Control-Allow-Methods: DELETE
+</code></pre>
+
+<p>&hellip;then the browser will allow the original request to go through.</p>
+
+<p>Rather than roll our own system for handling this exchange,
+we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
+
+<h3>Gemfile</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;rack-cors&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s1">&#39;rack/cors&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>config/application.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">use</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Cors</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">allow</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">origins</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+</span><span class='line'>    <span class="n">resource</span> <span class="sr">%r{/pokemon/\d+/comments/\d+}</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:headers</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;Accept&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:methods</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:delete</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As configured above, <code>rack-cors</code> will intercept the preflight <code>OPTIONS</code> request from jQuery and grant <code>DELETE</code> access to <code>localhost:8000</code>.</p>
+
+<p>And there you have it.  :)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1574,155 +1782,9 @@ developers for other developers to find.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/04/manage-your-dotfiles-with-git/">Manage Your Dotfiles With Git</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-04T22:55:48-05:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After spending an unreasonable amount of time tinkering with <code>LSCOLORS</code> and <code>PS1</code> in my <code>.bash_profile</code> (think blinking pink unicode coffee cup), I made a typo and broke the file.  The error was deep inside my long, opaque <code>PS1</code> string, and I eventually decided to scrap the broken version and start over.  I also decided to put my dotfiles under version control.</p>
-
-<p>This turned out to be a little trickier than I expected&hellip;</p>
-
-<h2>Separate Your Dots</h2>
-
-<p>The first problem I encountered is that your system expects dotfiles to live in your home directory at paths like <code>~/.vimrc</code>. This isn&rsquo;t a great place for a git repository because, well, that&rsquo;s where <em>ALL</em> of the rest of your user files live.  On the other hand, if you move them into their own directory,</p>
-
-<pre><code>$ mkdir ~/dotfiles/
-$ mv ~/.bash_profile /dotfiles/bash_profile
-</code></pre>
-
-<p>they will no longer be accessible to programs that use them to load your customization.</p>
-
-<h2>Symlinks</h2>
-
-<p>Enter symlinks.  Symlinks basically let you create a named pointer (or <em>symbolic link</em>) to a file at a different location in the file system.  When the system tries to open this pointer, it will link to the target file, and open that instead.  In our case, this means that we can stash all of our resource files in <code>~/dotfiles</code> and create links to make them accessible to programs looking for them in <code>~/</code>. Here&rsquo;s the line of code that makes that happen.</p>
-
-<pre><code>$ ln -s /dotfiles/bash_profile ~/.bash_profile
-</code></pre>
-
-<p>This is basically just saying:
-&ldquo;Create a link from stashed file <code>/dotfiles/bash_profile</code> to its original location at <code>~/.bash_profile</code>.  (I decided to remove the dot from the stashed file for convenience.)</p>
-
-<h2>Git It!</h2>
-
-<p>With the symlink in place, our <code>bash_profile</code> should now be working from its new location.  (Note: You may need to close and reopen terminal to see a change). All that&rsquo;s left to do is initialize our git repo and make our first commit.</p>
-
-<pre><code>$ cd ~/dotfiles
-$ git init
-$ git add .
-$ git commit -m "Initial commit"
-</code></pre>
-
-<h2>Syntax Highlighting</h2>
-
-<p>You&rsquo;ll notice that as a side effect of moving our <code>bash_profile</code>, we no longer get pretty syntax highlighting when we open it in an editor.</p>
-
-<p>  <strong>dotfiles/bash_profile</strong></p>
-
-<pre><code>PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-
-CDPATH=~/dev/
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-export PS1="\W ☕ "
-export GREP_OPTIONS='--color=always'
-export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
-</code></pre>
-
-<p>The solution is to explicitly tell the editor the file type (a shell script) by appending <code>.sh</code> to the filename.</p>
-
-<p>  <strong>dotfiles/bash_profile.sh</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/Applications/Postgres.app/Contents/MacOS/bin:$PATH&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">CDPATH</span><span class="o">=</span>~/dev/
-</span><span class='line'>
-</span><span class='line'><span class="o">[[</span> -s <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">source</span> <span class="s2">&quot;$HOME/.rvm/scripts/rvm&quot;</span> <span class="c"># Load RVM into a shell session *as a function*</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\W ☕ &quot;</span>
-</span><span class='line'><span class="nb">export </span><span class="nv">GREP_OPTIONS</span><span class="o">=</span><span class="s1">&#39;--color=always&#39;</span>
-</span><span class='line'><span class="nb">export </span><span class="nv">LSCOLORS</span><span class="o">=</span><span class="s2">&quot;GxGxBxDxCxEgEdxbxgxcxd&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Aaaaah. Much better.</p>
-
-<h2>Generate Symlinks with a Script</h2>
-
-<p>Great, so now version control and syntax hightlighting are working, but we&rsquo;ve introduced another problem.  Namely, it&rsquo;s a pain to manually maintain these symlinks.  As your list of dotfiles grows, or when you change computers, it would be nice to have a way to dynamically generate links to these stashed resource files. Solution: write a little shell script to link all of the files in <code>/dotfiles</code> to the home directory for you.  I just threw this in the same directory.</p>
-
-<p><strong>linkdotfiles.sh</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">dir</span><span class="o">=</span>~/dotfiles          <span class="c"># dotfiles directory</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">for </span>file in <span class="nv">$dir</span>/*; <span class="k">do</span>
-</span><span class='line'><span class="k">  if</span> <span class="o">[</span> <span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span> !<span class="o">=</span> <span class="s2">&quot;linkdotfiles&quot;</span> <span class="o">]</span>
-</span><span class='line'>  <span class="k">then</span>
-</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Linking&quot;</span> <span class="k">$(</span>basename <span class="nv">$file</span><span class="k">)</span> <span class="s2">&quot;...&quot;</span>
-</span><span class='line'>    ln -s <span class="nv">$file</span> ~/.<span class="k">$(</span>basename <span class="nv">$file</span> .sh<span class="k">)</span>
-</span><span class='line'>  <span class="k">fi</span>
-</span><span class='line'><span class="k">done</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;... all done!&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>To run:</p>
-
-<pre><code>$ sh linkdotfiles.sh
-</code></pre>
-
-<p>All done.  :)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1766,6 +1828,10 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/29/rails-how-to-run-tests-based-on-a-search-pattern/">Rails: How To Run Tests Based On A Search Pattern</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/03/01/so-youre-thinking-about-programming/">So, You&#8217;re Thinking About Programming</a>
       </li>
     
@@ -1779,10 +1845,6 @@ export LSCOLORS="GxGxBxDxCxEgEdxbxgxcxd"
     
       <li class="post">
         <a href="/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">Find and Replace from Shell with Sed</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/23/the-big-difference-between-empty-and-none/">The Big Difference Between Empty And None</a>
       </li>
     
   </ul>

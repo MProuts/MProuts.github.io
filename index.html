@@ -9,7 +9,9 @@
   <meta name="author" content="Michael Prouty">
 
   
-  <meta name="description" content="Advice from another adult beginner who is only slightly ahead of you in the Suzuki violin books, but who is enjoying her adult music lessons over at &hellip;">
+  <meta name="description" content="This came up while I was doing a refactoring that reached across
+multiple files. I wanted a way to make some change, then run all of the
+tests that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +79,88 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/29/rails-how-to-run-tests-based-on-a-search-pattern/">Rails: How To Run Tests Based On A Search Pattern</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-03-29T13:39:11-04:00" pubdate data-updated="true">Mar 29<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This came up while I was doing a refactoring that reached across
+multiple files.  I wanted a way to make some change, then run all of the
+tests that contain any reference to a particular method.</p>
+
+<h3>TL;DR</h3>
+
+<p>Replace <code>&lt;pattern&gt;</code> with your search term.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ack &lt;pattern&gt; <span class="nb">test</span>/ -l | xargs -I<span class="o">{}</span> ruby -I<span class="s2">&quot;lib:test&quot;</span> <span class="o">{}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Explanation</h3>
+
+<p>To break this apart a little bit, I knew that you can get <code>ack</code> to give you
+a list of file names that match a pattern by passing it the <code>-l</code> option.
+So that first clause is pretty straightforward &mdash; look for <code>&lt;pattern&gt;</code>
+inside files in the <code>test/</code> directory, and give me back a list of file
+names.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ack &lt;pattern&gt; <span class="nb">test</span>/ -l
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&rsquo;m used to using this command to run a single test:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">TEST</span><span class="o">=</span>&lt;filepath&gt; rake <span class="nb">test</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>However, in order to get this working with <code>xargs</code>, I had to switch to the slighlty
+uglier version (which, if you look, is what rake is doing internally
+anyway):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ruby -I<span class="s2">&quot;lib:test&quot;</span> &lt;filepath&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>xarg</code>&rsquo;s <code>-I</code> argument basically just lets you specify where an
+argument fits inside shell command that&rsquo;s receiving
+it.  In this case, <code>{}</code> in <code>ruby -I"lib:test" {}</code> gets replaced once in
+succession by each of the file names we found with in the first clause
+with <code>ack</code>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1439,215 +1523,6 @@ $ cp /myproject/.git/hooks/pre-commit ~/.git_template/hooks/pre-commit
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/01/cross-domain-post-and-delete-with-jquery-and-rails/">Cross-Domain Requests With Angular & Rails</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-01T09:54:29-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Most modern web APIs provide programatic access to an application&rsquo;s internals by exposing RESTful JSON endpoints.  For example, a <code>POST</code> to <code>/pokemon.json</code> with a lump of properly-formatted JSON might create a new pokemon resource on the application server.</p>
-
-<p>Javascript frameworks like Angular were designed to
-sit on top of APIs, accessing data through endpoints like
-the one described above. When an Angular app and the API it consumes are
-hosted on separate domains, data access is complicated by a security restriction implemented by most browsers called the <code>same-origin policy</code>.  Under the <code>same-origin policy</code>, client-side scripts running in one domain are prevented from obtaining data retrieved from another domain.</p>
-
-<p>Luckily, most browsers also provide a mechanism for getting
-around this restriction called <code>cross-origin resource sharing</code>, or <code>CORS</code>.  Here&rsquo;s
-what you need to know to get it working with jQuery and Rails.</p>
-
-<h1>GET</h1>
-
-<p>Let&rsquo;s say that you have your Angular app running in development on port 8000,
-and your Rails API running on port 3000. When your Angular app loads, it will probably need to request some data
-from the server.</p>
-
-<h3>app.js</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$http</span>
-</span><span class='line'>  <span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/pokemon.json&#39;</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
-</span><span class='line'>    <span class="nx">pokedex</span><span class="p">.</span><span class="nx">pokemons</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But this produces an error.</p>
-
-<p><img src="/images/cors_get_request.png"></p>
-
-<p>Under the <code>same-origin policy</code>, the browser will block cross-domain <code>XMLHttpRequests</code> unless the server&rsquo;s response to such requests includes an <code>access-control-allow-origin</code> header that matches the
-requesting script&rsquo;s <code>origin</code> (In our case, <code>http://localhost:8000</code>).</p>
-
-<p>In Rails, we can simply add this header to all responses
-in our application controller as follows.</p>
-
-<h3>application_controller.rb</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_filter</span> <span class="ss">:set_access_control_headers</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">set_access_control_headers</span>
-</span><span class='line'>  <span class="n">headers</span><span class="o">[</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h1>POST</h1>
-
-<p> <code>POST</code> should now also work.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments&#39;</span><span class="p">;</span>
-</span><span class='line'>  <span class="nx">data</span><span class="o">:</span> <span class="nx">mydata</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
-</span><span class='line'>    <span class="p">...</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h1>DELETE</h1>
-
-<p> <code>GET</code> and <code>POST</code> are considered <em>simple requests</em> under the
- <code>CORS</code> standard, meaning that providing the access control headers is
- sufficient for cross-domain requests.</p>
-
-<p>But what about <code>DELETE</code>?</p>
-
-<h3>app.js</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://localhost:3000/pokemon/&#39;</span> <span class="o">+</span> <span class="nx">pokemon</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/comments/&#39;</span> <span class="o">+</span> <span class="nx">comment</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
-</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">contentType</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&hellip;produces&hellip;</p>
-
-<p><img src="/images/cors_delete_request.png"></p>
-
-<p>&hellip;and in the Rails log&hellip;</p>
-
-<pre><code>Started OPTIONS "/pokemon/11/comments/119" for 127.0.0.1 at 2014-06-01 11:38:14 -0400
-
-ActionController::RoutingError (No route matches [OPTIONS] "/pokemon/11/comments/119"):
-</code></pre>
-
-<h1>Preflighted Requests</h1>
-
-<p>Under <code>CORS</code>, requests using methods other than <code>GET</code> or <code>POST</code> need to be <em>preflighted</em>.  Essentially, before the
-actual request can take place, the client sends a preliminary
- <code>OPTIONS</code> request with an <code>access-control-request-method</code>
-header, asking permission to use a particular HTTP method with a given URL.  In our case, we
-want to use <code>DELETE</code> at <code>/pokemon/11/comments/119</code>.  jQuery is smart enough to initiate the preflight
-request for us&hellip;</p>
-
-<pre><code>OPTIONS /pokemon/11/comments/119
-Origin: http://localhost:8000
-Access-Control-Request-Method: DELETE
-</code></pre>
-
-<p>&hellip;so if the server responds with&hellip;</p>
-
-<pre><code>Access-Control-Allow-Origin: http://localhost:8000
-Access-Control-Allow-Methods: DELETE
-</code></pre>
-
-<p>&hellip;then the browser will allow the original request to go through.</p>
-
-<p>Rather than roll our own system for handling this exchange,
-we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
-
-<h3>Gemfile</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;rack-cors&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s1">&#39;rack/cors&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>config/application.rb</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">use</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Cors</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">allow</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">origins</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
-</span><span class='line'>    <span class="n">resource</span> <span class="sr">%r{/pokemon/\d+/comments/\d+}</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:headers</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;Accept&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:methods</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:delete</span><span class="o">]</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As configured above, <code>rack-cors</code> will intercept the preflight <code>OPTIONS</code> request from jQuery and grant <code>DELETE</code> access to <code>localhost:8000</code>.</p>
-
-<p>And there you have it.  :)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1692,6 +1567,10 @@ we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/29/rails-how-to-run-tests-based-on-a-search-pattern/">Rails: How To Run Tests Based On A Search Pattern</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/03/01/so-youre-thinking-about-programming/">So, You&#8217;re Thinking About Programming</a>
       </li>
     
@@ -1705,10 +1584,6 @@ we can simply add the <code>rack-cors</code> gem to our gemfile.</p>
     
       <li class="post">
         <a href="/blog/2014/11/18/find-and-replace-from-the-shell-with-sed/">Find and Replace from Shell with Sed</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/23/the-big-difference-between-empty-and-none/">The Big Difference Between Empty And None</a>
       </li>
     
   </ul>

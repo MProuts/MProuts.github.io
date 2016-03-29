@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: ack | Full Stack Snacks]]></title>
+  <title><![CDATA[Category: Ack, | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/ack/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2016-03-01T19:14:16-05:00</updated>
+  <updated>2016-03-29T14:24:16-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -14,28 +14,53 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Find And Replace From Outside Of Files]]></title>
-    <link href="http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files/"/>
-    <updated>2014-09-13T22:10:03-04:00</updated>
-    <id>http://MProuts.github.io/blog/2014/09/13/find-and-replace-from-outside-of-files</id>
-    <content type="html"><![CDATA[<p>Toss this puppy in your <code>.bashrc</code> for string substitution from
-outside of files.</p>
+    <title type="html"><![CDATA[Rails: How To Run Tests Based On A Search Pattern]]></title>
+    <link href="http://MProuts.github.io/blog/2016/03/29/rails-how-to-run-tests-based-on-a-search-pattern/"/>
+    <updated>2016-03-29T13:39:11-04:00</updated>
+    <id>http://MProuts.github.io/blog/2016/03/29/rails-how-to-run-tests-based-on-a-search-pattern</id>
+    <content type="html"><![CDATA[<p>This came up while I was doing a refactoring that reached across
+multiple files.  I wanted a way to make some change, then run all of the
+tests that contain any reference to a particular method.</p>
+
+<h3>TL;DR</h3>
+
+<p>Replace <code>&lt;pattern&gt;</code> with your search term.</p>
 
 <p><code>sh
-function ack_sub {
-  ack -l $1 $3 | xargs perl -pi -E 's/'$1'/'$2'/g'
-}
+ack &lt;pattern&gt; test/ -l | xargs -I{} ruby -I"lib:test" {}
 </code></p>
 
-<h3>Syntax</h3>
+<h3>Explanation</h3>
 
-<blockquote><p><code>ack_sub &lt;target&gt; &lt;substitution&gt; &lt;directory&gt;</code></p></blockquote>
-
-<h3>Example</h3>
+<p>To break this apart a little bit, I knew that you can get <code>ack</code> to give you
+a list of file names that match a pattern by passing it the <code>-l</code> option.
+So that first clause is pretty straightforward &mdash; look for <code>&lt;pattern&gt;</code>
+inside files in the <code>test/</code> directory, and give me back a list of file
+names.</p>
 
 <p><code>sh
-$ ack_sub "Mikey" "Michael" "./taxes"
+ack &lt;pattern&gt; test/ -l
 </code></p>
+
+<p>I&rsquo;m used to using this command to run a single test:</p>
+
+<p><code>sh
+TEST=&lt;filepath&gt; rake test
+</code></p>
+
+<p>However, in order to get this working with <code>xargs</code>, I had to switch to the slighlty
+uglier version (which, if you look, is what rake is doing internally
+anyway):</p>
+
+<p><code>sh
+ruby -I"lib:test" &lt;filepath&gt;
+</code></p>
+
+<p><code>xarg</code>&rsquo;s <code>-I</code> argument basically just lets you specify where an
+argument fits inside shell command that&rsquo;s receiving
+it.  In this case, <code>{}</code> in <code>ruby -I"lib:test" {}</code> gets replaced once in
+succession by each of the file names we found with in the first clause
+with <code>ack</code>.</p>
 ]]></content>
   </entry>
   
