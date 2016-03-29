@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Testing | Full Stack Snacks]]></title>
   <link href="http://MProuts.github.io/blog/categories/testing/atom.xml" rel="self"/>
   <link href="http://MProuts.github.io/"/>
-  <updated>2016-03-29T14:24:16-04:00</updated>
+  <updated>2016-03-29T14:26:20-04:00</updated>
   <id>http://MProuts.github.io/</id>
   <author>
     <name><![CDATA[Michael Prouty]]></name>
@@ -59,7 +59,7 @@ ruby -I"lib:test" &lt;filepath&gt;
 <p><code>xarg</code>&rsquo;s <code>-I</code> argument basically just lets you specify where an
 argument fits inside shell command that&rsquo;s receiving
 it.  In this case, <code>{}</code> in <code>ruby -I"lib:test" {}</code> gets replaced once in
-succession by each of the file names we found with in the first clause
+succession by each of the file names we found in the first clause
 with <code>ack</code>.</p>
 ]]></content>
   </entry>
